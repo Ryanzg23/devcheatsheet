@@ -1,57 +1,49 @@
-import { Client } from "pg";
+import { neon } from "@netlify/neon";
 
 export default async (req) => {
-  const client = new Client({
-    connectionString: process.env.NETLIFY_DATABASE_URL
-  });
-
-  await client.connect();
+  const sql = neon(); // uses NETLIFY_DATABASE_URL automatically
 
   /* ---------- ensure table ---------- */
-  await client.query(`
+  await sql`
     CREATE TABLE IF NOT EXISTS htaccess_rules (
       id SERIAL PRIMARY KEY,
       title TEXT NOT NULL,
       code TEXT NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
-  `);
+  `;
 
-  /* ---------- GET ---------- */
+  /* ---------- GET rules ---------- */
   if (req.method === "GET") {
-    const { rows } = await client.query(
-      "SELECT title, code FROM htaccess_rules ORDER BY id ASC"
-    );
-
-    await client.end();
+    const rows = await sql`
+      SELECT title, code
+      FROM htaccess_rules
+      ORDER BY id ASC
+    `;
 
     return new Response(JSON.stringify(rows), {
       headers: { "Content-Type": "application/json" }
     });
   }
 
-  /* ---------- POST ---------- */
+  /* ---------- ADD rule ---------- */
   if (req.method === "POST") {
     const body = await req.json();
     const { title, code } = body;
 
     if (!title || !code) {
-      await client.end();
       return new Response("Missing fields", { status: 400 });
     }
 
-    await client.query(
-      "INSERT INTO htaccess_rules (title, code) VALUES ($1, $2)",
-      [title, code]
-    );
-
-    await client.end();
+    await sql`
+      INSERT INTO htaccess_rules (title, code)
+      VALUES (${title}, ${code})
+    `;
 
     return new Response(JSON.stringify({ ok: true }), {
       headers: { "Content-Type": "application/json" }
     });
   }
 
-  await client.end();
   return new Response("Method not allowed", { status: 405 });
 };
