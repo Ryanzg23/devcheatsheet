@@ -1,5 +1,13 @@
 document.addEventListener("DOMContentLoaded", function(){
 
+  /* ---------- Accordion ---------- */
+document.querySelectorAll(".acc-toggle").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    var item = btn.closest(".acc-item");
+    if(item) item.classList.toggle("open");
+  });
+});
+
   /* ---------- Theme toggle ---------- */
   var root = document.documentElement;
   var toggle = document.getElementById("themeToggle");
