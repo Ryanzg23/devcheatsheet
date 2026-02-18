@@ -380,10 +380,7 @@ function createRuleCard(rule) {
   const edit = item.querySelector(".edit");
 
   if (del) {
-    del.onclick = () => {
-      if (!confirm("Are you sure you want to delete this rule?")) return;
-      deleteRule(rule.id);
-    };
+    del.onclick = () => openDeleteModal(rule.id);
   }
 
   if (edit) {
