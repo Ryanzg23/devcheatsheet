@@ -32,7 +32,10 @@ body{
   margin:36px auto 64px;
   padding:0 24px;
 }
-
+.btn.copy:disabled{
+  opacity:.6;
+  cursor:default;
+}
 /* Header */
 .header{
   display:flex;
