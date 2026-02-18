@@ -113,15 +113,20 @@ document.addEventListener("DOMContentLoaded", function(){
       var primary = document.createElement("span");
       primary.className = "badge " + (code==200?"ok":(code==301?"redirect":"err"));
       primary.textContent = code;
+      
+      // tooltip on 301 badge
+      if(code==301 && r.redirect){
+        primary.title = r.redirect;
+      }
       badges.appendChild(primary);
-
+      
       if(r.redirect){
         var final = document.createElement("span");
         final.className = "badge ok";
         final.textContent = "200";
-        final.title = r.redirect;
         badges.appendChild(final);
       }
+
 
       statusDiv.appendChild(badges);
       row.appendChild(urlDiv);
