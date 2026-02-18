@@ -209,16 +209,7 @@ const adminModal = document.getElementById("adminModal");
 const adminPassword = document.getElementById("adminPassword");
 const adminLogin = document.getElementById("adminLogin");
 const adminCancel = document.getElementById("adminCancel");
-
-/* create logout button */
-let adminLogoutBtn = document.getElementById("adminLogoutBtn");
-if(!adminLogoutBtn && adminBtn){
-  adminLogoutBtn = document.createElement("button");
-  adminLogoutBtn.id = "adminLogoutBtn";
-  adminLogoutBtn.className = "btn small admin-only";
-  adminLogoutBtn.textContent = "Logout";
-  adminBtn.parentNode.appendChild(adminLogoutBtn);
-}
+const adminLogoutBtn = document.getElementById("adminLogoutBtn");
 
 function openAdminModal(){
   adminModal.style.display = "flex";
