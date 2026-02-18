@@ -1,6 +1,6 @@
 {
   "name": "devcheatsite",
   "dependencies": {
-    "@netlify/neon": "^1.0.0"
+    "@netlify/neon": "^0.5.0"
   }
 }
