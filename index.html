@@ -271,11 +271,24 @@ RewriteRule .* - [L]</code></pre>
   </div>
 </div>
 
-
+<div id="adminModal" class="modal">
+  <div class="modal-box">
+    <h3>Admin Access</h3>
+    <input id="adminPassword" type="password" placeholder="Enter admin password">
+    <div class="modal-actions">
+      <button id="adminLogin" class="btn">Login</button>
+      <button id="adminCancel" class="btn secondary">Cancel</button>
+    </div>
+    <div id="adminError" class="muted" style="margin-top:8px;display:none;">
+      Incorrect password
+    </div>
+  </div>
+</div>
 	
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
