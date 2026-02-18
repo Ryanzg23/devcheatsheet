@@ -166,7 +166,7 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
   <script>
 document.addEventListener("DOMContentLoaded", function(){
 
-  // Tabs
+  /* ---------- Tabs ---------- */
   var tabs = document.querySelectorAll(".tab");
   var contents = document.querySelectorAll(".tab-content");
   tabs.forEach(function(tab){
@@ -180,7 +180,7 @@ document.addEventListener("DOMContentLoaded", function(){
     });
   });
 
-  // Copy buttons
+  /* ---------- Copy buttons ---------- */
   var copyBtns = document.querySelectorAll(".btn.copy");
   copyBtns.forEach(function(btn){
     btn.addEventListener("click", function(){
@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", function(){
     });
   });
 
-  // Domain generator
+  /* ---------- Domain generator ---------- */
   var domainInput = document.getElementById("domainInput");
   var genBtn = document.getElementById("genBtn");
   var out = document.getElementById("generatedUrls");
@@ -209,17 +209,22 @@ document.addEventListener("DOMContentLoaded", function(){
     return d.trim();
   }
 
+  function buildVariants(domain){
+    return [
+      "https://www."+domain,
+      "https://"+domain,
+      "http://www."+domain,
+      "http://"+domain
+    ];
+  }
+
   if(genBtn && out && domainInput){
     genBtn.addEventListener("click", function(){
       var d = normalizeDomain(domainInput.value);
-      var urls = [
-        "https://www." + d,
-        "https://" + d,
-        "http://www." + d,
-        "http://" + d
-      ];
-      out.textContent = urls.join("
-");
+      var urls = buildVariants(d);
+      out.textContent = urls.join("\n");
+      var statusBox = document.getElementById("statusResults");
+      if(statusBox) statusBox.textContent = "(click check to fetch status)";
     });
   }
 
@@ -229,6 +234,32 @@ document.addEventListener("DOMContentLoaded", function(){
       var old = copyUrls.innerText;
       copyUrls.innerText = "Copied!";
       setTimeout(function(){ copyUrls.innerText = old; }, 1200);
+    });
+  }
+
+  /* ---------- Status checker (Netlify function) ---------- */
+  var checkBtn = document.getElementById("checkStatus");
+  var statusBox = document.getElementById("statusResults");
+
+  if(checkBtn && statusBox && out){
+    checkBtn.addEventListener("click", function(){
+      var urls = out.innerText.split("\n").filter(Boolean);
+      if(!urls.length) return;
+
+      statusBox.textContent = "Checking...";
+
+      Promise.all(urls.map(function(u){
+        return fetch("/.netlify/functions/httpstatus?url="+encodeURIComponent(u))
+          .then(function(r){ return r.json(); })
+          .catch(function(){ return {url:u,status:"ERR"}; });
+      })).then(function(results){
+        var lines = results.map(function(r){
+          if(r.error) return r.url+" → ERR";
+          if(r.redirect) return r.url+" → "+r.status+" → "+r.redirect;
+          return r.url+" → "+r.status;
+        });
+        statusBox.textContent = lines.join("\n");
+      });
     });
   }
 
