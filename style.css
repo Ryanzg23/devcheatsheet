@@ -544,9 +544,6 @@ body.admin-mode .admin-only{
   gap:8px;
 }
 
-.header-actions .btn.small{
-  height:34px;
-}
 
 .theme-toggle{
   margin-left:4px;
