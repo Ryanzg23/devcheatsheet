@@ -184,6 +184,86 @@ if(htaccessSearch){
   });
 }
 
+/* ---------- Add htaccess rule ---------- */
+var addRuleBtn = document.getElementById("addRuleBtn");
+var modal = document.getElementById("ruleModal");
+var saveRule = document.getElementById("saveRule");
+var cancelRule = document.getElementById("cancelRule");
+var ruleTitle = document.getElementById("ruleTitle");
+var ruleCode = document.getElementById("ruleCode");
+
+function createRuleCard(title, code){
+  var acc = document.querySelector("#htaccess .accordion");
+  if(!acc) return;
+
+  var item = document.createElement("div");
+  item.className = "acc-item";
+
+  item.innerHTML = `
+    <div class="acc-header">
+      <h3>${title}</h3>
+      <div class="acc-actions">
+        <button class="btn copy">Copy Code</button>
+        <button class="acc-toggle">▾</button>
+      </div>
+    </div>
+    <div class="acc-body">
+      <pre><code>${code.replace(/</g,"&lt;")}</code></pre>
+    </div>
+  `;
+
+  acc.appendChild(item);
+
+  // bind accordion toggle
+  var header = item.querySelector(".acc-header");
+  header.addEventListener("click", function(e){
+    if(e.target.closest(".btn.copy")) return;
+    item.classList.toggle("open");
+  });
+
+  // bind copy
+  var btn = item.querySelector(".btn.copy");
+  btn.addEventListener("click", function(e){
+    e.stopPropagation();
+    var pre = item.querySelector("pre");
+    navigator.clipboard.writeText(pre.innerText);
+    var old = btn.innerText;
+    btn.innerText = "Copied!";
+    btn.disabled = true;
+    setTimeout(function(){
+      btn.innerText = old;
+      btn.disabled = false;
+    },1200);
+  });
+}
+
+if(addRuleBtn){
+  addRuleBtn.addEventListener("click", function(){
+    modal.classList.add("open");
+  });
+}
+
+if(cancelRule){
+  cancelRule.addEventListener("click", function(){
+    modal.classList.remove("open");
+  });
+}
+
+if(saveRule){
+  saveRule.addEventListener("click", function(){
+    var t = ruleTitle.value.trim();
+    var c = ruleCode.value.trim();
+    if(!t || !c) return;
+
+    createRuleCard(t, c);
+
+    modal.classList.remove("open");
+    ruleTitle.value = "";
+    ruleCode.value = "";
+  });
+}
+
+  
 
 });
 
