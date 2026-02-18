@@ -182,61 +182,7 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
   />
 </div>
 
-      <div id="htaccessAccordion" class="accordion">
-
-  <!-- Redirect to new domain -->
-  <div class="acc-item">
-    <div class="acc-header">
-      <h3>Redirect to new domain</h3>
-      <div class="acc-actions">
-        <button class="btn copy">Copy Code</button>
-        <button class="acc-toggle">▾</button>
-      </div>
-    </div>
-    <div class="acc-body">
-      <pre><code>RewriteEngine On
-RewriteCond %{HTTP_HOST} ^(www\.)?usergacorvip\.com$ [NC]
-RewriteRule ^ https://www.wearepetaloso.com/? [L,R=301]</code></pre>
-    </div>
-  </div>
-
-  <!-- Allow direct access folder -->
-  <div class="acc-item">
-    <div class="acc-header">
-      <h3>Allow direct access to this folder's files</h3>
-      <div class="acc-actions">
-        <button class="btn copy">Copy Code</button>
-        <button class="acc-toggle">▾</button>
-      </div>
-    </div>
-    <div class="acc-body">
-      <pre><code>Options +FollowSymLinks
-RewriteEngine On
-
-# Stop parent .htaccess from interfering
-RewriteOptions InheritDownBefore
-
-# Serve index.html automatically
-DirectoryIndex index.html
-
-# Don't rewrite anything here
-RewriteRule .* - [L]</code></pre>
-    </div>
-  </div>
-
-  <!-- Redirect index.html -->
-  <div class="acc-item">
-    <div class="acc-header">
-      <h3>Redirect index.html to slash</h3>
-      <div class="acc-actions">
-        <button class="btn copy">Copy Code</button>
-        <button class="acc-toggle">▾</button>
-      </div>
-    </div>
-    <div class="acc-body">
-      <pre><code>RewriteRule ^(.*/)?index\.html$ /$1 [R=301,L]</code></pre>
-    </div>
-  </div>
+<div id="htaccessAccordion" class="accordion">
 
 </div>
 
@@ -293,6 +239,7 @@ RewriteRule .* - [L]</code></pre>
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
