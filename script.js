@@ -1,5 +1,20 @@
 document.addEventListener("DOMContentLoaded", function(){
 
+  /* ---------- Theme toggle ---------- */
+  var root = document.documentElement;
+  var toggle = document.getElementById("themeToggle");
+  if(toggle){
+    toggle.addEventListener("click", function(){
+      if(root.getAttribute("data-theme")==="light"){
+        root.removeAttribute("data-theme");
+        toggle.textContent = "🌙";
+      }else{
+        root.setAttribute("data-theme","light");
+        toggle.textContent = "☀️";
+      }
+    });
+  }
+
   /* ---------- Tabs ---------- */
   var tabs = document.querySelectorAll(".tab");
   var contents = document.querySelectorAll(".tab-content");
@@ -57,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function(){
       var d = normalizeDomain(domainInput.value);
       var urls = buildVariants(d);
       out.textContent = urls.join("\n");
-      checkStatus();
+      checkStatus(urls);
     });
   }
 
@@ -78,7 +93,6 @@ document.addEventListener("DOMContentLoaded", function(){
     if(!statusTable) return;
     statusTable.innerHTML = "";
 
-    // header
     var header = document.createElement("div");
     header.className = "status-row header";
     header.innerHTML = "<div>Request URL</div><div>Status</div>";
@@ -95,19 +109,17 @@ document.addEventListener("DOMContentLoaded", function(){
       var badges = document.createElement("div");
       badges.className = "badges";
 
-      // 301 / 200 primary badge
-      var primary = document.createElement("span");
       var code = r.status || "ERR";
+      var primary = document.createElement("span");
       primary.className = "badge " + (code==200?"ok":(code==301?"redirect":"err"));
       primary.textContent = code;
       badges.appendChild(primary);
 
-      // final 200 badge for redirect target
       if(r.redirect){
         var final = document.createElement("span");
         final.className = "badge ok";
         final.textContent = "200";
-        final.title = r.redirect; // tooltip final URL
+        final.title = r.redirect;
         badges.appendChild(final);
       }
 
@@ -118,20 +130,14 @@ document.addEventListener("DOMContentLoaded", function(){
     });
   }
 
-      statusDiv.appendChild(badges);
-      row.appendChild(urlDiv);
-      row.appendChild(statusDiv);
-      statusTable.appendChild(row);
-    });
+  function showLoading(){
+    if(!statusTable) return;
+    statusTable.innerHTML = '<div class="status-loading">Checking…</div>';
   }
 
-  function checkStatus(){
-    if(!out || !statusTable) return;
-    var urls = out.innerText.split("\n").filter(Boolean);
-    if(!urls.length) return;
-
-    // loading state centered
-    statusTable.innerHTML = '<div class="status-loading">Checking…</div>';
+  function checkStatus(urls){
+    if(!urls || !urls.length) return;
+    showLoading();
 
     Promise.all(urls.map(function(u){
       return fetch("/.netlify/functions/httpstatus?url="+encodeURIComponent(u))
@@ -141,7 +147,10 @@ document.addEventListener("DOMContentLoaded", function(){
   }
 
   if(recheckBtn){
-    recheckBtn.addEventListener("click", checkStatus);
+    recheckBtn.addEventListener("click", function(){
+      var urls = out ? out.innerText.split("\n").filter(Boolean) : [];
+      checkStatus(urls);
+    });
   }
 
 });
