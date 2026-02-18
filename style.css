@@ -233,7 +233,8 @@ input{
   border:none;
   color:var(--muted);
   font-weight:600;
-  padding:0 2px 6px;
+  padding: 0 10px 6px;
+  margin-bottom: 0;
 }
 
 /* Status URL text contrast */
