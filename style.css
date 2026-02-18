@@ -316,4 +316,46 @@ pre{
   margin:0;
   padding:6px 12px;
 }
+.accordion{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.acc-item{
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:var(--card);
+  overflow:hidden;
+}
+
+.acc-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 16px;
+}
+
+.acc-actions{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.acc-toggle{
+  border:none;
+  background:transparent;
+  color:var(--muted);
+  font-size:16px;
+  cursor:pointer;
+}
+
+.acc-body{
+  display:none;
+  padding:0 16px 16px;
+}
+
+.acc-item.open .acc-body{
+  display:block;
+}
 
