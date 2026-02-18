@@ -210,7 +210,19 @@ const adminPassword = document.getElementById("adminPassword");
 const adminLogin = document.getElementById("adminLogin");
 const adminCancel = document.getElementById("adminCancel");
 const adminLogoutBtn = document.getElementById("adminLogoutBtn");
+const adminPassword = document.getElementById("adminPassword");
+const adminLogin = document.getElementById("adminLogin");
 
+/* Enter key submits admin login */
+if(adminPassword){
+  adminPassword.addEventListener("keydown", e => {
+    if(e.key === "Enter"){
+      e.preventDefault();
+      adminLogin.click();
+    }
+  });
+}
+   
 function openAdminModal(){
   adminModal.style.display = "flex";
   adminPassword.value = "";
