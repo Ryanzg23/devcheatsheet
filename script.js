@@ -83,18 +83,15 @@ document.addEventListener("DOMContentLoaded", function(){
     ];
   }
 
-  if(genBtn && out && domainInput){
-    genBtn.addEventListener("click", function(){
-      var d = normalizeDomain(domainInput.value);
-      var urls = buildVariants(d);
-      out.textContent = urls.join("\n");
-      checkStatus(urls);
-    });
-  }
-
   /* ---------- Status checker ---------- */
   var statusTable = document.getElementById("statusTable");
   var recheckBtn = document.getElementById("recheckStatus");
+
+  function showLoading(){
+    if(!statusTable) return;
+    statusTable.innerHTML = '<div class="status-loading">Checking…</div>';
+    if(recheckBtn) recheckBtn.style.display = "none";
+  }
 
   function renderStatus(results){
     if(!statusTable) return;
@@ -136,15 +133,7 @@ document.addEventListener("DOMContentLoaded", function(){
       statusTable.appendChild(row);
     });
 
-    // show recheck after results
     if(recheckBtn) recheckBtn.style.display = "inline-flex";
-  }
-  }
-
-  function showLoading(){
-    if(!statusTable) return;
-    statusTable.innerHTML = '<div class="status-loading">Checking…</div>';
-    if(recheckBtn) recheckBtn.style.display = "none";
   }
 
   function checkStatus(urls){
@@ -156,6 +145,15 @@ document.addEventListener("DOMContentLoaded", function(){
         .then(function(r){ return r.json(); })
         .catch(function(){ return {url:u,error:true}; });
     })).then(renderStatus);
+  }
+
+  if(genBtn && out && domainInput){
+    genBtn.addEventListener("click", function(){
+      var d = normalizeDomain(domainInput.value);
+      var urls = buildVariants(d);
+      out.textContent = urls.join("\n");
+      checkStatus(urls);
+    });
   }
 
   if(recheckBtn){
