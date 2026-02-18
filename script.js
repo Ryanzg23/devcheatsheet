@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function(){
     });
   }
 
-    /* ---------- Tabs ---------- */
+  /* ---------- Tabs ---------- */
   var tabs = document.querySelectorAll(".tab");
   var contents = document.querySelectorAll(".tab-content");
   tabs.forEach(function(tab){
@@ -28,19 +28,12 @@ document.addEventListener("DOMContentLoaded", function(){
       if(target) target.classList.add("active");
     });
   });
-      contents.forEach(function(c){ c.classList.remove("active"); });
-      tab.classList.add("active");
-      var id = tab.getAttribute("data-tab");
-      var target = document.getElementById(id);
-      if(target) target.classList.add("active");
-    });
-  });
 
-    /* ---------- Copy buttons (card + accordion) ---------- */
+  /* ---------- Copy buttons (card + accordion) ---------- */
   var copyBtns = document.querySelectorAll(".btn.copy");
   copyBtns.forEach(function(btn){
     btn.addEventListener("click", function(e){
-      e.stopPropagation(); // prevent accordion toggle
+      e.stopPropagation();
       var scope = btn.closest(".card") || btn.closest(".acc-item");
       if(!scope) return;
       var pre = scope.querySelector("pre");
@@ -51,13 +44,21 @@ document.addEventListener("DOMContentLoaded", function(){
       setTimeout(function(){ btn.innerText = old; }, 1200);
     });
   });
+
+  /* ---------- Accordion ---------- */
+  var accHeaders = document.querySelectorAll(".acc-header");
+  accHeaders.forEach(function(header){
+    header.addEventListener("click", function(e){
+      if(e.target.closest(".btn.copy")) return;
+      var item = header.closest(".acc-item");
+      if(item) item.classList.toggle("open");
+    });
   });
 
   /* ---------- Domain generator ---------- */
   var domainInput = document.getElementById("domainInput");
   var genBtn = document.getElementById("genBtn");
   var out = document.getElementById("generatedUrls");
-  var copyUrls = document.getElementById("copyUrls");
 
   function normalizeDomain(d){
     if(!d) return "domain.com";
@@ -82,15 +83,6 @@ document.addEventListener("DOMContentLoaded", function(){
       var urls = buildVariants(d);
       out.textContent = urls.join("\n");
       checkStatus(urls);
-    });
-  }
-
-  if(copyUrls && out){
-    copyUrls.addEventListener("click", function(){
-      navigator.clipboard.writeText(out.innerText);
-      var old = copyUrls.innerText;
-      copyUrls.innerText = "Copied!";
-      setTimeout(function(){ copyUrls.innerText = old; }, 1200);
     });
   }
 
@@ -122,13 +114,13 @@ document.addEventListener("DOMContentLoaded", function(){
       var primary = document.createElement("span");
       primary.className = "badge " + (code==200?"ok":(code==301?"redirect":"err"));
       primary.textContent = code;
+      if(code==301 && r.redirect) primary.title = r.redirect;
       badges.appendChild(primary);
 
       if(r.redirect){
         var final = document.createElement("span");
         final.className = "badge ok";
         final.textContent = "200";
-        final.title = r.redirect;
         badges.appendChild(final);
       }
 
@@ -155,23 +147,11 @@ document.addEventListener("DOMContentLoaded", function(){
     })).then(renderStatus);
   }
 
-    if(recheckBtn){
+  if(recheckBtn){
     recheckBtn.addEventListener("click", function(){
-      var urls = out ? out.innerText.split("
-").filter(Boolean) : [];
+      var urls = out ? out.innerText.split("\n").filter(Boolean) : [];
       checkStatus(urls);
     });
   }
-
-  /* ---------- Accordion: whole header clickable ---------- */
-  var accHeaders = document.querySelectorAll(".acc-header");
-  accHeaders.forEach(function(header){
-    header.addEventListener("click", function(e){
-      // ignore clicks on copy button
-      if(e.target.closest(".btn.copy")) return;
-      var item = header.closest(".acc-item");
-      if(item) item.classList.toggle("open");
-    });
-  });
 
 });
