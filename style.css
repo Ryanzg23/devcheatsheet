@@ -349,3 +349,22 @@ input{
 
 #generatedUrls{min-height:120px}
 #recheckStatus{display:none}
+
+.search-bar{
+  margin-bottom:16px;
+}
+
+.search-bar input{
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  font-size:14px;
+}
+
+[data-theme="light"] .search-bar input{
+  background:#ffffff;
+}
+
