@@ -169,6 +169,11 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
 
     <!-- ================= HTACCESS TAB ================= -->
     <div class="tab-content" id="htaccess">
+		
+<div class="htaccess-toolbar">
+  <button class="btn small" id="addRuleBtn">+ Add Rule</button>
+</div>
+		
 <div class="search-bar">
   <input
     type="text"
@@ -249,9 +254,29 @@ RewriteRule .* - [L]</code></pre>
 
   </div>
 
+<div class="modal" id="ruleModal">
+  <div class="modal-content">
+    <h3>Add htaccess Rule</h3>
+
+    <label>Title</label>
+    <input type="text" id="ruleTitle" placeholder="Rule title" />
+
+    <label>Code</label>
+    <textarea id="ruleCode" rows="8" placeholder="RewriteEngine On..."></textarea>
+
+    <div class="modal-actions">
+      <button class="btn" id="saveRule">Save</button>
+      <button class="btn secondary" id="cancelRule">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+	
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
