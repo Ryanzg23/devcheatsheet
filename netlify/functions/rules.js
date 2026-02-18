@@ -1,37 +1,57 @@
+import { Client } from "pg";
 
-const fs = require("fs");
-const path = require("path");
+export default async (req) => {
+  const client = new Client({
+    connectionString: process.env.NETLIFY_DATABASE_URL
+  });
 
-const file = path.join(process.cwd(), "data", "htaccess-rules.json");
+  await client.connect();
 
-exports.handler = async (event) => {
-  if(event.httpMethod === "GET"){
-    const data = fs.readFileSync(file, "utf8");
-    return {
-      statusCode: 200,
-      headers:{ "Content-Type":"application/json" },
-      body: data
-    };
+  /* ---------- ensure table ---------- */
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS htaccess_rules (
+      id SERIAL PRIMARY KEY,
+      title TEXT NOT NULL,
+      code TEXT NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  /* ---------- GET ---------- */
+  if (req.method === "GET") {
+    const { rows } = await client.query(
+      "SELECT title, code FROM htaccess_rules ORDER BY id ASC"
+    );
+
+    await client.end();
+
+    return new Response(JSON.stringify(rows), {
+      headers: { "Content-Type": "application/json" }
+    });
   }
 
-  if(event.httpMethod === "POST"){
-    const body = JSON.parse(event.body || "{}");
+  /* ---------- POST ---------- */
+  if (req.method === "POST") {
+    const body = await req.json();
     const { title, code } = body;
 
-    if(!title || !code){
-      return { statusCode:400, body:"Missing fields" };
+    if (!title || !code) {
+      await client.end();
+      return new Response("Missing fields", { status: 400 });
     }
 
-    const rules = JSON.parse(fs.readFileSync(file,"utf8"));
-    rules.push({ title, code });
+    await client.query(
+      "INSERT INTO htaccess_rules (title, code) VALUES ($1, $2)",
+      [title, code]
+    );
 
-    fs.writeFileSync(file, JSON.stringify(rules,null,2));
+    await client.end();
 
-    return {
-      statusCode:200,
-      body: JSON.stringify({ ok:true })
-    };
+    return new Response(JSON.stringify({ ok: true }), {
+      headers: { "Content-Type": "application/json" }
+    });
   }
 
-  return { statusCode:405 };
+  await client.end();
+  return new Response("Method not allowed", { status: 405 });
 };
