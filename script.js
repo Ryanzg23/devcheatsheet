@@ -248,6 +248,8 @@ document.addEventListener("DOMContentLoaded", () => {
       modal.dataset.editId = id;
       modal.classList.add("open");
     });
+	  
+	updateAdminUI();
   }
 
   async function loadGlobalRules() {
