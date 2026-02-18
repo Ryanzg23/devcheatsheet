@@ -338,10 +338,6 @@ input{
   padding:0 16px 16px;
 }
 
-[data-theme="light"] .acc-body{
-  padding:16px;
-}
-
 /* ---------- Misc ---------- */
 
 #generatedUrls{min-height:120px}
