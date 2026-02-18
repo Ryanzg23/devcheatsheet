@@ -1,13 +1,5 @@
 document.addEventListener("DOMContentLoaded", function(){
 
-  /* ---------- Accordion ---------- */
-document.querySelectorAll(".acc-toggle").forEach(function(btn){
-  btn.addEventListener("click", function(){
-    var item = btn.closest(".acc-item");
-    if(item) item.classList.toggle("open");
-  });
-});
-
   /* ---------- Theme toggle ---------- */
   var root = document.documentElement;
   var toggle = document.getElementById("themeToggle");
@@ -37,19 +29,21 @@ document.querySelectorAll(".acc-toggle").forEach(function(btn){
     });
   });
 
-  /* ---------- Copy buttons ---------- */
+    /* ---------- Copy buttons (card + accordion) ---------- */
   var copyBtns = document.querySelectorAll(".btn.copy");
   copyBtns.forEach(function(btn){
-    btn.addEventListener("click", function(){
-      var card = btn.closest(".card");
-      if(!card) return;
-      var pre = card.querySelector("pre");
+    btn.addEventListener("click", function(e){
+      e.stopPropagation(); // prevent accordion toggle
+      var scope = btn.closest(".card") || btn.closest(".acc-item");
+      if(!scope) return;
+      var pre = scope.querySelector("pre");
       if(!pre) return;
       navigator.clipboard.writeText(pre.innerText);
       var old = btn.innerText;
       btn.innerText = "Copied!";
       setTimeout(function(){ btn.innerText = old; }, 1200);
     });
+  });
   });
 
   /* ---------- Domain generator ---------- */
@@ -121,20 +115,15 @@ document.querySelectorAll(".acc-toggle").forEach(function(btn){
       var primary = document.createElement("span");
       primary.className = "badge " + (code==200?"ok":(code==301?"redirect":"err"));
       primary.textContent = code;
-      
-      // tooltip on 301 badge
-      if(code==301 && r.redirect){
-        primary.title = r.redirect;
-      }
       badges.appendChild(primary);
-      
+
       if(r.redirect){
         var final = document.createElement("span");
         final.className = "badge ok";
         final.textContent = "200";
+        final.title = r.redirect;
         badges.appendChild(final);
       }
-
 
       statusDiv.appendChild(badges);
       row.appendChild(urlDiv);
@@ -159,11 +148,22 @@ document.querySelectorAll(".acc-toggle").forEach(function(btn){
     })).then(renderStatus);
   }
 
-  if(recheckBtn){
+    if(recheckBtn){
     recheckBtn.addEventListener("click", function(){
       var urls = out ? out.innerText.split("\n").filter(Boolean) : [];
       checkStatus(urls);
     });
   }
+
+  /* ---------- Accordion: whole header clickable ---------- */
+  var accHeaders = document.querySelectorAll(".acc-header");
+  accHeaders.forEach(function(header){
+    header.addEventListener("click", function(e){
+      // ignore clicks on copy button
+      if(e.target.closest(".btn.copy")) return;
+      var item = header.closest(".acc-item");
+      if(item) item.classList.toggle("open");
+    });
+  });
 
 });
