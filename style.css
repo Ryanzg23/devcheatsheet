@@ -8,7 +8,6 @@
   --accent2:#16a34a;
 }
 
-/* LIGHT THEME */
 [data-theme="light"]{
   --bg:#f4f6fb;
   --card:#ffffff;
@@ -24,13 +23,13 @@
 body{
   margin:0;
   font-family:Inter,system-ui,Segoe UI,Arial;
-  background:linear-gradient(180deg,var(--bg),#0a0f1d);
+  background:radial-gradient(1200px 600px at 50% -200px,#11183a 0%,var(--bg) 60%);
   color:var(--text);
 }
 
 .container{
   max-width:1400px;
-  margin:40px auto 60px;
+  margin:36px auto 64px;
   padding:0 24px;
 }
 
@@ -39,22 +38,36 @@ body{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  margin-bottom:22px;
+  margin-bottom:18px;
 }
 
-h1{margin:0;font-size:28px}
+h1{
+  margin:0;
+  font-size:28px;
+  letter-spacing:.2px;
+}
 
 .theme-toggle{
-  background:var(--card);
+  width:38px;
+  height:38px;
+  border-radius:12px;
   border:1px solid var(--border);
+  background:linear-gradient(180deg,#0e1530,#0a1026);
   color:var(--text);
-  border-radius:10px;
-  padding:8px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   cursor:pointer;
+  box-shadow:0 6px 16px rgba(0,0,0,.25);
 }
 
 /* Tabs */
-.tabs{display:flex;gap:10px;margin-bottom:22px}
+.tabs{
+  display:flex;
+  gap:10px;
+  margin-bottom:22px;
+}
+
 .tab{
   background:#0e1530;
   border:1px solid var(--border);
@@ -64,34 +77,56 @@ h1{margin:0;font-size:28px}
   cursor:pointer;
   font-weight:600;
 }
-.tab.active{background:var(--accent);color:#fff;border-color:transparent}
+
+.tab.active{
+  background:var(--accent);
+  color:#fff;
+  border-color:transparent;
+  box-shadow:0 6px 16px rgba(79,124,255,.35);
+}
 
 .tab-content{display:none}
 .tab-content.active{display:block}
 
-/* Grids */
-.grid{display:grid;gap:22px}
-.grid-2{grid-template-columns:repeat(2,1fr)}
-.grid-3{grid-template-columns:repeat(3,1fr)}
+/* Layout grids */
+.grid{
+  display:grid;
+  gap:22px;
+}
+
+.grid-2{
+  grid-template-columns:1fr 1fr;
+  align-items:stretch;
+}
+
+.grid-3{
+  grid-template-columns:1fr 1fr 1fr;
+}
 
 /* Cards */
 .card{
-  background:var(--card);
+  background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0));
   border:1px solid var(--border);
   border-radius:16px;
   padding:18px 18px 16px;
   box-shadow:0 14px 32px rgba(0,0,0,.35);
+  display:flex;
+  flex-direction:column;
 }
-.card h3{margin:0 0 12px;font-size:16px}
+
+.card h3{
+  margin:0 0 12px;
+  font-size:16px;
+}
 
 .card-header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  margin-bottom:10px;
+  margin-bottom:12px;
 }
 
-/* Code */
+/* Code block */
 pre{
   margin:0;
   background:#0a0f22;
@@ -99,7 +134,9 @@ pre{
   border-radius:12px;
   padding:14px;
   overflow:auto;
+  flex:1;
 }
+
 code{
   font-family:Consolas,monospace;
   font-size:13px;
@@ -107,7 +144,12 @@ code{
 }
 
 /* Inputs */
-.row{display:flex;gap:10px;margin-bottom:12px}
+.row{
+  display:flex;
+  gap:10px;
+  margin-bottom:12px;
+}
+
 input{
   flex:1;
   background:#0a0f22;
@@ -127,19 +169,34 @@ input{
   font-weight:600;
   cursor:pointer;
 }
+
 .btn.secondary{background:var(--accent2)}
-.btn.small{padding:6px 10px;font-size:12px}
+
+.btn.small{
+  padding:6px 10px;
+  font-size:12px;
+}
 
 .btn.copy{
-  margin-top:10px;
+  margin-top:12px;
+  align-self:flex-start;
   background:#0e1530;
   border:1px solid var(--border);
   color:var(--muted);
 }
-.btn.copy:hover{background:#18224a;color:#fff}
 
-/* Status */
-.status-table{display:flex;flex-direction:column;gap:8px}
+.btn.copy:hover{
+  background:#18224a;
+  color:#fff;
+}
+
+/* Status table */
+.status-table{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  flex:1;
+}
 
 .status-row{
   display:flex;
@@ -157,9 +214,13 @@ input{
   border:none;
   color:var(--muted);
   font-weight:600;
+  padding:0 2px 6px;
 }
 
-.badges{display:flex;gap:6px}
+.badges{
+  display:flex;
+  gap:6px;
+}
 
 .badge{
   padding:2px 8px;
@@ -168,16 +229,15 @@ input{
   font-weight:600;
 }
 
-.badge.ok{background:#16a34a;color:#fff}      /* 200 */
-.badge.redirect{background:#2563eb;color:#fff}/* 301 */
+.badge.ok{background:#16a34a;color:#fff}
+.badge.redirect{background:#2563eb;color:#fff}
 .badge.err{background:#ef4444;color:#fff}
 
-.muted{color:var(--muted)}
-
-/* Center checking */
 .status-loading{
   text-align:center;
-  padding:22px 0;
+  padding:28px 0;
   color:var(--muted);
   font-weight:600;
 }
+
+.muted{color:var(--muted)}
