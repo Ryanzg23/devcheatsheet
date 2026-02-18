@@ -338,6 +338,13 @@ input{
   padding:0 16px 16px;
 }
 
+.section-title{
+  margin:0 0 12px;
+  font-size:16px;
+  font-weight:600;
+}
+
+
 /* ---------- Misc ---------- */
 
 #generatedUrls{min-height:120px}
