@@ -143,6 +143,24 @@ code{
   color:#cfe1ff;
 }
 
+/* vertical spacing between rows */
+.tab-content .grid{
+  margin-bottom:26px;
+}
+
+/* consistent card heights per row */
+.grid-2 > .card,
+.grid-3 > .card{
+  height:100%;
+}
+
+/* tighter container alignment */
+.container{
+  max-width:1200px;
+  margin:36px auto 64px;
+  padding:0 20px;
+}
+
 /* Inputs */
 .row{
   display:flex;
@@ -215,6 +233,16 @@ input{
   color:var(--muted);
   font-weight:600;
   padding:0 2px 6px;
+}
+
+/* Status URL text contrast */
+.status-row div:first-child{
+  color:var(--text);
+}
+
+/* ensure badges visible in light */
+[data-theme="light"] .status-row{
+  background:#f8fafc;
 }
 
 .badges{
