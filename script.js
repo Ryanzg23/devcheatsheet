@@ -129,12 +129,14 @@ document.addEventListener("DOMContentLoaded", function(){
       row.appendChild(statusDiv);
       statusTable.appendChild(row);
     });
+    if(recheckBtn) recheckBtn.style.display = "inline-flex";
   }
 
-  function showLoading(){
-    if(!statusTable) return;
-    statusTable.innerHTML = '<div class="status-loading">Checking…</div>';
-  }
+function showLoading(){
+  if(!statusTable) return;
+  statusTable.innerHTML = '<div class="status-loading">Checking…</div>';
+  if(recheckBtn) recheckBtn.style.display = "none";
+}
 
   function checkStatus(urls){
     if(!urls || !urls.length) return;
