@@ -285,6 +285,36 @@ if(adminLogoutBtn){
   };
 }
 
+const deleteModal = document.getElementById("deleteModal");
+const confirmDeleteBtn = document.getElementById("confirmDelete");
+const cancelDeleteBtn = document.getElementById("cancelDelete");
+
+let deleteRuleId = null;
+
+function openDeleteModal(id){
+  deleteRuleId = id;
+  deleteModal.style.display = "flex";
+}
+
+function closeDeleteModal(){
+  deleteModal.style.display = "none";
+  deleteRuleId = null;
+}
+
+if(cancelDeleteBtn){
+  cancelDeleteBtn.onclick = closeDeleteModal;
+}
+
+if(confirmDeleteBtn){
+  confirmDeleteBtn.onclick = () => {
+    if(deleteRuleId){
+      deleteRule(deleteRuleId);
+    }
+    closeDeleteModal();
+  };
+}
+
+
 /* restore on load */
 updateAdminUI();
 
