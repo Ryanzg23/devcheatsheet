@@ -12,9 +12,16 @@
 
     <!-- Header -->
     <div class="header">
-      <h1>Dev Cheat Sheet</h1>
-      <button id="themeToggle" class="theme-toggle">🌙</button>
-    </div>
+	  <h1>Dev Cheat Sheet</h1>
+	
+	  <div class="header-actions">
+	    <button id="adminModeBtn" class="btn small">Admin Mode</button>
+	    <button id="adminLogoutBtn" class="btn small admin-only">Logout</button>
+	    <button id="themeToggle" class="theme-toggle">🌙</button>
+	  </div>
+	</div>
+
+	  
 
     <!-- Tabs -->
     <div class="tabs">
@@ -239,6 +246,7 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
