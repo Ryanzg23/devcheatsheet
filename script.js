@@ -278,7 +278,7 @@ updateAdminUI();
    HTACCESS RULES (NEON)
 ========================= */
 const rulesContainer = document.getElementById("htaccessAccordion");
-const searchInput = document.getElementById("ruleSearch");
+const searchInput = document.getElementById("htaccessSearch");
 const addRuleBtn = document.getElementById("addRuleBtn");
 
 let rulesData = [];
