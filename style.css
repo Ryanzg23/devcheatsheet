@@ -451,7 +451,11 @@ input{
 }
 
 .admin-only{
-  display:none !important;
+  display:none;
+}
+
+body.admin-mode .admin-only{
+  display:inline-flex;
 }
 
 /* Modal overlay */
