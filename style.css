@@ -357,6 +357,18 @@ pre{
   padding:0 16px 16px;
 }
 
+.acc-body{
+  max-height:0;
+  overflow:hidden;
+  padding:0 16px;
+  transition:max-height .28s ease, padding .18s ease;
+}
+
+.acc-item.open .acc-body{
+  max-height:600px; /* large enough for content */
+  padding:16px;
+}
+
 .acc-item.open .acc-body{
   display:block;
 }
