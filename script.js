@@ -1,380 +1,391 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  /* ================= Theme ================= */
-  const root = document.documentElement;
-  const toggle = document.getElementById("themeToggle");
+/* =========================
+   THEME TOGGLE
+========================= */
+const root = document.documentElement;
+const themeToggle = document.getElementById("themeToggle");
 
-  if (toggle) {
-    toggle.addEventListener("click", () => {
-      if (root.getAttribute("data-theme") === "light") {
-        root.removeAttribute("data-theme");
-        toggle.textContent = "🌙";
-      } else {
-        root.setAttribute("data-theme", "light");
-        toggle.textContent = "☀️";
-      }
-    });
-  }
-
-  /* ================= Tabs ================= */
-  const tabs = document.querySelectorAll(".tab");
-  const contents = document.querySelectorAll(".tab-content");
-
-  tabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-      tabs.forEach(t => t.classList.remove("active"));
-      contents.forEach(c => c.classList.remove("active"));
-
-      tab.classList.add("active");
-      const id = tab.dataset.tab;
-      const target = document.getElementById(id);
-      if (target) target.classList.add("active");
-    });
+if (themeToggle) {
+  themeToggle.addEventListener("click", () => {
+    if (root.getAttribute("data-theme") === "light") {
+      root.removeAttribute("data-theme");
+      themeToggle.textContent = "🌙";
+    } else {
+      root.setAttribute("data-theme", "light");
+      themeToggle.textContent = "☀️";
+    }
   });
+}
 
-  /* ================= Accordion ================= */
-  function bindAccordion(item) {
-    const header = item.querySelector(".acc-header");
-    if (!header) return;
+/* =========================
+   TABS
+========================= */
+const tabs = document.querySelectorAll(".tab");
+const tabContents = document.querySelectorAll(".tab-content");
 
-    header.addEventListener("click", (e) => {
-      if (e.target.closest(".btn.copy") ||
-          e.target.closest(".edit") ||
-          e.target.closest(".delete")) return;
+tabs.forEach(tab => {
+  tab.addEventListener("click", () => {
+    tabs.forEach(t => t.classList.remove("active"));
+    tabContents.forEach(c => c.classList.remove("active"));
 
+    tab.classList.add("active");
+    const id = tab.dataset.tab;
+    const target = document.getElementById(id);
+    if (target) target.classList.add("active");
+  });
+});
+
+/* =========================
+   ACCORDION
+========================= */
+function initAccordion(scope = document) {
+  scope.querySelectorAll(".acc-header").forEach(header => {
+    header.onclick = () => {
+      const item = header.closest(".acc-item");
       item.classList.toggle("open");
-    });
-  }
+    };
+  });
+}
 
-  /* ================= Copy ================= */
-  function bindCopy(btn) {
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
+/* =========================
+   COPY BUTTONS
+========================= */
+function initCopyButtons(scope = document) {
+  scope.querySelectorAll(".btn.copy").forEach(btn => {
+    btn.onclick = () => {
+      if (btn.disabled) return;
 
-      const scope = btn.closest(".card") || btn.closest(".acc-item");
-      const pre = scope?.querySelector("pre");
+      const card = btn.closest(".acc-item, .card");
+      const pre = card ? card.querySelector("pre") : null;
       if (!pre) return;
 
       navigator.clipboard.writeText(pre.innerText);
 
-      const old = btn.innerText;
-      btn.innerText = "Copied!";
+      const original = btn.innerText;
+      btn.innerText = "Copied";
       btn.disabled = true;
 
       setTimeout(() => {
-        btn.innerText = old;
+        btn.innerText = original;
         btn.disabled = false;
       }, 1200);
-    });
-  }
+    };
+  });
+}
 
-  document.querySelectorAll(".btn.copy").forEach(bindCopy);
-  document.querySelectorAll(".acc-item").forEach(bindAccordion);
+/* =========================
+   DOMAIN GENERATOR
+========================= */
+const domainInput = document.getElementById("domainInput");
+const genBtn = document.getElementById("genBtn");
+const generatedUrls = document.getElementById("generatedUrls");
 
-  /* ================= Domain generator ================= */
-  const domainInput = document.getElementById("domainInput");
-  const genBtn = document.getElementById("genBtn");
-  const out = document.getElementById("generatedUrls");
+function normalizeDomain(d) {
+  if (!d) return "";
+  d = d.replace(/^https?:\/\//i, "");
+  d = d.replace(/^www\./i, "");
+  d = d.split("/")[0];
+  return d.trim();
+}
 
-  function normalizeDomain(d) {
-    if (!d) return "domain.com";
-    d = d.replace(/^https?:\/\//i, "");
-    d = d.replace(/^www\./i, "");
-    d = d.split("/")[0];
-    return d.trim();
-  }
+function buildVariants(domain) {
+  return [
+    "https://www." + domain,
+    "https://" + domain,
+    "http://www." + domain,
+    "http://" + domain
+  ];
+}
 
-  function buildVariants(domain) {
-    return [
-      "https://www." + domain,
-      "https://" + domain,
-      "http://www." + domain,
-      "http://" + domain
-    ];
-  }
+if (genBtn && generatedUrls && domainInput) {
+  genBtn.onclick = () => {
+    const d = normalizeDomain(domainInput.value);
+    if (!d) return;
 
-  /* ================= HTTP Status ================= */
-  const statusTable = document.getElementById("statusTable");
-  const recheckBtn = document.getElementById("recheckStatus");
+    const urls = buildVariants(d);
+    generatedUrls.textContent = urls.join("\n");
+    checkStatus(urls);
+  };
+}
 
-  function showLoading() {
-    if (!statusTable) return;
-    statusTable.innerHTML = '<div class="status-loading">Checking…</div>';
-    if (recheckBtn) recheckBtn.style.display = "none";
-  }
+/* =========================
+   HTTP STATUS CHECKER
+========================= */
+const statusTable = document.getElementById("statusTable");
+const recheckBtn = document.getElementById("recheckStatus");
 
-  function renderStatus(results) {
-    if (!statusTable) return;
-    statusTable.innerHTML = "";
+function showLoading() {
+  if (!statusTable) return;
+  statusTable.innerHTML =
+    '<div class="status-loading">Checking…</div>';
+  if (recheckBtn) recheckBtn.style.display = "none";
+}
 
-    const header = document.createElement("div");
-    header.className = "status-row header";
-    header.innerHTML = "<div>Request URL</div><div>Status</div>";
-    statusTable.appendChild(header);
+function renderStatus(results) {
+  if (!statusTable) return;
 
-    results.forEach(r => {
-      const row = document.createElement("div");
-      row.className = "status-row";
+  statusTable.innerHTML = "";
 
-      const urlDiv = document.createElement("div");
-      urlDiv.textContent = r.url;
+  const header = document.createElement("div");
+  header.className = "status-row header";
+  header.innerHTML = "<div>Request URL</div><div>Status</div>";
+  statusTable.appendChild(header);
 
-      const statusDiv = document.createElement("div");
-      const badges = document.createElement("div");
-      badges.className = "badges";
+  results.forEach(r => {
+    const row = document.createElement("div");
+    row.className = "status-row";
 
-      const code = r.status || "ERR";
-      const primary = document.createElement("span");
-      primary.className =
-        "badge " + (code == 200 ? "ok" : code == 301 ? "redirect" : "err");
-      primary.textContent = code;
-      if (code == 301 && r.redirect) primary.title = r.redirect;
-      badges.appendChild(primary);
+    const urlDiv = document.createElement("div");
+    urlDiv.textContent = r.url;
 
-      if (r.redirect) {
-        const final = document.createElement("span");
-        final.className = "badge ok";
-        final.textContent = "200";
-        badges.appendChild(final);
-      }
+    const statusDiv = document.createElement("div");
+    const badges = document.createElement("div");
+    badges.className = "badges";
 
-      statusDiv.appendChild(badges);
-      row.appendChild(urlDiv);
-      row.appendChild(statusDiv);
-      statusTable.appendChild(row);
-    });
+    const primary = document.createElement("span");
+    primary.className =
+      "badge " +
+      (r.status == 200
+        ? "ok"
+        : r.status == 301
+        ? "redirect"
+        : "err");
+    primary.textContent = r.status || "ERR";
+    badges.appendChild(primary);
 
-    if (recheckBtn) recheckBtn.style.display = "inline-flex";
-  }
-
-  function checkStatus(urls) {
-    if (!urls || !urls.length) return;
-    showLoading();
-
-    Promise.all(
-      urls.map(u =>
-        fetch("/.netlify/functions/httpstatus?url=" + encodeURIComponent(u))
-          .then(r => r.json())
-          .catch(() => ({ url: u, error: true }))
-      )
-    ).then(renderStatus);
-  }
-
-  if (genBtn && out && domainInput) {
-    genBtn.addEventListener("click", () => {
-      const d = normalizeDomain(domainInput.value);
-      const urls = buildVariants(d);
-      out.textContent = urls.join("\n");
-      checkStatus(urls);
-    });
-  }
-
-  if (recheckBtn) {
-    recheckBtn.addEventListener("click", () => {
-      const urls = out ? out.innerText.split("\n").filter(Boolean) : [];
-      checkStatus(urls);
-    });
-  }
-
-  /* ================= htaccess search ================= */
-  const htaccessSearch = document.getElementById("htaccessSearch");
-
-  if (htaccessSearch) {
-    htaccessSearch.addEventListener("input", () => {
-      const q = htaccessSearch.value.toLowerCase().trim();
-      document.querySelectorAll("#htaccess .acc-item").forEach(item => {
-        const title = item.querySelector("h3")?.textContent.toLowerCase() || "";
-        item.style.display = !q || title.includes(q) ? "" : "none";
-      });
-    });
-  }
-
-  /* ================= Rules CRUD ================= */
-  const addRuleBtn = document.getElementById("addRuleBtn");
-  const modal = document.getElementById("ruleModal");
-  const saveRule = document.getElementById("saveRule");
-  const cancelRule = document.getElementById("cancelRule");
-  const ruleTitle = document.getElementById("ruleTitle");
-  const ruleCode = document.getElementById("ruleCode");
-
-  function createRuleCard(rule) {
-    const { id, title, code } = rule;
-    const acc = document.querySelector("#htaccess .accordion");
-    if (!acc) return;
-
-    const item = document.createElement("div");
-    item.className = "acc-item";
-    item.dataset.id = id;
-
-    item.innerHTML = `
-      <div class="acc-header">
-        <h3>${title}</h3>
-        <div class="acc-actions">
-          <button class="btn small edit admin-only">Edit</button>
-          <button class="btn small delete admin-only">Delete</button>
-          <button class="btn copy">Copy Code</button>
-          <button class="acc-toggle">▾</button>
-        </div>
-      </div>
-      <div class="acc-body">
-        <pre><code>${code.replace(/</g, "&lt;")}</code></pre>
-      </div>
-    `;
-
-    acc.appendChild(item);
-
-    bindAccordion(item);
-    bindCopy(item.querySelector(".btn.copy"));
-
-    /* delete */
-    item.querySelector(".delete").addEventListener("click", async e => {
-      e.stopPropagation();
-      if (!confirm("Are you sure you want to delete this rule?")) return;
-
-      await fetch("/.netlify/functions/rules", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id })
-      });
-
-      item.remove();
-    });
-
-    /* edit */
-    item.querySelector(".edit").addEventListener("click", e => {
-      e.stopPropagation();
-      ruleTitle.value = title;
-      ruleCode.value = code;
-      modal.dataset.editId = id;
-      modal.classList.add("open");
-    });
-	  
-	updateAdminUI();
-  }
-
-  async function loadGlobalRules() {
-    try {
-      const res = await fetch("/.netlify/functions/rules");
-      const list = await res.json();
-      list.forEach(r => createRuleCard(r));
-    } catch (e) {
-      console.warn("rules load failed", e);
+    if (r.redirect) {
+      const final = document.createElement("span");
+      final.className = "badge ok";
+      final.textContent = "200";
+      final.title = r.redirect;
+      badges.appendChild(final);
     }
-  }
 
-  loadGlobalRules();
+    statusDiv.appendChild(badges);
+    row.appendChild(urlDiv);
+    row.appendChild(statusDiv);
+    statusTable.appendChild(row);
+  });
 
-  if (addRuleBtn) {
-    addRuleBtn.addEventListener("click", () => {
-      delete modal.dataset.editId;
-      modal.classList.add("open");
-    });
-  }
+  if (recheckBtn) recheckBtn.style.display = "inline-flex";
+}
 
-  if (cancelRule) {
-    cancelRule.addEventListener("click", () => {
-      modal.classList.remove("open");
-    });
-  }
+function checkStatus(urls) {
+  if (!urls || !urls.length) return;
 
-  if (saveRule) {
-    saveRule.addEventListener("click", async () => {
-      const t = ruleTitle.value.trim();
-      const c = ruleCode.value.trim();
-      if (!t || !c) return;
+  showLoading();
 
-      const editId = modal.dataset.editId;
+  Promise.all(
+    urls.map(u =>
+      fetch(
+        "/.netlify/functions/httpstatus?url=" +
+          encodeURIComponent(u)
+      )
+        .then(r => r.json())
+        .catch(() => ({ url: u, status: "ERR" }))
+    )
+  ).then(renderStatus);
+}
 
-      if (editId) {
-        /* UPDATE */
-        await fetch("/.netlify/functions/rules", {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: editId, title: t, code: c })
-        });
+if (recheckBtn) {
+  recheckBtn.onclick = () => {
+    const urls = generatedUrls.innerText
+      .split("\n")
+      .filter(Boolean);
+    checkStatus(urls);
+  };
+}
 
-        const item = document.querySelector(
-          `.acc-item[data-id="${editId}"]`
-        );
-        if (item) {
-          item.querySelector("h3").textContent = t;
-          item.querySelector("code").textContent = c;
-        }
+/* =========================
+   ADMIN MODE
+========================= */
+let isAdmin = false;
 
-        delete modal.dataset.editId;
-      } else {
-        /* ADD */
-        const res = await fetch("/.netlify/functions/rules", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ title: t, code: c })
-        });
-
-        const data = await res.json();
-        createRuleCard({ id: data.id, title: t, code: c });
-      }
-
-      modal.classList.remove("open");
-      ruleTitle.value = "";
-      ruleCode.value = "";
-    });
-
-/* ================= Admin Mode ================= */
 const adminBtn = document.getElementById("adminModeBtn");
 const adminModal = document.getElementById("adminModal");
 const adminLogin = document.getElementById("adminLogin");
 const adminCancel = document.getElementById("adminCancel");
 const adminPassword = document.getElementById("adminPassword");
-const adminError = document.getElementById("adminError");
+const adminClose = document.getElementById("adminClose");
 
-let isAdmin = false;
+function openAdminModal() {
+  adminModal.style.display = "flex";
+  adminPassword.value = "";
+  adminPassword.focus();
+}
 
-function updateAdminUI(){
-  document.querySelectorAll(".admin-only").forEach(el=>{
+function closeAdminModal() {
+  adminModal.style.display = "none";
+}
+
+if (adminBtn) adminBtn.onclick = openAdminModal;
+if (adminCancel) adminCancel.onclick = closeAdminModal;
+if (adminClose) adminClose.onclick = closeAdminModal;
+
+function updateAdminUI() {
+  document.querySelectorAll(".admin-only").forEach(el => {
     el.style.display = isAdmin ? "inline-flex" : "none";
   });
 
-  if(adminBtn){
-    adminBtn.textContent = isAdmin ? "Admin ✓" : "Admin Mode";
-  }
+  if (adminBtn)
+    adminBtn.textContent = isAdmin
+      ? "Admin ✓"
+      : "Admin Mode";
 }
 
-
-if(adminBtn){
-  adminBtn.addEventListener("click", ()=>{
-    if(isAdmin){
-      isAdmin = false;
-      updateAdminUI();
-      return;
-    }
-    adminModal.classList.add("open");
-    adminPassword.value="";
-    adminError.style.display="none";
-  });
-}
-
-if(adminCancel){
-  adminCancel.addEventListener("click", ()=>{
-    adminModal.classList.remove("open");
-  });
-}
-
-if(adminLogin){
-  adminLogin.addEventListener("click", ()=>{
-    if(adminPassword.value==="admin"){
+if (adminLogin) {
+  adminLogin.onclick = () => {
+    if (adminPassword.value === "admin") {
       isAdmin = true;
-      adminModal.classList.remove("open");
       updateAdminUI();
-    }else{
-      adminError.style.display="block";
+      loadRules(); // re-render with admin buttons
+      closeAdminModal();
+    } else {
+      alert("Wrong password");
     }
-  });
+  };
 }
 
-/* hide controls initially */
-updateAdminUI();
+/* =========================
+   HTACCESS RULES (NEON)
+========================= */
+const rulesContainer = document.getElementById(
+  "htaccessAccordion"
+);
+const searchInput = document.getElementById("ruleSearch");
+const addRuleBtn = document.getElementById("addRuleBtn");
 
-    
+let rulesData = [];
+
+function createRuleCard(rule) {
+  const item = document.createElement("div");
+  item.className = "acc-item";
+
+  item.innerHTML = `
+    <div class="acc-header">
+      <h3>${rule.title}</h3>
+      <div class="acc-actions">
+        <button class="btn small copy">Copy Code</button>
+        <button class="btn small admin-only edit">Edit</button>
+        <button class="btn small admin-only delete">Delete</button>
+        <span class="acc-toggle">▾</span>
+      </div>
+    </div>
+    <div class="acc-body">
+      <pre><code>${rule.code}</code></pre>
+    </div>
+  `;
+
+  const del = item.querySelector(".delete");
+  const edit = item.querySelector(".edit");
+
+  if (del) {
+    del.onclick = () => {
+      if (!confirm("Delete this rule?")) return;
+      deleteRule(rule.id);
+    };
   }
+
+  if (edit) {
+    edit.onclick = () => {
+      const title = prompt("Edit title", rule.title);
+      if (!title) return;
+
+      const code = prompt("Edit code", rule.code);
+      if (!code) return;
+
+      updateRule(rule.id, title, code);
+    };
+  }
+
+  return item;
+}
+
+function renderRules(list) {
+  if (!rulesContainer) return;
+
+  rulesContainer.innerHTML = "";
+
+  list.forEach(rule => {
+    const card = createRuleCard(rule);
+    rulesContainer.appendChild(card);
+  });
+
+  initAccordion(rulesContainer);
+  initCopyButtons(rulesContainer);
+  updateAdminUI();
+}
+
+/* =========================
+   LOAD RULES FROM FUNCTION
+========================= */
+function loadRules() {
+  fetch("/.netlify/functions/rules")
+    .then(r => r.json())
+    .then(data => {
+      rulesData = data || [];
+      renderRules(rulesData);
+    })
+    .catch(() => {
+      rulesData = [];
+      renderRules([]);
+    });
+}
+
+/* =========================
+   ADD RULE
+========================= */
+if (addRuleBtn) {
+  addRuleBtn.onclick = () => {
+    const title = prompt("Rule title");
+    if (!title) return;
+
+    const code = prompt("Rule code");
+    if (!code) return;
+
+    fetch("/.netlify/functions/rules", {
+      method: "POST",
+      body: JSON.stringify({ title, code })
+    }).then(loadRules);
+  };
+}
+
+/* =========================
+   DELETE RULE
+========================= */
+function deleteRule(id) {
+  fetch("/.netlify/functions/rules?id=" + id, {
+    method: "DELETE"
+  }).then(loadRules);
+}
+
+/* =========================
+   UPDATE RULE
+========================= */
+function updateRule(id, title, code) {
+  fetch("/.netlify/functions/rules", {
+    method: "PUT",
+    body: JSON.stringify({ id, title, code })
+  }).then(loadRules);
+}
+
+/* =========================
+   SEARCH
+========================= */
+if (searchInput) {
+  searchInput.oninput = () => {
+    const q = searchInput.value.toLowerCase();
+    const filtered = rulesData.filter(r =>
+      r.title.toLowerCase().includes(q)
+    );
+    renderRules(filtered);
+  };
+}
+
+/* =========================
+   INIT
+========================= */
+loadRules();
 
 });
