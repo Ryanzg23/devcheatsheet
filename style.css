@@ -361,3 +361,40 @@ pre{
   display:block;
 }
 
+[data-theme="light"] .card,
+[data-theme="light"] .acc-item{
+  background:#ffffff;
+  border:1px solid #e6e9ef;
+  box-shadow:0 4px 14px rgba(0,0,0,.06);
+}
+[data-theme="light"] .acc-header{
+  background:#f8fafc;
+}
+
+[data-theme="light"] .acc-item.open .acc-header{
+  background:#eef2f7;
+}
+[data-theme="light"] pre{
+  background:#0b1220;   /* soft navy */
+  color:#e6edf7;
+  border:1px solid #e3e7ee;
+  box-shadow:none;
+}
+[data-theme="light"] .card,
+[data-theme="light"] .acc-item{
+  box-shadow:0 6px 18px rgba(0,0,0,.06);
+}
+[data-theme="light"] .status-row{
+  background:#f8fafc;
+  border:1px solid #e6e9ef;
+}
+[data-theme="light"] .btn.copy{
+  background:#eef2f7;
+  color:#1f2937;
+  border:1px solid #d7dde5;
+}
+
+[data-theme="light"] .btn.copy:hover{
+  background:#e3e8f0;
+}
+
