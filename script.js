@@ -1,10 +1,11 @@
 document.addEventListener("DOMContentLoaded", function(){
 
-  /* ---------- Theme toggle ---------- */
-  var root = document.documentElement;
-  var toggle = document.getElementById("themeToggle");
+  /* ================= Theme ================= */
+  const root = document.documentElement;
+  const toggle = document.getElementById("themeToggle");
+
   if(toggle){
-    toggle.addEventListener("click", function(){
+    toggle.addEventListener("click", ()=>{
       if(root.getAttribute("data-theme")==="light"){
         root.removeAttribute("data-theme");
         toggle.textContent = "🌙";
@@ -15,61 +16,70 @@ document.addEventListener("DOMContentLoaded", function(){
     });
   }
 
-  /* ---------- Tabs ---------- */
-  var tabs = document.querySelectorAll(".tab");
-  var contents = document.querySelectorAll(".tab-content");
-  tabs.forEach(function(tab){
-    tab.addEventListener("click", function(){
-      tabs.forEach(function(t){ t.classList.remove("active"); });
-      contents.forEach(function(c){ c.classList.remove("active"); });
+  /* ================= Tabs ================= */
+  const tabs = document.querySelectorAll(".tab");
+  const contents = document.querySelectorAll(".tab-content");
+
+  tabs.forEach(tab=>{
+    tab.addEventListener("click", ()=>{
+      tabs.forEach(t=>t.classList.remove("active"));
+      contents.forEach(c=>c.classList.remove("active"));
+
       tab.classList.add("active");
-      var id = tab.getAttribute("data-tab");
-      var target = document.getElementById(id);
+      const id = tab.dataset.tab;
+      const target = document.getElementById(id);
       if(target) target.classList.add("active");
     });
   });
 
-  /* ---------- Copy buttons (card + accordion) ---------- */
-  var copyBtns = document.querySelectorAll(".btn.copy");
-  copyBtns.forEach(function(btn){
-    btn.addEventListener("click", function(e){
+  /* ================= Accordion ================= */
+  function bindAccordion(item){
+    const header = item.querySelector(".acc-header");
+    if(!header) return;
+
+    header.addEventListener("click", (e)=>{
+      if(e.target.closest(".btn.copy")) return;
+      item.classList.toggle("open");
+    });
+  }
+
+  document.querySelectorAll(".acc-item").forEach(bindAccordion);
+
+  /* ================= Copy buttons ================= */
+  function bindCopy(btn){
+    btn.addEventListener("click", (e)=>{
       e.stopPropagation();
-      var scope = btn.closest(".card") || btn.closest(".acc-item");
+
+      const scope = btn.closest(".card") || btn.closest(".acc-item");
       if(!scope) return;
-      var pre = scope.querySelector("pre");
+
+      const pre = scope.querySelector("pre");
       if(!pre) return;
+
       navigator.clipboard.writeText(pre.innerText);
-      var old = btn.innerText;
+
+      const old = btn.innerText;
       btn.innerText = "Copied!";
       btn.disabled = true;
-      btn.classList.add("is-copied");
-      setTimeout(function(){
+
+      setTimeout(()=>{
         btn.innerText = old;
         btn.disabled = false;
-        btn.classList.remove("is-copied");
-      }, 1200);
+      },1200);
     });
-  });
+  }
 
-  /* ---------- Accordion ---------- */
-  var accHeaders = document.querySelectorAll(".acc-header");
-  accHeaders.forEach(function(header){
-    header.addEventListener("click", function(e){
-      if(e.target.closest(".btn.copy")) return;
-      var item = header.closest(".acc-item");
-      if(item) item.classList.toggle("open");
-    });
-  });
+  document.querySelectorAll(".btn.copy").forEach(bindCopy);
 
-  /* ---------- Domain generator ---------- */
-  var domainInput = document.getElementById("domainInput");
-  var genBtn = document.getElementById("genBtn");
-  var out = document.getElementById("generatedUrls");
+  /* ================= Domain generator ================= */
+  const domainInput = document.getElementById("domainInput");
+  const genBtn = document.getElementById("genBtn");
+  const out = document.getElementById("generatedUrls");
 
   function normalizeDomain(d){
     if(!d) return "domain.com";
-    d = d.replace(/^https?:\/\//i, "");
-    d = d.replace(/^www\./i, "");
+    d = d.replace(/^https?:\/\//i,"");
+    d = d.replace(/^www\./i,"");
     d = d.split("/")[0];
     return d.trim();
   }
@@ -83,9 +93,9 @@ document.addEventListener("DOMContentLoaded", function(){
     ];
   }
 
-  /* ---------- Status checker ---------- */
-  var statusTable = document.getElementById("statusTable");
-  var recheckBtn = document.getElementById("recheckStatus");
+  /* ================= Status checker ================= */
+  const statusTable = document.getElementById("statusTable");
+  const recheckBtn = document.getElementById("recheckStatus");
 
   function showLoading(){
     if(!statusTable) return;
@@ -97,31 +107,31 @@ document.addEventListener("DOMContentLoaded", function(){
     if(!statusTable) return;
     statusTable.innerHTML = "";
 
-    var header = document.createElement("div");
+    const header = document.createElement("div");
     header.className = "status-row header";
     header.innerHTML = "<div>Request URL</div><div>Status</div>";
     statusTable.appendChild(header);
 
-    results.forEach(function(r){
-      var row = document.createElement("div");
+    results.forEach(r=>{
+      const row = document.createElement("div");
       row.className = "status-row";
 
-      var urlDiv = document.createElement("div");
+      const urlDiv = document.createElement("div");
       urlDiv.textContent = r.url;
 
-      var statusDiv = document.createElement("div");
-      var badges = document.createElement("div");
+      const statusDiv = document.createElement("div");
+      const badges = document.createElement("div");
       badges.className = "badges";
 
-      var code = r.status || "ERR";
-      var primary = document.createElement("span");
+      const code = r.status || "ERR";
+      const primary = document.createElement("span");
       primary.className = "badge " + (code==200?"ok":(code==301?"redirect":"err"));
       primary.textContent = code;
       if(code==301 && r.redirect) primary.title = r.redirect;
       badges.appendChild(primary);
 
       if(r.redirect){
-        var final = document.createElement("span");
+        const final = document.createElement("span");
         final.className = "badge ok";
         final.textContent = "200";
         badges.appendChild(final);
@@ -140,131 +150,125 @@ document.addEventListener("DOMContentLoaded", function(){
     if(!urls || !urls.length) return;
     showLoading();
 
-    Promise.all(urls.map(function(u){
+    Promise.all(urls.map(u=>{
       return fetch("/.netlify/functions/httpstatus?url="+encodeURIComponent(u))
-        .then(function(r){ return r.json(); })
-        .catch(function(){ return {url:u,error:true}; });
+        .then(r=>r.json())
+        .catch(()=>({url:u,error:true}));
     })).then(renderStatus);
   }
 
   if(genBtn && out && domainInput){
-    genBtn.addEventListener("click", function(){
-      var d = normalizeDomain(domainInput.value);
-      var urls = buildVariants(d);
+    genBtn.addEventListener("click", ()=>{
+      const d = normalizeDomain(domainInput.value);
+      const urls = buildVariants(d);
       out.textContent = urls.join("\n");
       checkStatus(urls);
     });
   }
 
   if(recheckBtn){
-    recheckBtn.addEventListener("click", function(){
-      var urls = out ? out.innerText.split("\n").filter(Boolean) : [];
+    recheckBtn.addEventListener("click", ()=>{
+      const urls = out ? out.innerText.split("\n").filter(Boolean) : [];
       checkStatus(urls);
     });
   }
 
-  /* ---------- htaccess search ---------- */
-var htaccessSearch = document.getElementById("htaccessSearch");
+  /* ================= htaccess search ================= */
+  const htaccessSearch = document.getElementById("htaccessSearch");
 
-if(htaccessSearch){
-  htaccessSearch.addEventListener("input", function(){
-    var q = htaccessSearch.value.toLowerCase().trim();
-    var items = document.querySelectorAll("#htaccess .acc-item");
+  if(htaccessSearch){
+    htaccessSearch.addEventListener("input", ()=>{
+      const q = htaccessSearch.value.toLowerCase().trim();
+      const items = document.querySelectorAll("#htaccess .acc-item");
 
-    items.forEach(function(item){
-      var title = item.querySelector("h3");
-      var text = title ? title.textContent.toLowerCase() : "";
-
-      if(!q || text.includes(q)){
-        item.style.display = "";
-      }else{
-        item.style.display = "none";
-      }
+      items.forEach(item=>{
+        const title = item.querySelector("h3");
+        const text = title ? title.textContent.toLowerCase() : "";
+        item.style.display = (!q || text.includes(q)) ? "" : "none";
+      });
     });
-  });
-}
+  }
 
-/* ---------- Add htaccess rule ---------- */
-var addRuleBtn = document.getElementById("addRuleBtn");
-var modal = document.getElementById("ruleModal");
-var saveRule = document.getElementById("saveRule");
-var cancelRule = document.getElementById("cancelRule");
-var ruleTitle = document.getElementById("ruleTitle");
-var ruleCode = document.getElementById("ruleCode");
+  /* ================= Global rules (Netlify) ================= */
 
-function createRuleCard(title, code){
-  var acc = document.querySelector("#htaccess .accordion");
-  if(!acc) return;
+  const addRuleBtn = document.getElementById("addRuleBtn");
+  const modal = document.getElementById("ruleModal");
+  const saveRule = document.getElementById("saveRule");
+  const cancelRule = document.getElementById("cancelRule");
+  const ruleTitle = document.getElementById("ruleTitle");
+  const ruleCode = document.getElementById("ruleCode");
 
-  var item = document.createElement("div");
-  item.className = "acc-item";
+  function createRuleCard(title, code){
+    const acc = document.querySelector("#htaccess .accordion");
+    if(!acc) return;
 
-  item.innerHTML = `
-    <div class="acc-header">
-      <h3>${title}</h3>
-      <div class="acc-actions">
-        <button class="btn copy">Copy Code</button>
-        <button class="acc-toggle">▾</button>
+    const item = document.createElement("div");
+    item.className = "acc-item";
+
+    item.innerHTML = `
+      <div class="acc-header">
+        <h3>${title}</h3>
+        <div class="acc-actions">
+          <button class="btn copy">Copy Code</button>
+          <button class="acc-toggle">▾</button>
+        </div>
       </div>
-    </div>
-    <div class="acc-body">
-      <pre><code>${code.replace(/</g,"&lt;")}</code></pre>
-    </div>
-  `;
+      <div class="acc-body">
+        <pre><code>${code.replace(/</g,"&lt;")}</code></pre>
+      </div>
+    `;
 
-  acc.appendChild(item);
+    acc.appendChild(item);
 
-  // bind accordion toggle
-  var header = item.querySelector(".acc-header");
-  header.addEventListener("click", function(e){
-    if(e.target.closest(".btn.copy")) return;
-    item.classList.toggle("open");
-  });
+    bindAccordion(item);
+    bindCopy(item.querySelector(".btn.copy"));
+  }
 
-  // bind copy
-  var btn = item.querySelector(".btn.copy");
-  btn.addEventListener("click", function(e){
-    e.stopPropagation();
-    var pre = item.querySelector("pre");
-    navigator.clipboard.writeText(pre.innerText);
-    var old = btn.innerText;
-    btn.innerText = "Copied!";
-    btn.disabled = true;
-    setTimeout(function(){
-      btn.innerText = old;
-      btn.disabled = false;
-    },1200);
-  });
-}
+  async function saveRuleGlobal(title, code){
+    await fetch("/.netlify/functions/rules",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({ title, code })
+    });
+  }
 
-if(addRuleBtn){
-  addRuleBtn.addEventListener("click", function(){
-    modal.classList.add("open");
-  });
-}
+  async function loadGlobalRules(){
+    try{
+      const res = await fetch("/.netlify/functions/rules");
+      const list = await res.json();
+      list.forEach(r=>createRuleCard(r.title, r.code));
+    }catch(e){
+      console.warn("rules load failed", e);
+    }
+  }
 
-if(cancelRule){
-  cancelRule.addEventListener("click", function(){
-    modal.classList.remove("open");
-  });
-}
+  loadGlobalRules();
 
-if(saveRule){
-  saveRule.addEventListener("click", function(){
-    var t = ruleTitle.value.trim();
-    var c = ruleCode.value.trim();
-    if(!t || !c) return;
+  if(addRuleBtn){
+    addRuleBtn.addEventListener("click", ()=>{
+      modal.classList.add("open");
+    });
+  }
 
-    createRuleCard(t, c);
+  if(cancelRule){
+    cancelRule.addEventListener("click", ()=>{
+      modal.classList.remove("open");
+    });
+  }
 
-    modal.classList.remove("open");
-    ruleTitle.value = "";
-    ruleCode.value = "";
-  });
-}
+  if(saveRule){
+    saveRule.addEventListener("click", async ()=>{
+      const t = ruleTitle.value.trim();
+      const c = ruleCode.value.trim();
+      if(!t || !c) return;
 
-  
+      createRuleCard(t, c);
+      await saveRuleGlobal(t, c);
+
+      modal.classList.remove("open");
+      ruleTitle.value = "";
+      ruleCode.value = "";
+    });
+  }
 
 });
-
-
