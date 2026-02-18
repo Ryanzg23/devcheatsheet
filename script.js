@@ -355,10 +355,12 @@ function updateRule(id, title, code) {
 
 /* ---------- DELETE ---------- */
 function deleteRule(id) {
-  fetch("/.netlify/functions/rules?id=" + id, {
-    method: "DELETE"
+  fetch("/.netlify/functions/rules", {
+    method: "DELETE",
+    body: JSON.stringify({ id })
   }).then(loadRules);
 }
+
 
 /* ---------- SAVE MODAL ---------- */
 if (saveRuleBtn) {
