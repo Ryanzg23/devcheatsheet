@@ -37,16 +37,17 @@ tabs.forEach(tab => {
 });
 
 /* =========================
-   ACCORDION
+   ACCORDION (delegated)
 ========================= */
-function initAccordion(scope = document) {
-  scope.querySelectorAll(".acc-header").forEach(header => {
-    header.onclick = () => {
-      const item = header.closest(".acc-item");
-      item.classList.toggle("open");
-    };
-  });
-}
+document.addEventListener("click", (e) => {
+  const header = e.target.closest(".acc-header");
+  if (!header) return;
+
+  const item = header.closest(".acc-item");
+  if (!item) return;
+
+  item.classList.toggle("open");
+});
 
 /* =========================
    COPY BUTTONS
