@@ -250,3 +250,42 @@ input{
   box-shadow:0 18px 44px rgba(0,0,0,.45);
   border-color:rgba(79,124,255,.45);
 }
+
+
+/* Card header aligns title + copy */
+.card-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+/* Code block spacing */
+pre{
+  margin-top:6px;
+  flex:1;
+}
+
+/* Grid rhythm */
+.grid{
+  display:grid;
+  gap:24px;
+}
+
+/* Generator textarea height */
+#generatedUrls{
+  min-height:120px;
+  display:block;
+}
+
+/* Status rows tighter alignment */
+.status-row{
+  gap:14px;
+}
+
+/* Buttons look consistent */
+.btn.copy{
+  margin:0;
+  padding:6px 12px;
+}
+
