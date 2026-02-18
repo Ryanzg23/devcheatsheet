@@ -24,7 +24,7 @@
     </div>
 	  
 	<!-- ================= DOMAIN ORIGIN TAB ================= -->
-    <div class="tab-content" id="origin">
+    <div class="tab-content active" id="origin">
 
       <!-- Row 1: Generator + Status -->
       <div class="grid grid-2">
@@ -168,7 +168,7 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
     </div>
 
     <!-- ================= HTACCESS TAB ================= -->
-    <div class="tab-content active" id="htaccess">
+    <div class="tab-content" id="htaccess">
 
       <div class="grid grid-2">
 
@@ -209,6 +209,7 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]</code></pre>
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
