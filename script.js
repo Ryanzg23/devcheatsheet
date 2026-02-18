@@ -223,16 +223,14 @@ if (adminBtn) adminBtn.onclick = openAdminModal;
 if (adminCancel) adminCancel.onclick = closeAdminModal;
 if (adminClose) adminClose.onclick = closeAdminModal;
 
-function updateAdminUI() {
-  document.querySelectorAll(".admin-only").forEach(el => {
-    el.style.display = isAdmin ? "inline-flex" : "none";
-  });
+function updateAdminUI(){
+  document.body.classList.toggle("admin-mode", isAdmin);
 
-  if (adminBtn)
-    adminBtn.textContent = isAdmin
-      ? "Admin ✓"
-      : "Admin Mode";
+  if(adminBtn){
+    adminBtn.textContent = isAdmin ? "Admin ✓" : "Admin Mode";
+  }
 }
+
 
 if (adminLogin) {
   adminLogin.onclick = () => {
