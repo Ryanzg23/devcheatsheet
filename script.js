@@ -328,7 +328,7 @@ const adminError = document.getElementById("adminError");
 let isAdmin = false;
 
 function updateAdminUI(){
-  document.querySelectorAll(".edit, .delete, #addRuleBtn").forEach(el=>{
+  document.querySelectorAll(".admin-only").forEach(el=>{
     el.style.display = isAdmin ? "inline-flex" : "none";
   });
 
@@ -336,6 +336,7 @@ function updateAdminUI(){
     adminBtn.textContent = isAdmin ? "Admin ✓" : "Admin Mode";
   }
 }
+
 
 if(adminBtn){
   adminBtn.addEventListener("click", ()=>{
