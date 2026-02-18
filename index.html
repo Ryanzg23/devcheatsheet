@@ -8,7 +8,10 @@
 </head>
 <body>
   <div class="container">
-    <h1>Dev Cheat Sheet</h1>
+    <div class="header">
+      <h1>Dev Cheat Sheet</h1>
+      <button id="themeToggle" class="theme-toggle">🌙</button>
+    </div>
 
     <div class="tabs">
       <button class="tab active" data-tab="htaccess">htaccess Rules</button>
@@ -137,3 +140,4 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
   <script src="script.js"></script>
 </body>
 </html>
+
