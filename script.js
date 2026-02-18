@@ -210,9 +210,6 @@ const adminPassword = document.getElementById("adminPassword");
 const adminLogin = document.getElementById("adminLogin");
 const adminCancel = document.getElementById("adminCancel");
 const adminLogoutBtn = document.getElementById("adminLogoutBtn");
-const adminPassword = document.getElementById("adminPassword");
-const adminLogin = document.getElementById("adminLogin");
-
 
    
 function openAdminModal(){
