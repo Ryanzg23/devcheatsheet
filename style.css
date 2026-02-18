@@ -422,3 +422,31 @@ input{
   margin-top:8px;
 }
 
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
+}
+
+.modal.open{display:flex}
+
+.modal-box{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px;
+  width:320px;
+  box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+.modal-actions{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+
