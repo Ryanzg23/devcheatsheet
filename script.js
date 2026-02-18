@@ -41,7 +41,13 @@ document.addEventListener("DOMContentLoaded", function(){
       navigator.clipboard.writeText(pre.innerText);
       var old = btn.innerText;
       btn.innerText = "Copied!";
-      setTimeout(function(){ btn.innerText = old; }, 1200);
+      btn.disabled = true;
+      btn.classList.add("is-copied");
+      setTimeout(function(){
+        btn.innerText = old;
+        btn.disabled = false;
+        btn.classList.remove("is-copied");
+      }, 1200);
     });
   });
 
@@ -129,14 +135,12 @@ document.addEventListener("DOMContentLoaded", function(){
       row.appendChild(statusDiv);
       statusTable.appendChild(row);
     });
-    if(recheckBtn) recheckBtn.style.display = "inline-flex";
   }
 
-function showLoading(){
-  if(!statusTable) return;
-  statusTable.innerHTML = '<div class="status-loading">Checking…</div>';
-  if(recheckBtn) recheckBtn.style.display = "none";
-}
+  function showLoading(){
+    if(!statusTable) return;
+    statusTable.innerHTML = '<div class="status-loading">Checking…</div>';
+  }
 
   function checkStatus(urls){
     if(!urls || !urls.length) return;
