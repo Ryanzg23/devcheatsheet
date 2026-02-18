@@ -152,7 +152,7 @@ h3{margin:0 5px}
 
 pre{
   margin:6px 0 0;
-  background:#0a0f22;
+  background:#161616;
   border:1px solid var(--border);
   border-radius:12px;
   padding:14px;
@@ -177,7 +177,7 @@ code{
 
 input{
   flex:1;
-  background:#0a0f22;
+  background:#161616;
   border:1px solid var(--border);
   color:#fff;
   border-radius:12px;
@@ -240,7 +240,7 @@ input{
   align-items:center;
   padding:9px 12px;
   border-radius:10px;
-  background:#0a0f22;
+  background:#161616;
   border:1px solid var(--border);
   font-size:13px;
   gap:14px;
@@ -402,7 +402,7 @@ input{
 
 .modal-content textarea{
   width:100%;
-  background:#0a0f22;
+  background:#161616;
   color:#fff;
   border:1px solid var(--border);
   border-radius:10px;
@@ -518,7 +518,7 @@ body.admin-mode .admin-only{
 
 .modal-body input{
   width:100%;
-  background:#0a0f22;
+  background:#161616;
   border:1px solid var(--border);
   border-radius:10px;
   padding:10px 12px;
