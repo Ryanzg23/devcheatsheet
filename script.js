@@ -316,6 +316,62 @@ document.addEventListener("DOMContentLoaded", () => {
       ruleTitle.value = "";
       ruleCode.value = "";
     });
+
+/* ================= Admin Mode ================= */
+const adminBtn = document.getElementById("adminModeBtn");
+const adminModal = document.getElementById("adminModal");
+const adminLogin = document.getElementById("adminLogin");
+const adminCancel = document.getElementById("adminCancel");
+const adminPassword = document.getElementById("adminPassword");
+const adminError = document.getElementById("adminError");
+
+let isAdmin = false;
+
+function updateAdminUI(){
+  document.querySelectorAll(".edit, .delete, #addRuleBtn").forEach(el=>{
+    el.style.display = isAdmin ? "inline-flex" : "none";
+  });
+
+  if(adminBtn){
+    adminBtn.textContent = isAdmin ? "Admin ✓" : "Admin Mode";
+  }
+}
+
+if(adminBtn){
+  adminBtn.addEventListener("click", ()=>{
+    if(isAdmin){
+      isAdmin = false;
+      updateAdminUI();
+      return;
+    }
+    adminModal.classList.add("open");
+    adminPassword.value="";
+    adminError.style.display="none";
+  });
+}
+
+if(adminCancel){
+  adminCancel.addEventListener("click", ()=>{
+    adminModal.classList.remove("open");
+  });
+}
+
+if(adminLogin){
+  adminLogin.addEventListener("click", ()=>{
+    if(adminPassword.value==="admin"){
+      isAdmin = true;
+      adminModal.classList.remove("open");
+      updateAdminUI();
+    }else{
+      adminError.style.display="block";
+    }
+  });
+}
+
+/* hide controls initially */
+updateAdminUI();
+
+    
   }
 
 });
