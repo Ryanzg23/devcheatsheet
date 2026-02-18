@@ -1,9 +1,9 @@
-import { neon } from "@netlify/neon";
+import { neon } from "@neondatabase/serverless";
 
 export default async (req) => {
-  const sql = neon(); // uses NETLIFY_DATABASE_URL automatically
+  const sql = neon(process.env.NETLIFY_DATABASE_URL);
 
-  /* ---------- ensure table ---------- */
+  /* ensure table */
   await sql`
     CREATE TABLE IF NOT EXISTS htaccess_rules (
       id SERIAL PRIMARY KEY,
@@ -13,7 +13,7 @@ export default async (req) => {
     )
   `;
 
-  /* ---------- GET rules ---------- */
+  /* GET */
   if (req.method === "GET") {
     const rows = await sql`
       SELECT title, code
@@ -26,7 +26,7 @@ export default async (req) => {
     });
   }
 
-  /* ---------- ADD rule ---------- */
+  /* POST */
   if (req.method === "POST") {
     const body = await req.json();
     const { title, code } = body;
