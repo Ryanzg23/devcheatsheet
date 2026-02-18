@@ -18,47 +18,12 @@
 
     <!-- Tabs -->
     <div class="tabs">
-      <button class="tab active" data-tab="htaccess">htaccess Rules</button>
+      <button class="tab active" data-tab="origin">Domain Origin</button>
+      <button class="tab" data-tab="htaccess">htaccess Rules</button>
       <button class="tab" data-tab="cloudflare">Cloudflare</button>
-      <button class="tab" data-tab="origin">Domain Origin</button>
     </div>
-
-    <!-- ================= HTACCESS TAB ================= -->
-    <div class="tab-content active" id="htaccess">
-
-      <div class="grid grid-2">
-
-        <div class="card">
-          <div class="card-header">
-            <h3>301 Redirect (Single Page)</h3>
-            <button class="btn copy">Copy</button>
-          </div>
-          <pre><code>Redirect 301 /old-page https://example.com/new-page</code></pre>
-        </div>
-
-        <div class="card">
-          <div class="card-header">
-            <h3>Force HTTPS</h3>
-            <button class="btn copy">Copy</button>
-          </div>
-          <pre><code>RewriteEngine On
-RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]</code></pre>
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- ================= CLOUDFLARE TAB ================= -->
-    <div class="tab-content" id="cloudflare">
-      <div class="card">
-        <h3>Cloudflare</h3>
-        <p class="muted">Coming soon…</p>
-      </div>
-    </div>
-
-    <!-- ================= DOMAIN ORIGIN TAB ================= -->
+	  
+	<!-- ================= DOMAIN ORIGIN TAB ================= -->
     <div class="tab-content" id="origin">
 
       <!-- Row 1: Generator + Status -->
@@ -202,11 +167,49 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
 
     </div>
 
+    <!-- ================= HTACCESS TAB ================= -->
+    <div class="tab-content active" id="htaccess">
+
+      <div class="grid grid-2">
+
+        <div class="card">
+          <div class="card-header">
+            <h3>301 Redirect (Single Page)</h3>
+            <button class="btn copy">Copy</button>
+          </div>
+          <pre><code>Redirect 301 /old-page https://example.com/new-page</code></pre>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3>Force HTTPS</h3>
+            <button class="btn copy">Copy</button>
+          </div>
+          <pre><code>RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]</code></pre>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ================= CLOUDFLARE TAB ================= -->
+    <div class="tab-content" id="cloudflare">
+      <div class="card">
+        <h3>Cloudflare</h3>
+        <p class="muted">Coming soon…</p>
+      </div>
+    </div>
+
+    
+
   </div>
 
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
