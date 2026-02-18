@@ -171,7 +171,7 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
     <div class="tab-content" id="htaccess">
 <button id="adminModeBtn" class="btn small">Admin Mode</button>		
 <div class="htaccess-toolbar">
-  <button class="btn small" id="addRuleBtn">+ Add Rule</button>
+  <button id="addRuleBtn" class="btn small admin-only">+ Add Rule</button>
 </div>
 		
 <div class="search-bar">
@@ -288,6 +288,7 @@ RewriteRule .* - [L]</code></pre>
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
