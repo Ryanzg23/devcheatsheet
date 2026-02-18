@@ -23,7 +23,7 @@
 body{
   margin:0;
   font-family:Inter,system-ui,Segoe UI,Arial;
-  background:radial-gradient(1200px 600px at 50% -200px,#11183a 0%,var(--bg) 60%);
+  background:var(--bg);
   color:var(--text);
 }
 
