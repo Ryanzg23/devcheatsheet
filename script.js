@@ -335,7 +335,14 @@ function addRule(title, code) {
   fetch("/.netlify/functions/rules", {
     method: "POST",
     body: JSON.stringify({ title, code })
-  }).then(loadRules);
+  })
+  .then(r => r.json())
+  .then(data => {
+    // add immediately to UI
+    const newRule = { id: data.id, title, code };
+    rulesData.push(newRule);
+    renderRules(rulesData);
+  });
 }
 
 /* ---------- UPDATE ---------- */
