@@ -15,12 +15,19 @@ document.addEventListener("DOMContentLoaded", function(){
     });
   }
 
-  /* ---------- Tabs ---------- */
+    /* ---------- Tabs ---------- */
   var tabs = document.querySelectorAll(".tab");
   var contents = document.querySelectorAll(".tab-content");
   tabs.forEach(function(tab){
     tab.addEventListener("click", function(){
       tabs.forEach(function(t){ t.classList.remove("active"); });
+      contents.forEach(function(c){ c.classList.remove("active"); });
+      tab.classList.add("active");
+      var id = tab.getAttribute("data-tab");
+      var target = document.getElementById(id);
+      if(target) target.classList.add("active");
+    });
+  });
       contents.forEach(function(c){ c.classList.remove("active"); });
       tab.classList.add("active");
       var id = tab.getAttribute("data-tab");
@@ -150,7 +157,8 @@ document.addEventListener("DOMContentLoaded", function(){
 
     if(recheckBtn){
     recheckBtn.addEventListener("click", function(){
-      var urls = out ? out.innerText.split("\n").filter(Boolean) : [];
+      var urls = out ? out.innerText.split("
+").filter(Boolean) : [];
       checkStatus(urls);
     });
   }
