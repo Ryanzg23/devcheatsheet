@@ -163,4 +163,28 @@ document.addEventListener("DOMContentLoaded", function(){
     });
   }
 
+  /* ---------- htaccess search ---------- */
+var htaccessSearch = document.getElementById("htaccessSearch");
+
+if(htaccessSearch){
+  htaccessSearch.addEventListener("input", function(){
+    var q = htaccessSearch.value.toLowerCase().trim();
+    var items = document.querySelectorAll("#htaccess .acc-item");
+
+    items.forEach(function(item){
+      var title = item.querySelector("h3");
+      var text = title ? title.textContent.toLowerCase() : "";
+
+      if(!q || text.includes(q)){
+        item.style.display = "";
+      }else{
+        item.style.display = "none";
+      }
+    });
+  });
+}
+
+
 });
+
+
