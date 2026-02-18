@@ -210,8 +210,8 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="acc-header">
         <h3>${title}</h3>
         <div class="acc-actions">
-          <button class="btn small edit">Edit</button>
-          <button class="btn small delete">Delete</button>
+          <button class="btn small edit admin-only">Edit</button>
+          <button class="btn small delete admin-only">Delete</button>
           <button class="btn copy">Copy Code</button>
           <button class="acc-toggle">▾</button>
         </div>
