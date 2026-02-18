@@ -549,3 +549,6 @@ body.admin-mode .admin-only{
   margin-left:4px;
 }
 
+#confirmDelete{
+  background:#ef4444;
+}
