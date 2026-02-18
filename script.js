@@ -19,19 +19,35 @@ if (themeToggle) {
 }
 
 /* =========================
-   TABS
+   TABS (persist)
 ========================= */
-document.querySelectorAll(".tab").forEach(tab => {
-  tab.onclick = () => {
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-    document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+const tabs = document.querySelectorAll(".tab");
+const tabContents = document.querySelectorAll(".tab-content");
 
+function activateTab(id){
+  tabs.forEach(t => t.classList.remove("active"));
+  tabContents.forEach(c => c.classList.remove("active"));
+
+  const tab = document.querySelector(`.tab[data-tab="${id}"]`);
+  const content = document.getElementById(id);
+
+  if(tab && content){
     tab.classList.add("active");
-    const id = tab.dataset.tab;
-    const target = document.getElementById(id);
-    if (target) target.classList.add("active");
-  };
+    content.classList.add("active");
+    localStorage.setItem("activeTab", id);
+  }
+}
+
+tabs.forEach(tab => {
+  tab.onclick = () => activateTab(tab.dataset.tab);
 });
+
+/* restore tab on load */
+const savedTab = localStorage.getItem("activeTab");
+if(savedTab){
+  activateTab(savedTab);
+}
+
 
 /* =========================
    ACCORDION (DELEGATED)
@@ -184,9 +200,9 @@ if (recheckBtn) {
 }
 
 /* =========================
-   ADMIN MODE
+   ADMIN MODE (persist)
 ========================= */
-let isAdmin = false;
+let isAdmin = localStorage.getItem("adminMode") === "1";
 
 const adminBtn = document.getElementById("adminModeBtn");
 const adminModal = document.getElementById("adminModal");
@@ -194,39 +210,78 @@ const adminPassword = document.getElementById("adminPassword");
 const adminLogin = document.getElementById("adminLogin");
 const adminCancel = document.getElementById("adminCancel");
 
-function openAdminModal() {
+/* create logout button */
+let adminLogoutBtn = document.getElementById("adminLogoutBtn");
+if(!adminLogoutBtn && adminBtn){
+  adminLogoutBtn = document.createElement("button");
+  adminLogoutBtn.id = "adminLogoutBtn";
+  adminLogoutBtn.className = "btn small admin-only";
+  adminLogoutBtn.textContent = "Logout";
+  adminBtn.parentNode.appendChild(adminLogoutBtn);
+}
+
+function openAdminModal(){
   adminModal.style.display = "flex";
   adminPassword.value = "";
   adminPassword.focus();
 }
 
-function closeAdminModal() {
+function closeAdminModal(){
   adminModal.style.display = "none";
 }
 
-function updateAdminUI() {
+function updateAdminUI(){
   document.body.classList.toggle("admin-mode", isAdmin);
 
-  if (adminBtn) {
+  if(adminBtn){
     adminBtn.textContent = isAdmin ? "Admin ✓" : "Admin Mode";
+  }
+
+  if(adminLogoutBtn){
+    adminLogoutBtn.style.display = isAdmin ? "inline-flex" : "none";
   }
 }
 
-if (adminBtn) adminBtn.onclick = openAdminModal;
-if (adminCancel) adminCancel.onclick = closeAdminModal;
+/* open modal */
+if(adminBtn){
+  adminBtn.onclick = () => {
+    if(isAdmin) return; // already admin
+    openAdminModal();
+  };
+}
 
-if (adminLogin) {
+/* cancel */
+if(adminCancel){
+  adminCancel.onclick = closeAdminModal;
+}
+
+/* login */
+if(adminLogin){
   adminLogin.onclick = () => {
-    if (adminPassword.value === "admin") {
+    if(adminPassword.value === "admin"){
       isAdmin = true;
+      localStorage.setItem("adminMode","1");
       updateAdminUI();
-      loadRules(); // re-render with admin buttons
+      loadRules();
       closeAdminModal();
-    } else {
+    }else{
       alert("Wrong password");
     }
   };
 }
+
+/* logout */
+if(adminLogoutBtn){
+  adminLogoutBtn.onclick = () => {
+    isAdmin = false;
+    localStorage.removeItem("adminMode");
+    updateAdminUI();
+  };
+}
+
+/* restore on load */
+updateAdminUI();
+
 
 /* =========================
    HTACCESS RULES (NEON)
