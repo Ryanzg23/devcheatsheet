@@ -352,10 +352,6 @@ pre{
   cursor:pointer;
 }
 
-.acc-body{
-  display:none;
-  padding:0 16px 16px;
-}
 
 .acc-body{
   max-height:0;
