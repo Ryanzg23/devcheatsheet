@@ -401,3 +401,25 @@ pre{
 [data-theme="light"] .acc-body{
   padding:16px;
 }
+/* Tabs – light theme */
+[data-theme="light"] .tabs{
+  background:transparent;
+}
+
+[data-theme="light"] .tab{
+  background:#eef2f7;
+  color:#334155;
+  border:1px solid #e2e8f0;
+  box-shadow:none;
+}
+
+[data-theme="light"] .tab:hover{
+  background:#e3e8f0;
+}
+
+[data-theme="light"] .tab.active{
+  background:#2563eb;
+  color:#ffffff;
+  border-color:#2563eb;
+  box-shadow:0 4px 12px rgba(37,99,235,.25);
+}
