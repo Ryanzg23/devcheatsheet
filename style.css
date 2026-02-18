@@ -427,3 +427,19 @@ pre{
 #recheckStatus{
   display:none;
 }
+
+.acc-header{
+  cursor:pointer;
+}
+
+.acc-header *{
+  cursor:pointer;
+}
+.acc-toggle{
+  transition:transform .18s ease;
+}
+
+.acc-item.open .acc-toggle{
+  transform:rotate(180deg);
+}
+
