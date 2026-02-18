@@ -398,3 +398,6 @@ pre{
   background:#e3e8f0;
 }
 
+[data-theme="light"] .acc-body{
+  padding:16px;
+}
