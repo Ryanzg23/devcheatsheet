@@ -423,3 +423,7 @@ pre{
   border-color:#2563eb;
   box-shadow:0 4px 12px rgba(37,99,235,.25);
 }
+
+#recheckStatus{
+  display:none;
+}
