@@ -7,7 +7,7 @@ const root = document.documentElement;
 const themeToggle = document.getElementById("themeToggle");
 
 if (themeToggle) {
-  themeToggle.addEventListener("click", () => {
+  themeToggle.onclick = () => {
     if (root.getAttribute("data-theme") === "light") {
       root.removeAttribute("data-theme");
       themeToggle.textContent = "🌙";
@@ -15,65 +15,61 @@ if (themeToggle) {
       root.setAttribute("data-theme", "light");
       themeToggle.textContent = "☀️";
     }
-  });
+  };
 }
 
 /* =========================
    TABS
 ========================= */
-const tabs = document.querySelectorAll(".tab");
-const tabContents = document.querySelectorAll(".tab-content");
-
-tabs.forEach(tab => {
-  tab.addEventListener("click", () => {
-    tabs.forEach(t => t.classList.remove("active"));
-    tabContents.forEach(c => c.classList.remove("active"));
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.onclick = () => {
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
 
     tab.classList.add("active");
     const id = tab.dataset.tab;
     const target = document.getElementById(id);
     if (target) target.classList.add("active");
-  });
+  };
 });
 
 /* =========================
-   ACCORDION (delegated)
+   ACCORDION (DELEGATED)
 ========================= */
-document.addEventListener("click", (e) => {
+document.addEventListener("click", e => {
+  if (e.target.closest(".btn")) return;
+
   const header = e.target.closest(".acc-header");
   if (!header) return;
 
   const item = header.closest(".acc-item");
-  if (!item) return;
-
-  item.classList.toggle("open");
+  if (item) item.classList.toggle("open");
 });
 
 /* =========================
    COPY BUTTONS
 ========================= */
-function initCopyButtons(scope = document) {
-  scope.querySelectorAll(".btn.copy").forEach(btn => {
-    btn.onclick = () => {
-      if (btn.disabled) return;
+document.addEventListener("click", e => {
+  const btn = e.target.closest(".btn.copy");
+  if (!btn) return;
 
-      const card = btn.closest(".acc-item, .card");
-      const pre = card ? card.querySelector("pre") : null;
-      if (!pre) return;
+  if (btn.disabled) return;
 
-      navigator.clipboard.writeText(pre.innerText);
+  const card = btn.closest(".acc-item, .card");
+  const pre = card?.querySelector("pre");
+  if (!pre) return;
 
-      const original = btn.innerText;
-      btn.innerText = "Copied";
-      btn.disabled = true;
+  navigator.clipboard.writeText(pre.innerText);
 
-      setTimeout(() => {
-        btn.innerText = original;
-        btn.disabled = false;
-      }, 1200);
-    };
-  });
-}
+  const original = btn.innerText;
+  btn.innerText = "Copied";
+  btn.disabled = true;
+
+  setTimeout(() => {
+    btn.innerText = original;
+    btn.disabled = false;
+  }, 1200);
+});
 
 /* =========================
    DOMAIN GENERATOR
@@ -99,27 +95,15 @@ function buildVariants(domain) {
   ];
 }
 
-if (genBtn && generatedUrls && domainInput) {
-  genBtn.onclick = () => {
-    const d = normalizeDomain(domainInput.value);
-    if (!d) return;
-
-    const urls = buildVariants(d);
-    generatedUrls.textContent = urls.join("\n");
-    checkStatus(urls);
-  };
-}
-
 /* =========================
-   HTTP STATUS CHECKER
+   HTTP STATUS
 ========================= */
 const statusTable = document.getElementById("statusTable");
 const recheckBtn = document.getElementById("recheckStatus");
 
 function showLoading() {
   if (!statusTable) return;
-  statusTable.innerHTML =
-    '<div class="status-loading">Checking…</div>';
+  statusTable.innerHTML = '<div class="status-loading">Checking…</div>';
   if (recheckBtn) recheckBtn.style.display = "none";
 }
 
@@ -147,11 +131,7 @@ function renderStatus(results) {
     const primary = document.createElement("span");
     primary.className =
       "badge " +
-      (r.status == 200
-        ? "ok"
-        : r.status == 301
-        ? "redirect"
-        : "err");
+      (r.status == 200 ? "ok" : r.status == 301 ? "redirect" : "err");
     primary.textContent = r.status || "ERR";
     badges.appendChild(primary);
 
@@ -173,27 +153,32 @@ function renderStatus(results) {
 }
 
 function checkStatus(urls) {
-  if (!urls || !urls.length) return;
-
+  if (!urls?.length) return;
   showLoading();
 
   Promise.all(
     urls.map(u =>
-      fetch(
-        "/.netlify/functions/httpstatus?url=" +
-          encodeURIComponent(u)
-      )
+      fetch("/.netlify/functions/httpstatus?url=" + encodeURIComponent(u))
         .then(r => r.json())
         .catch(() => ({ url: u, status: "ERR" }))
     )
   ).then(renderStatus);
 }
 
+if (genBtn && generatedUrls && domainInput) {
+  genBtn.onclick = () => {
+    const d = normalizeDomain(domainInput.value);
+    if (!d) return;
+
+    const urls = buildVariants(d);
+    generatedUrls.textContent = urls.join("\n");
+    checkStatus(urls);
+  };
+}
+
 if (recheckBtn) {
   recheckBtn.onclick = () => {
-    const urls = generatedUrls.innerText
-      .split("\n")
-      .filter(Boolean);
+    const urls = generatedUrls.innerText.split("\n").filter(Boolean);
     checkStatus(urls);
   };
 }
@@ -205,10 +190,9 @@ let isAdmin = false;
 
 const adminBtn = document.getElementById("adminModeBtn");
 const adminModal = document.getElementById("adminModal");
+const adminPassword = document.getElementById("adminPassword");
 const adminLogin = document.getElementById("adminLogin");
 const adminCancel = document.getElementById("adminCancel");
-const adminPassword = document.getElementById("adminPassword");
-const adminClose = document.getElementById("adminClose");
 
 function openAdminModal() {
   adminModal.style.display = "flex";
@@ -220,18 +204,16 @@ function closeAdminModal() {
   adminModal.style.display = "none";
 }
 
-if (adminBtn) adminBtn.onclick = openAdminModal;
-if (adminCancel) adminCancel.onclick = closeAdminModal;
-if (adminClose) adminClose.onclick = closeAdminModal;
-
-function updateAdminUI(){
+function updateAdminUI() {
   document.body.classList.toggle("admin-mode", isAdmin);
 
-  if(adminBtn){
+  if (adminBtn) {
     adminBtn.textContent = isAdmin ? "Admin ✓" : "Admin Mode";
   }
 }
 
+if (adminBtn) adminBtn.onclick = openAdminModal;
+if (adminCancel) adminCancel.onclick = closeAdminModal;
 
 if (adminLogin) {
   adminLogin.onclick = () => {
@@ -249,14 +231,41 @@ if (adminLogin) {
 /* =========================
    HTACCESS RULES (NEON)
 ========================= */
-const rulesContainer = document.getElementById(
-  "htaccessAccordion"
-);
+const rulesContainer = document.getElementById("htaccessAccordion");
 const searchInput = document.getElementById("ruleSearch");
 const addRuleBtn = document.getElementById("addRuleBtn");
 
 let rulesData = [];
+let editingRuleId = null;
 
+/* ---------- RULE MODAL ---------- */
+const ruleModal = document.getElementById("ruleModal");
+const ruleTitleInput = document.getElementById("ruleTitle");
+const ruleCodeInput = document.getElementById("ruleCode");
+const saveRuleBtn = document.getElementById("saveRule");
+const cancelRuleBtn = document.getElementById("cancelRule");
+
+function openRuleModal(rule = null) {
+  ruleModal.style.display = "flex";
+
+  if (rule) {
+    editingRuleId = rule.id;
+    ruleTitleInput.value = rule.title;
+    ruleCodeInput.value = rule.code;
+  } else {
+    editingRuleId = null;
+    ruleTitleInput.value = "";
+    ruleCodeInput.value = "";
+  }
+}
+
+function closeRuleModal() {
+  ruleModal.style.display = "none";
+}
+
+if (cancelRuleBtn) cancelRuleBtn.onclick = closeRuleModal;
+
+/* ---------- CREATE CARD ---------- */
 function createRuleCard(rule) {
   const item = document.createElement("div");
   item.className = "acc-item";
@@ -281,26 +290,19 @@ function createRuleCard(rule) {
 
   if (del) {
     del.onclick = () => {
-      if (!confirm("Delete this rule?")) return;
+      if (!confirm("Are you sure you want to delete this rule?")) return;
       deleteRule(rule.id);
     };
   }
 
   if (edit) {
-    edit.onclick = () => {
-      const title = prompt("Edit title", rule.title);
-      if (!title) return;
-
-      const code = prompt("Edit code", rule.code);
-      if (!code) return;
-
-      updateRule(rule.id, title, code);
-    };
+    edit.onclick = () => openRuleModal(rule);
   }
 
   return item;
 }
 
+/* ---------- RENDER ---------- */
 function renderRules(list) {
   if (!rulesContainer) return;
 
@@ -311,14 +313,10 @@ function renderRules(list) {
     rulesContainer.appendChild(card);
   });
 
-  initAccordion(rulesContainer);
-  initCopyButtons(rulesContainer);
   updateAdminUI();
 }
 
-/* =========================
-   LOAD RULES FROM FUNCTION
-========================= */
+/* ---------- LOAD ---------- */
 function loadRules() {
   fetch("/.netlify/functions/rules")
     .then(r => r.json())
@@ -332,36 +330,15 @@ function loadRules() {
     });
 }
 
-/* =========================
-   ADD RULE
-========================= */
-if (addRuleBtn) {
-  addRuleBtn.onclick = () => {
-    const title = prompt("Rule title");
-    if (!title) return;
-
-    const code = prompt("Rule code");
-    if (!code) return;
-
-    fetch("/.netlify/functions/rules", {
-      method: "POST",
-      body: JSON.stringify({ title, code })
-    }).then(loadRules);
-  };
-}
-
-/* =========================
-   DELETE RULE
-========================= */
-function deleteRule(id) {
-  fetch("/.netlify/functions/rules?id=" + id, {
-    method: "DELETE"
+/* ---------- ADD ---------- */
+function addRule(title, code) {
+  fetch("/.netlify/functions/rules", {
+    method: "POST",
+    body: JSON.stringify({ title, code })
   }).then(loadRules);
 }
 
-/* =========================
-   UPDATE RULE
-========================= */
+/* ---------- UPDATE ---------- */
 function updateRule(id, title, code) {
   fetch("/.netlify/functions/rules", {
     method: "PUT",
@@ -369,9 +346,36 @@ function updateRule(id, title, code) {
   }).then(loadRules);
 }
 
-/* =========================
-   SEARCH
-========================= */
+/* ---------- DELETE ---------- */
+function deleteRule(id) {
+  fetch("/.netlify/functions/rules?id=" + id, {
+    method: "DELETE"
+  }).then(loadRules);
+}
+
+/* ---------- SAVE MODAL ---------- */
+if (saveRuleBtn) {
+  saveRuleBtn.onclick = () => {
+    const title = ruleTitleInput.value.trim();
+    const code = ruleCodeInput.value.trim();
+    if (!title || !code) return;
+
+    if (editingRuleId) {
+      updateRule(editingRuleId, title, code);
+    } else {
+      addRule(title, code);
+    }
+
+    closeRuleModal();
+  };
+}
+
+/* ---------- ADD BUTTON ---------- */
+if (addRuleBtn) {
+  addRuleBtn.onclick = () => openRuleModal();
+}
+
+/* ---------- SEARCH ---------- */
 if (searchInput) {
   searchInput.oninput = () => {
     const q = searchInput.value.toLowerCase();
