@@ -85,7 +85,33 @@ http://domain.com</code></pre>
         </div>
 
         <div class="card">
-          <h3>HTTPS and WWW</h3>
+          <h3>Redirect all to HTTPS &amp; HTTPS WWW</h3>
+          <pre><code>RewriteEngine On
+
+# Redirect all HTTP requests to HTTPS, preserving www or non-www
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]</code></pre>
+          <button class="btn copy">Copy Code</button>
+        </div>
+
+        <div class="card">
+          <h3>Redirect all to HTTPS</h3>
+          <pre><code>RewriteEngine On
+RewriteBase /
+
+# Redirect www to non-www (works for both HTTP and HTTPS)
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+# Redirect HTTP to HTTPS for non-www
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP_HOST} !^www\. [NC]
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]</code></pre>
+          <button class="btn copy">Copy HTTPS</button>
+        </div>
+
+        <div class="card">
+          <h3>Redirect all to HTTPS WWW</h3>
           <pre><code>RewriteEngine On
 RewriteCond %{HTTPS} off [OR]
 RewriteCond %{HTTP_HOST} !^www\. [NC]
@@ -95,106 +121,100 @@ RewriteRule ^ https://www.%1%{REQUEST_URI} [L,NE,R=301]</code></pre>
         </div>
 
         <div class="card">
-          <h3>HTTPS and non-WWW</h3>
+          <h3>Redirect all to HTTP</h3>
           <pre><code>RewriteEngine On
 RewriteBase /
+
+# Redirect www to non-www (any domain)
 RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
-RewriteCond %{HTTPS} off
+RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
+
+# Redirect HTTPS to HTTP (only for non-www)
+RewriteCond %{HTTPS} on
 RewriteCond %{HTTP_HOST} !^www\. [NC]
-RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]</code></pre>
-          <button class="btn copy">Copy HTTPS</button>
+RewriteRule ^ http://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]</code></pre>
+          <button class="btn copy">Copy HTTP</button>
         </div>
 
         <div class="card">
-          <h3>HTTP and WWW</h3>
-          <pre><code>RewriteEngine On
+          <h3>Redirect all to HTTP WWW</h3>
+          <pre><code>&lt;IfModule mod_rewrite.c&gt;
+RewriteEngine On
 RewriteCond %{HTTPS} on [OR]
 RewriteCond %{HTTP_HOST} !^www\. [NC]
 RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
-RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]</code></pre>
+RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
+&lt;/IfModule&gt;</code></pre>
           <button class="btn copy">Copy HTTP WWW</button>
-        </div>
-
-        <div class="card">
-          <h3>HTTP and non-WWW</h3>
-          <pre><code>RewriteEngine On
-RewriteBase /
-RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
-RewriteCond %{HTTPS} on
-RewriteRule ^ http://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]</code></pre>
-          <button class="btn copy">Copy HTTP</button>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-document.addEventListener("DOMContentLoaded", function(){
+  document.addEventListener("DOMContentLoaded", function(){
 
-  // Tabs
-  document.querySelectorAll(".tab").forEach(function(tab){
-    tab.addEventListener("click", function(){
-      document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-      document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
-      tab.classList.add("active");
-      const id = tab.getAttribute("data-tab");
-      const target = document.getElementById(id);
-      if(target) target.classList.add("active");
+    // Tabs
+    document.querySelectorAll(".tab").forEach(function(tab){
+      tab.addEventListener("click", function(){
+        document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+        document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
+        tab.classList.add("active");
+        const id = tab.getAttribute("data-tab");
+        const target = document.getElementById(id);
+        if(target) target.classList.add("active");
+      });
     });
+
+    // Copy htaccess cards
+    document.querySelectorAll(".btn.copy").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        const pre = btn.closest(".card").querySelector("pre");
+        if(!pre) return;
+        navigator.clipboard.writeText(pre.innerText);
+        const old = btn.innerText;
+        btn.innerText = "Copied!";
+        setTimeout(()=>btn.innerText = old,1200);
+      });
+    });
+
+    // Domain generator
+    const domainInput = document.getElementById("domainInput");
+    const genBtn = document.getElementById("genBtn");
+    const out = document.getElementById("generatedUrls");
+    const copyUrls = document.getElementById("copyUrls");
+
+    function normalizeDomain(d){
+      return d
+        .replace(/^https?:\/\//i,"")
+        .replace(/^www\./i,"")
+        .split("/")[0]
+        .trim();
+    }
+
+    if(genBtn){
+      genBtn.addEventListener("click", function(){
+        const d = normalizeDomain(domainInput.value || "domain.com");
+        out.textContent = [
+          "https://www."+d,
+          "https://"+d,
+          "http://www."+d,
+          "http://"+d
+        ].join("
+");
+      });
+    }
+
+    if(copyUrls){
+      copyUrls.addEventListener("click", function(){
+        navigator.clipboard.writeText(out.innerText);
+        const old = copyUrls.innerText;
+        copyUrls.innerText = "Copied!";
+        setTimeout(()=>copyUrls.innerText = old,1200);
+      });
+    }
+
   });
-
-  // Copy htaccess cards
-  document.querySelectorAll(".btn.copy").forEach(function(btn){
-    btn.addEventListener("click", function(){
-      const pre = btn.closest(".card").querySelector("pre");
-      if(!pre) return;
-      navigator.clipboard.writeText(pre.innerText);
-      const old = btn.innerText;
-      btn.innerText = "Copied!";
-      setTimeout(()=>btn.innerText = old,1200);
-    });
-  });
-
-  // Domain generator
-  const domainInput = document.getElementById("domainInput");
-  const genBtn = document.getElementById("genBtn");
-  const out = document.getElementById("generatedUrls");
-  const copyUrls = document.getElementById("copyUrls");
-
-  function normalizeDomain(d){
-    return d
-      .replace(/^https?:\/\//i,"")
-      .replace(/^www\./i,"")
-      .split("/")[0]
-      .trim();
-  }
-
-  if(genBtn){
-    genBtn.addEventListener("click", function(){
-      const d = normalizeDomain(domainInput.value || "domain.com");
-      out.textContent = [
-        "https://www."+d,
-        "https://"+d,
-        "http://www."+d,
-        "http://"+d
-      ].join("\n");
-    });
-  }
-
-  if(copyUrls){
-    copyUrls.addEventListener("click", function(){
-      navigator.clipboard.writeText(out.innerText);
-      const old = copyUrls.innerText;
-      copyUrls.innerText = "Copied!";
-      setTimeout(()=>copyUrls.innerText = old,1200);
-    });
-  }
-
-});
-</script>
-
+  </script>
 </body>
 </html>
-
