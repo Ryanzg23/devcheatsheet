@@ -4,41 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dev Cheat Sheet</title>
-  <style>
-    :root{
-      --bg:#0b1020;--card:#121933;--border:#1f2a4d;
-      --text:#e6ecff;--muted:#9fb0ff;
-      --accent:#4f7cff;--accent2:#16a34a;
-    }
-    *{box-sizing:border-box}
-    body{margin:0;background:linear-gradient(180deg,#0b1020,#0a0f1d);color:var(--text);font-family:Inter,system-ui,Segoe UI,Arial}
-    .container{max-width:1400px;margin:40px auto;padding:0 20px}
-    h1{margin:0 0 20px;font-size:28px}
-    .tabs{display:flex;gap:8px;margin-bottom:20px}
-    .tab{background:#0e1530;border:1px solid var(--border);color:var(--muted);padding:8px 14px;border-radius:10px;cursor:pointer;font-weight:600}
-    .tab.active{background:var(--accent);color:#fff;border-color:transparent}
-    .tab-content{display:none}
-    .tab-content.active{display:block}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;box-shadow:0 10px 24px rgba(0,0,0,.35)}
-    .card h3{margin:0 0 10px;font-size:16px}
-    pre{margin:0;background:#0a0f22;border:1px solid var(--border);border-radius:10px;padding:12px;overflow:auto}
-    code{font-family:Consolas,monospace;font-size:13px;color:#cfe1ff}
-    .row{display:flex;gap:8px;margin-bottom:10px}
-    input{flex:1;background:#0a0f22;border:1px solid var(--border);color:#fff;border-radius:10px;padding:9px 10px}
-    .btn{background:var(--accent);border:none;color:#fff;border-radius:10px;padding:9px 12px;font-weight:600;cursor:pointer}
-    .btn.secondary{background:var(--accent2)}
-    .btn.copy{margin-top:8px;background:#0e1530;border:1px solid var(--border);color:var(--muted)}
-    .btn.copy:hover{background:#18224a;color:#fff}
-  .status-table{display:flex;flex-direction:column;gap:6px}
-.status-row{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;background:#0a0f22;border:1px solid var(--border);font-size:13px}
-.status-row.header{background:transparent;border:none;color:var(--muted);font-weight:600}
-.badges{display:flex;gap:6px}
-.badge{padding:2px 8px;border-radius:999px;font-size:12px;font-weight:600}
-.badge.ok{background:#16a34a;color:#fff}
-.badge.redirect{background:#2563eb;color:#fff}
-.badge.err{background:#ef4444;color:#fff}
-</style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
@@ -52,7 +18,7 @@
 
     <!-- htaccess -->
     <div class="tab-content active" id="htaccess">
-      <div class="grid">
+      <div class="grid grid-2">
         <div class="card">
           <h3>301 Redirect (Single Page)</h3>
           <pre><code>Redirect 301 /old-page https://example.com/new-page</code></pre>
@@ -72,16 +38,15 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]</code></pre>
     <div class="tab-content" id="cloudflare">
       <div class="card">
         <h3>Cloudflare</h3>
-        <p style="color:var(--muted)">Coming soon…</p>
+        <p class="muted">Coming soon…</p>
       </div>
     </div>
 
     <!-- Domain Origin -->
     <div class="tab-content" id="origin">
-      
-      <!-- Row 1: Generator + Status -->
-      <div class="grid" style="grid-template-columns:1fr 1fr">
-        
+
+      <!-- Row 1 -->
+      <div class="grid grid-2">
         <div class="card">
           <h3>Domain Origin Generator</h3>
           <div class="row">
@@ -95,23 +60,17 @@ http://domain.com</code></pre>
           <button class="btn secondary" id="copyUrls">Copy URLs</button>
         </div>
 
-        <div class="card" id="statusCard">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-            <h3 style="margin:0">HTTP Status</h3>
-            <button class="btn copy" id="recheckStatus">Recheck</button>
+        <div class="card">
+          <div class="card-header">
+            <h3>HTTP Status</h3>
+            <button class="btn small" id="recheckStatus">Recheck</button>
           </div>
-          <div id="statusTable" class="status-table">
-            <div class="status-row header">
-              <div>Request URL</div>
-              <div>Status</div>
-            </div>
-          </div>
+          <div id="statusTable" class="status-table"></div>
         </div>
       </div>
 
-      <!-- Row 2: HTTPS group -->
-      <div class="grid" style="grid-template-columns:repeat(3,1fr);margin-top:18px">
-        
+      <!-- Row 2 -->
+      <div class="grid grid-3">
         <div class="card">
           <h3>Redirect all to HTTPS &amp; HTTPS WWW</h3>
           <pre><code>RewriteEngine On
@@ -119,23 +78,19 @@ http://domain.com</code></pre>
 # Redirect all HTTP requests to HTTPS, preserving www or non-www
 RewriteCond %{HTTPS} off
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]</code></pre>
-          <button class="btn copy">Copy Code</button>
+          <button class="btn copy">Copy</button>
         </div>
 
         <div class="card">
           <h3>Redirect all to HTTPS</h3>
           <pre><code>RewriteEngine On
 RewriteBase /
-
-# Redirect www to non-www (works for both HTTP and HTTPS)
 RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
 RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
-
-# Redirect HTTP to HTTPS for non-www
 RewriteCond %{HTTPS} off
 RewriteCond %{HTTP_HOST} !^www\. [NC]
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]</code></pre>
-          <button class="btn copy">Copy HTTPS</button>
+          <button class="btn copy">Copy</button>
         </div>
 
         <div class="card">
@@ -145,27 +100,22 @@ RewriteCond %{HTTPS} off [OR]
 RewriteCond %{HTTP_HOST} !^www\. [NC]
 RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
 RewriteRule ^ https://www.%1%{REQUEST_URI} [L,NE,R=301]</code></pre>
-          <button class="btn copy">Copy HTTPS WWW</button>
+          <button class="btn copy">Copy</button>
         </div>
       </div>
 
-      <!-- Row 3: HTTP group -->
-      <div class="grid" style="grid-template-columns:repeat(2,1fr);margin-top:18px">
-        
+      <!-- Row 3 -->
+      <div class="grid grid-2">
         <div class="card">
           <h3>Redirect all to HTTP</h3>
           <pre><code>RewriteEngine On
 RewriteBase /
-
-# Redirect www to non-www (any domain)
 RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
 RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
-
-# Redirect HTTPS to HTTP (only for non-www)
 RewriteCond %{HTTPS} on
 RewriteCond %{HTTP_HOST} !^www\. [NC]
 RewriteRule ^ http://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]</code></pre>
-          <button class="btn copy">Copy HTTP</button>
+          <button class="btn copy">Copy</button>
         </div>
 
         <div class="card">
@@ -177,153 +127,13 @@ RewriteCond %{HTTP_HOST} !^www\. [NC]
 RewriteCond %{HTTP_HOST} ^(?:www\.)?(.+)$ [NC]
 RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
 &lt;/IfModule&gt;</code></pre>
-          <button class="btn copy">Copy HTTP WWW</button>
+          <button class="btn copy">Copy</button>
         </div>
       </div>
 
     </div>
-    </div>
-    </div>
   </div>
 
-  <script>
-document.addEventListener("DOMContentLoaded", function(){
-
-  /* ---------- Tabs ---------- */
-  var tabs = document.querySelectorAll(".tab");
-  var contents = document.querySelectorAll(".tab-content");
-  tabs.forEach(function(tab){
-    tab.addEventListener("click", function(){
-      tabs.forEach(function(t){ t.classList.remove("active"); });
-      contents.forEach(function(c){ c.classList.remove("active"); });
-      tab.classList.add("active");
-      var id = tab.getAttribute("data-tab");
-      var target = document.getElementById(id);
-      if(target) target.classList.add("active");
-    });
-  });
-
-  /* ---------- Copy buttons ---------- */
-  var copyBtns = document.querySelectorAll(".btn.copy");
-  copyBtns.forEach(function(btn){
-    btn.addEventListener("click", function(){
-      var card = btn.closest(".card");
-      if(!card) return;
-      var pre = card.querySelector("pre");
-      if(!pre) return;
-      navigator.clipboard.writeText(pre.innerText);
-      var old = btn.innerText;
-      btn.innerText = "Copied!";
-      setTimeout(function(){ btn.innerText = old; }, 1200);
-    });
-  });
-
-  /* ---------- Domain generator ---------- */
-  var domainInput = document.getElementById("domainInput");
-  var genBtn = document.getElementById("genBtn");
-  var out = document.getElementById("generatedUrls");
-  var copyUrls = document.getElementById("copyUrls");
-
-  function normalizeDomain(d){
-    if(!d) return "domain.com";
-    d = d.replace(/^https?:\/\//i, "");
-    d = d.replace(/^www\./i, "");
-    d = d.split("/")[0];
-    return d.trim();
-  }
-
-  function buildVariants(domain){
-    return [
-      "https://www."+domain,
-      "https://"+domain,
-      "http://www."+domain,
-      "http://"+domain
-    ];
-  }
-
-  if(genBtn && out && domainInput){
-    genBtn.addEventListener("click", function(){
-      var d = normalizeDomain(domainInput.value);
-      var urls = buildVariants(d);
-      out.textContent = urls.join("
-");
-      var statusBox = document.getElementById("statusResults");
-      if(statusBox) statusBox.textContent = "(click check to fetch status)";
-    });
-  }
-
-  if(copyUrls && out){
-    copyUrls.addEventListener("click", function(){
-      navigator.clipboard.writeText(out.innerText);
-      var old = copyUrls.innerText;
-      copyUrls.innerText = "Copied!";
-      setTimeout(function(){ copyUrls.innerText = old; }, 1200);
-    });
-  }
-
-  /* ---------- Status checker ---------- */
-  var statusTable = document.getElementById("statusTable");
-  var recheckBtn = document.getElementById("recheckStatus");
-
-  function renderStatus(results){
-    statusTable.innerHTML = '<div class="status-row header"><div>Request URL</div><div>Status</div></div>';
-    results.forEach(function(r){
-      var row = document.createElement("div");
-      row.className = "status-row";
-      var url = document.createElement("div");
-      url.textContent = r.url;
-      var status = document.createElement("div");
-      var badges = document.createElement("div");
-      badges.className = "badges";
-      var b1 = document.createElement("span");
-      b1.className = "badge redirect";
-      b1.textContent = r.status || "ERR";
-      badges.appendChild(b1);
-      if(r.redirect){
-        var b2 = document.createElement("span");
-        b2.className = "badge ok";
-        b2.textContent = "→";
-        badges.appendChild(b2);
-      }
-      status.appendChild(badges);
-      row.appendChild(url);
-      row.appendChild(status);
-      statusTable.appendChild(row);
-    });
-  }
-
-  function checkStatus(){
-    if(!out) return;
-    var urls = out.innerText.split("
-").filter(Boolean);
-    Promise.all(urls.map(function(u){
-      return fetch("/.netlify/functions/httpstatus?url="+encodeURIComponent(u))
-        .then(function(r){ return r.json(); })
-        .catch(function(){ return {url:u,error:true}; });
-    })).then(renderStatus);
-  }
-
-  if(recheckBtn) recheckBtn.addEventListener("click", checkStatus);
-
-  /* auto after generate */
-  if(genBtn){
-    genBtn.addEventListener("click", function(){
-      setTimeout(checkStatus, 200);
-    });
-  }
-      })).then(function(results){
-        var lines = results.map(function(r){
-          if(r.error) return r.url+" → ERR";
-          if(r.redirect) return r.url+" → "+r.status+" → "+r.redirect;
-          return r.url+" → "+r.status;
-        });
-        statusBox.textContent = lines.join("
-");
-      });
-    });
-  }
-
-});
-</script>
+  <script src="script.js"></script>
 </body>
 </html>
