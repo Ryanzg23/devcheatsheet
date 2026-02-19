@@ -552,3 +552,38 @@ body.admin-mode .admin-only{
 #confirmDelete{
   background:#ef4444;
 }
+
+.has-tooltip{
+  position:relative;
+  cursor:default;
+}
+
+.tooltip{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%) translateY(-6px);
+  bottom:100%;
+  background:#111827;
+  color:#e5e7eb;
+  border:1px solid #374151;
+  border-radius:6px;
+  padding:6px 8px;
+  font-size:11px;
+  white-space:nowrap;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .12s ease, transform .12s ease;
+  z-index:10;
+}
+
+.has-tooltip:hover .tooltip{
+  opacity:1;
+  transform:translateX(-50%) translateY(-10px);
+}
+
+/* light theme */
+[data-theme="light"] .tooltip{
+  background:#0f172a;
+  color:#fff;
+  border:1px solid #e2e8f0;
+}
