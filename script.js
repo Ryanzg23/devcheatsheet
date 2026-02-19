@@ -458,11 +458,29 @@ if(confirmDeleteBtn){
   };
 }
 
+/* =========================
+   AMP STATIC SEARCH
+========================= */
+const ampSearch = document.getElementById("ampSearch");
+
+if (ampSearch) {
+  ampSearch.addEventListener("input", () => {
+    const q = ampSearch.value.toLowerCase();
+    const items = document.querySelectorAll(".amp-item");
+
+    items.forEach(item => {
+      const text = item.innerText.toLowerCase();
+      item.style.display = text.includes(q) ? "" : "none";
+    });
+  });
+}
+
 
 /* =========================
    INIT
 ========================= */
 setTimeout(loadRules,50);   // ⭐ non-blocking Neon load
 
+   
 
 });
