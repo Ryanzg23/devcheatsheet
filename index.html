@@ -202,31 +202,58 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
 
 
 
-<div class="card">
+<!-- AMP GUIDE -->
+<div class="card amp-intro">
+
   <div class="card-header">
     <h3>AMP Fix Guide</h3>
     <button class="btn small copy" id="copyAmpIntro">Copy Code</button>
   </div>
 
-  <p>
-    This section is intended for cases where you don’t have the original copy of your Pages.dev AMP site.
-When you download an existing AMP site using Saveweb, the downloaded version is usually not AMP-valid due to missing scripts, boilerplate, or required tags.
+  <p class="muted" style="margin-top:4px">
+    Use this guide when you don’t have the original copy of a Pages.dev AMP site.
+    Sites downloaded via Saveweb are typically <b>not AMP-valid</b> because required
+    AMP scripts, boilerplate, and tags are missing.
   </p>
 
-  <p>
-    Press <b>CTRL+F</b>, search for <code>v0.js</code>, and replace that line with:
-  </p>
+  <div style="margin-top:14px">
+    <div class="section-title" style="font-size:14px;margin-bottom:6px">
+      Quick Fix
+    </div>
 
-  <pre id="ampIntroCode"><code>&lt;script async src="https://cdn.ampproject.org/v0.js"&gt;&lt;/script&gt;</code></pre>
+    <p class="muted" style="margin:0 0 8px">
+      Press <b>CTRL + F</b>, search for <code>v0.js</code>, and replace that line with:
+    </p>
 
-	<p>Below are some of the AMP components and scripts you may need to add to make your AMP site valid.</p>
+    <pre id="ampIntroCode">
+<code>&lt;script async src="https://cdn.ampproject.org/v0.js"&gt;&lt;/script&gt;</code>
+    </pre>
+  </div>
+
+  <div style="margin-top:14px">
+    <p class="muted" style="margin:0">
+      Below are common AMP components and scripts you may need to add to make
+      your AMP page valid.
+    </p>
+  </div>
+
 </div>
 
-<h3 class="searchttle">Search for AMP Components</h3>
+<!-- AMP SEARCH -->
+<div class="amp-search-block">
+  <h3 class="section-title" style="margin-bottom:8px">
+    AMP Components Library
+  </h3>
 
   <div class="search-bar">
-    <input type="text" id="ampSearch" placeholder="Type search keyword here...">
+    <input
+      type="text"
+      id="ampSearch"
+      placeholder="Search AMP components or scripts..."
+    >
   </div>
+</div>
+
 
 	
  <div class="accordion">
@@ -616,6 +643,7 @@ animation:none}
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
