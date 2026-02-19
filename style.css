@@ -282,7 +282,11 @@ input{
 
 /* ---------- Accordion ---------- */
 
-.accordion{display:flex;flex-direction:column;gap:14px}
+.accordion{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
 
 .acc-item{
   border:1px solid var(--border);
@@ -312,7 +316,11 @@ input{
   background:#eef2f7;
 }
 
-.acc-actions{display:flex;gap:8px;align-items:center}
+.acc-actions{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
 
 .acc-toggle{
   border:none;
@@ -326,6 +334,7 @@ input{
   transform:rotate(180deg);
 }
 
+/* BODY */
 .acc-body{
   max-height:0;
   overflow:hidden;
@@ -333,16 +342,17 @@ input{
   transition:max-height .28s ease, padding .18s ease;
 }
 
+/* IMPORTANT: force block context */
+.acc-body pre{
+  margin:12px 0 0;
+}
+
+/* OPEN */
 .acc-item.open .acc-body{
-  max-height:600px;
+  max-height:800px; /* big enough for all rules */
   padding:0 16px 16px;
 }
 
-.section-title{
-  margin:0 0 12px;
-  font-size:16px;
-  font-weight:600;
-}
 
 
 /* ---------- Misc ---------- */
