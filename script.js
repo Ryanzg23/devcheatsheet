@@ -210,4 +210,39 @@ if(copyAmpIntro && ampIntroCode){
   };
 }
 
+/* FORCE BIND ACCORDIONS (STATIC + DYNAMIC) */
+document.querySelectorAll(".acc-header").forEach(header=>{
+  header.addEventListener("click", function(){
+    const item = this.closest(".acc-item");
+    if(item){
+      item.classList.toggle("open");
+    }
+  });
+});
+
+/* COPY BUTTONS GLOBAL */
+document.querySelectorAll(".btn.copy").forEach(btn=>{
+  btn.addEventListener("click", function(e){
+    e.stopPropagation();
+
+    const code = this.closest(".acc-item, .card")
+      ?.querySelector("code")?.innerText;
+
+    if(!code) return;
+
+    navigator.clipboard.writeText(code);
+
+    const old = this.innerText;
+    this.innerText = "Copied";
+    this.disabled = true;
+
+    setTimeout(()=>{
+      this.innerText = old;
+      this.disabled = false;
+    },1200);
+  });
+});
+
+
+   
 });
