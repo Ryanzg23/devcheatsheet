@@ -151,14 +151,20 @@ function renderStatus(results) {
       (r.status == 200 ? "ok" : r.status == 301 ? "redirect" : "err");
     primary.textContent = r.status || "ERR";
 
-    // ✅ Tooltip ONLY on 301
+    // ✅ CUSTOM TOOLTIP ON 301
     if (r.status == 301 && r.redirect) {
-      primary.title = r.redirect;
+      primary.classList.add("has-tooltip");
+
+      const tip = document.createElement("span");
+      tip.className = "tooltip";
+      tip.textContent = r.redirect;
+
+      primary.appendChild(tip);
     }
 
     badges.appendChild(primary);
 
-    // FINAL 200 badge (no tooltip)
+    // FINAL 200 badge
     if (r.redirect) {
       const final = document.createElement("span");
       final.className = "badge ok";
@@ -174,6 +180,7 @@ function renderStatus(results) {
 
   if (recheckBtn) recheckBtn.style.display = "inline-flex";
 }
+
 
 
 function checkStatus(urls) {
