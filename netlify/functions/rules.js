@@ -13,44 +13,47 @@ export default async (req) => {
   `;
 
   /* GET */
-  if (req.method === "GET") {
-    const rows = await sql`
-      SELECT id, title, code
-      FROM htaccess_rules
-      ORDER BY id ASC
-    `;
-    return new Response(JSON.stringify(rows), {
-      headers: { "Content-Type": "application/json" }
-    });
-  }
+if (req.method === "GET") {
+  const rows = await sql`
+    SELECT id, title, description, code
+    FROM htaccess_rules
+    ORDER BY id ASC
+  `;
+
+  return new Response(JSON.stringify(rows), {
+    headers: { "Content-Type": "application/json" }
+  });
+}
 
   /* POST (add) */
-  if (req.method === "POST") {
-    const { title, code } = await req.json();
+if (req.method === "POST") {
+  const { title, description, code } = await req.json();
 
-    const [row] = await sql`
-      INSERT INTO htaccess_rules (title, code)
-      VALUES (${title}, ${code})
-      RETURNING id
-    `;
+  const [row] = await sql`
+    INSERT INTO htaccess_rules (title, description, code)
+    VALUES (${title}, ${description}, ${code})
+    RETURNING id
+  `;
 
-    return new Response(JSON.stringify({ id: row.id }), {
-      headers: { "Content-Type": "application/json" }
-    });
-  }
+  return new Response(JSON.stringify({ id: row.id }), {
+    headers: { "Content-Type": "application/json" }
+  });
+}
 
   /* PUT (edit) */
-  if (req.method === "PUT") {
-    const { id, title, code } = await req.json();
+if (req.method === "PUT") {
+  const { id, title, description, code } = await req.json();
 
-    await sql`
-      UPDATE htaccess_rules
-      SET title=${title}, code=${code}
-      WHERE id=${id}
-    `;
+  await sql`
+    UPDATE htaccess_rules
+    SET title=${title},
+        description=${description},
+        code=${code}
+    WHERE id=${id}
+  `;
 
-    return new Response(JSON.stringify({ ok: true }));
-  }
+  return new Response("OK");
+}
 
   /* DELETE */
   if (req.method === "DELETE") {
