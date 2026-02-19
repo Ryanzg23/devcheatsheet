@@ -38,22 +38,20 @@ function activateTab(id){
   }
 }
 
-tabs.forEach(tab => {
+tabs.forEach(tab=>{
   tab.onclick = () => activateTab(tab.dataset.tab);
 });
 
-/* restore tab on load */
 const savedTab = localStorage.getItem("activeTab");
-if(savedTab){
-  activateTab(savedTab);
-}
-
+if(savedTab) activateTab(savedTab);
 
 /* =========================
-   ACCORDION (DELEGATED)
+   ACCORDION (delegated)
 ========================= */
-document.addEventListener("click", e => {
-  if (e.target.closest(".btn")) return;
+document.addEventListener("click", e=>{
+  if (e.target.closest(".copy") ||
+      e.target.closest(".edit") ||
+      e.target.closest(".delete")) return;
 
   const header = e.target.closest(".acc-header");
   if (!header) return;
@@ -65,15 +63,13 @@ document.addEventListener("click", e => {
 /* =========================
    COPY BUTTONS
 ========================= */
-document.addEventListener("click", e => {
+document.addEventListener("click", e=>{
   const btn = e.target.closest(".btn.copy");
-  if (!btn) return;
-
-  if (btn.disabled) return;
+  if(!btn || btn.disabled) return;
 
   const card = btn.closest(".acc-item, .card");
   const pre = card?.querySelector("pre");
-  if (!pre) return;
+  if(!pre) return;
 
   navigator.clipboard.writeText(pre.innerText);
 
@@ -81,10 +77,10 @@ document.addEventListener("click", e => {
   btn.innerText = "Copied";
   btn.disabled = true;
 
-  setTimeout(() => {
+  setTimeout(()=>{
     btn.innerText = original;
     btn.disabled = false;
-  }, 1200);
+  },1200);
 });
 
 /* =========================
@@ -94,81 +90,74 @@ const domainInput = document.getElementById("domainInput");
 const genBtn = document.getElementById("genBtn");
 const generatedUrls = document.getElementById("generatedUrls");
 
-function normalizeDomain(d) {
-  if (!d) return "";
-  d = d.replace(/^https?:\/\//i, "");
-  d = d.replace(/^www\./i, "");
-  d = d.split("/")[0];
-  return d.trim();
-}
-
-function buildVariants(domain) {
-  return [
-    "https://www." + domain,
-    "https://" + domain,
-    "http://www." + domain,
-    "http://" + domain
-  ];
-}
-
 /* =========================
    HTTP STATUS
 ========================= */
 const statusTable = document.getElementById("statusTable");
 const recheckBtn = document.getElementById("recheckStatus");
 
-function showLoading() {
-  if (!statusTable) return;
-  statusTable.innerHTML = '<div class="status-loading">Checking…</div>';
-  if (recheckBtn) recheckBtn.style.display = "none";
+function normalizeDomain(d){
+  if(!d) return "";
+  d = d.replace(/^https?:\/\//i,"");
+  d = d.replace(/^www\./i,"");
+  d = d.split("/")[0];
+  return d.trim();
 }
 
-function renderStatus(results) {
-  if (!statusTable) return;
+function buildVariants(domain){
+  return [
+    "https://www."+domain,
+    "https://"+domain,
+    "http://www."+domain,
+    "http://"+domain
+  ];
+}
 
-  statusTable.innerHTML = "";
+function showLoading(){
+  if(!statusTable) return;
+  statusTable.innerHTML = '<div class="status-loading">Checking…</div>';
+  if(recheckBtn) recheckBtn.style.display="none";
+}
+
+function renderStatus(results){
+  if(!statusTable) return;
+
+  statusTable.innerHTML="";
 
   const header = document.createElement("div");
-  header.className = "status-row header";
-  header.innerHTML = "<div>Request URL</div><div>Status</div>";
+  header.className="status-row header";
+  header.innerHTML="<div>Request URL</div><div>Status</div>";
   statusTable.appendChild(header);
 
-  results.forEach(r => {
-    const row = document.createElement("div");
-    row.className = "status-row";
+  results.forEach(r=>{
+    const row=document.createElement("div");
+    row.className="status-row";
 
-    const urlDiv = document.createElement("div");
-    urlDiv.textContent = r.url;
+    const urlDiv=document.createElement("div");
+    urlDiv.textContent=r.url;
 
-    const statusDiv = document.createElement("div");
-    const badges = document.createElement("div");
-    badges.className = "badges";
+    const statusDiv=document.createElement("div");
+    const badges=document.createElement("div");
+    badges.className="badges";
 
-    // PRIMARY BADGE
-    const primary = document.createElement("span");
-    primary.className =
-      "badge " +
-      (r.status == 200 ? "ok" : r.status == 301 ? "redirect" : "err");
-    primary.textContent = r.status || "ERR";
+    const primary=document.createElement("span");
+    primary.className="badge "+(r.status==200?"ok":r.status==301?"redirect":"err");
+    primary.textContent=r.status||"ERR";
 
-    // ✅ CUSTOM TOOLTIP ON 301
-    if (r.status == 301 && r.redirect) {
+    if(r.status==301 && r.redirect){
       primary.classList.add("has-tooltip");
-
-      const tip = document.createElement("span");
-      tip.className = "tooltip";
-      tip.textContent = r.redirect;
-
+      const tip=document.createElement("span");
+      tip.className="tooltip";
+      tip.textContent=r.redirect;
       primary.appendChild(tip);
     }
 
     badges.appendChild(primary);
 
-    // FINAL 200 badge
-    if (r.redirect) {
-      const final = document.createElement("span");
-      final.className = "badge ok";
-      final.textContent = "200";
+    if(r.redirect){
+      const final=document.createElement("span");
+      final.className="badge ok";
+      final.textContent="200";
       badges.appendChild(final);
     }
 
@@ -178,109 +167,93 @@ function renderStatus(results) {
     statusTable.appendChild(row);
   });
 
-  if (recheckBtn) recheckBtn.style.display = "inline-flex";
+  if(recheckBtn) recheckBtn.style.display="inline-flex";
 }
 
-
-
-function checkStatus(urls) {
-  if (!urls?.length) return;
+function checkStatus(urls){
+  if(!urls?.length) return;
   showLoading();
 
   Promise.all(
     urls.map(u =>
-      fetch("/.netlify/functions/httpstatus?url=" + encodeURIComponent(u))
-        .then(r => r.json())
-        .catch(() => ({ url: u, status: "ERR" }))
+      fetch("/.netlify/functions/httpstatus?url="+encodeURIComponent(u))
+        .then(r=>r.json())
+        .catch(()=>({url:u,status:"ERR"}))
     )
   ).then(renderStatus);
 }
 
-if (genBtn && generatedUrls && domainInput) {
-  genBtn.onclick = () => {
-    const d = normalizeDomain(domainInput.value);
-    if (!d) return;
+if(genBtn && generatedUrls && domainInput){
+  genBtn.onclick=()=>{
+    const d=normalizeDomain(domainInput.value);
+    if(!d) return;
 
-    const urls = buildVariants(d);
-    generatedUrls.textContent = urls.join("\n");
+    const urls=buildVariants(d);
+    generatedUrls.textContent=urls.join("\n");
     checkStatus(urls);
   };
 }
 
-if (recheckBtn) {
-  recheckBtn.onclick = () => {
-    const urls = generatedUrls.innerText.split("\n").filter(Boolean);
+if(recheckBtn){
+  recheckBtn.onclick=()=>{
+    const urls=generatedUrls.innerText.split("\n").filter(Boolean);
     checkStatus(urls);
   };
 }
 
 /* =========================
-   ADMIN MODE (persist)
+   ADMIN MODE
 ========================= */
-let isAdmin = localStorage.getItem("adminMode") === "1";
+let isAdmin = localStorage.getItem("adminMode")==="1";
 
-const adminBtn = document.getElementById("adminModeBtn");
-const adminModal = document.getElementById("adminModal");
-const adminPassword = document.getElementById("adminPassword");
-const adminLogin = document.getElementById("adminLogin");
-const adminCancel = document.getElementById("adminCancel");
-const adminLogoutBtn = document.getElementById("adminLogoutBtn");
-const adminClose = document.getElementById("adminClose");
-   
+const adminBtn=document.getElementById("adminModeBtn");
+const adminLogoutBtn=document.getElementById("adminLogoutBtn");
+const adminModal=document.getElementById("adminModal");
+const adminPassword=document.getElementById("adminPassword");
+const adminLogin=document.getElementById("adminLogin");
+const adminCancel=document.getElementById("adminCancel");
+const adminClose=document.getElementById("adminClose");
+
 function openAdminModal(){
-  adminModal.style.display = "flex";
-  adminPassword.value = "";
+  adminModal.style.display="flex";
+  adminPassword.value="";
   adminPassword.focus();
-
-   if(adminClose){
-     adminClose.onclick = closeAdminModal;
-   }
-
-      /* Enter key submits admin login */
-   if(adminPassword){
-     adminPassword.addEventListener("keydown", e => {
-       if(e.key === "Enter"){
-         e.preventDefault();
-         adminLogin.click();
-       }
-     });
-   }
 }
 
 function closeAdminModal(){
-  adminModal.style.display = "none";
+  adminModal.style.display="none";
 }
 
 function updateAdminUI(){
-  document.body.classList.toggle("admin-mode", isAdmin);
+  document.body.classList.toggle("admin-mode",isAdmin);
 
-  if(adminBtn){
-    adminBtn.textContent = isAdmin ? "Admin ✓" : "Admin Mode";
-  }
-
-  if(adminLogoutBtn){
-    adminLogoutBtn.style.display = isAdmin ? "inline-flex" : "none";
-  }
+  if(adminBtn) adminBtn.textContent=isAdmin?"Admin ✓":"Admin Mode";
+  if(adminLogoutBtn) adminLogoutBtn.style.display=isAdmin?"inline-flex":"none";
 }
 
-/* open modal */
 if(adminBtn){
-  adminBtn.onclick = () => {
-    if(isAdmin) return; // already admin
+  adminBtn.onclick=()=>{
+    if(isAdmin) return;
     openAdminModal();
   };
 }
 
-/* cancel */
-if(adminCancel){
-  adminCancel.onclick = closeAdminModal;
+if(adminCancel) adminCancel.onclick=closeAdminModal;
+if(adminClose) adminClose.onclick=closeAdminModal;
+
+if(adminPassword){
+  adminPassword.addEventListener("keydown",e=>{
+    if(e.key==="Enter"){
+      e.preventDefault();
+      adminLogin.click();
+    }
+  });
 }
 
-/* login */
 if(adminLogin){
-  adminLogin.onclick = () => {
-    if(adminPassword.value === "admin"){
-      isAdmin = true;
+  adminLogin.onclick=()=>{
+    if(adminPassword.value==="admin"){
+      isAdmin=true;
       localStorage.setItem("adminMode","1");
       updateAdminUI();
       loadRules();
@@ -291,99 +264,65 @@ if(adminLogin){
   };
 }
 
-/* logout */
 if(adminLogoutBtn){
-  adminLogoutBtn.onclick = () => {
-    isAdmin = false;
+  adminLogoutBtn.onclick=()=>{
+    isAdmin=false;
     localStorage.removeItem("adminMode");
     updateAdminUI();
   };
 }
 
-const deleteModal = document.getElementById("deleteModal");
-const confirmDeleteBtn = document.getElementById("confirmDelete");
-const cancelDeleteBtn = document.getElementById("cancelDelete");
-
-let deleteRuleId = null;
-
-function openDeleteModal(id){
-  deleteRuleId = id;
-  deleteModal.style.display = "flex";
-}
-
-function closeDeleteModal(){
-  deleteModal.style.display = "none";
-  deleteRuleId = null;
-}
-
-if(cancelDeleteBtn){
-  cancelDeleteBtn.onclick = closeDeleteModal;
-}
-
-if(confirmDeleteBtn){
-  confirmDeleteBtn.onclick = () => {
-    if(deleteRuleId){
-      deleteRule(deleteRuleId);
-    }
-    closeDeleteModal();
-  };
-}
-
-
-/* restore on load */
 updateAdminUI();
 
-
 /* =========================
-   HTACCESS RULES (NEON)
+   HTACCESS RULES
 ========================= */
-const rulesContainer = document.getElementById("htaccessAccordion");
-const searchInput = document.getElementById("htaccessSearch");
-const addRuleBtn = document.getElementById("addRuleBtn");
+const rulesContainer=document.getElementById("htaccessAccordion");
+const searchInput=document.getElementById("htaccessSearch");
+const addRuleBtn=document.getElementById("addRuleBtn");
 
-let rulesData = [];
-let editingRuleId = null;
+let rulesData=[];
+let editingRuleId=null;
 
-/* ---------- RULE MODAL ---------- */
-const ruleModal = document.getElementById("ruleModal");
-const ruleTitleInput = document.getElementById("ruleTitle");
-const ruleCodeInput = document.getElementById("ruleCode");
-const saveRuleBtn = document.getElementById("saveRule");
-const cancelRuleBtn = document.getElementById("cancelRule");
-const ruleDescInput = document.getElementById("ruleDesc");
-   
-function openRuleModal(rule = null) {
-  ruleModal.style.display = "flex";
+/* MODAL */
+const ruleModal=document.getElementById("ruleModal");
+const ruleTitleInput=document.getElementById("ruleTitle");
+const ruleDescInput=document.getElementById("ruleDesc");
+const ruleCodeInput=document.getElementById("ruleCode");
+const saveRuleBtn=document.getElementById("saveRule");
+const cancelRuleBtn=document.getElementById("cancelRule");
 
-  if (rule) {
-    editingRuleId = rule.id;
-    ruleTitleInput.value = rule.title;
-    ruleDescInput.value = rule.description || "";
-    ruleCodeInput.value = rule.code;
-  } else {
-    editingRuleId = null;
-    ruleTitleInput.value = "";
-    ruleDescInput.value = "";
-    ruleCodeInput.value = "";
+function openRuleModal(rule=null){
+  ruleModal.style.display="flex";
+
+  if(rule){
+    editingRuleId=rule.id;
+    ruleTitleInput.value=rule.title;
+    ruleDescInput.value=rule.description||"";
+    ruleCodeInput.value=rule.code;
+  }else{
+    editingRuleId=null;
+    ruleTitleInput.value="";
+    ruleDescInput.value="";
+    ruleCodeInput.value="";
   }
 }
 
-function closeRuleModal() {
-  ruleModal.style.display = "none";
+function closeRuleModal(){
+  ruleModal.style.display="none";
 }
 
-if (cancelRuleBtn) cancelRuleBtn.onclick = closeRuleModal;
+if(cancelRuleBtn) cancelRuleBtn.onclick=closeRuleModal;
 
-/* ---------- CREATE CARD ---------- */
-function createRuleCard(rule) {
-  const item = document.createElement("div");
-  item.className = "acc-item";
+function createRuleCard(rule){
+  const item=document.createElement("div");
+  item.className="acc-item";
 
-  item.innerHTML = `
+  item.innerHTML=`
     <div class="acc-header">
       <div>
         <h3>${rule.title}</h3>
-        ${rule.description ? `<div class="muted" style="font-size:12px;margin-top:2px">${rule.description}</div>` : ""}
+        ${rule.description?`<div class="muted" style="font-size:12px;margin-top:2px">${rule.description}</div>`:""}
       </div>
       <div class="acc-actions">
         <button class="btn small copy">Copy Code</button>
@@ -397,184 +336,156 @@ function createRuleCard(rule) {
     </div>
   `;
 
-  const del = item.querySelector(".delete");
-  const edit = item.querySelector(".edit");
-
-  if (del) {
-    del.onclick = () => openDeleteModal(rule.id);
-  }
-
-  if (edit) {
-    edit.onclick = () => openRuleModal(rule);
-  }
+  item.querySelector(".edit").onclick=()=>openRuleModal(rule);
+  item.querySelector(".delete").onclick=()=>openDeleteModal(rule.id);
 
   return item;
 }
 
-/* ---------- RENDER ---------- */
-function renderRules(list) {
-  if (!rulesContainer) return;
+function renderRules(list){
+  if(!rulesContainer) return;
 
-  rulesContainer.innerHTML = "";
-
-  list.forEach(rule => {
-    const card = createRuleCard(rule);
-    rulesContainer.appendChild(card);
+  rulesContainer.innerHTML="";
+  list.forEach(rule=>{
+    rulesContainer.appendChild(createRuleCard(rule));
   });
 
   updateAdminUI();
 }
 
-/* ---------- LOAD ---------- */
-function loadRules() {
+/* ⭐ LOADING FIX HERE */
+function loadRules(){
+  if(rulesContainer){
+    rulesContainer.innerHTML='<div class="status-loading">Loading rules…</div>';
+  }
+
   fetch("/.netlify/functions/rules")
-    .then(r => r.json())
-    .then(data => {
-      rulesData = data || [];
+    .then(r=>r.json())
+    .then(data=>{
+      rulesData=data||[];
       renderRules(rulesData);
     })
-    .catch(() => {
-      rulesData = [];
+    .catch(()=>{
+      rulesData=[];
       renderRules([]);
     });
 }
 
-/* ---------- ADD ---------- */
-function addRule(title, description, code) {
-  fetch("/.netlify/functions/rules", {
-    method: "POST",
-    body: JSON.stringify({ title, description, code })
+function addRule(title,description,code){
+  fetch("/.netlify/functions/rules",{
+    method:"POST",
+    body:JSON.stringify({title,description,code})
   })
-  .then(r => r.json())
-  .then(data => {
-    const newRule = { id: data.id, title, description, code };
+  .then(r=>r.json())
+  .then(data=>{
+    const newRule={id:data.id,title,description,code};
     rulesData.push(newRule);
     renderRules(rulesData);
   });
 }
 
-/* ---------- UPDATE ---------- */
-function updateRule(id, title, description, code) {
-  fetch("/.netlify/functions/rules", {
-    method: "PUT",
-    body: JSON.stringify({ id, title, description, code })
+function updateRule(id,title,description,code){
+  fetch("/.netlify/functions/rules",{
+    method:"PUT",
+    body:JSON.stringify({id,title,description,code})
   }).then(loadRules);
 }
 
-/* ---------- DELETE ---------- */
-function deleteRule(id) {
-  fetch("/.netlify/functions/rules", {
-    method: "DELETE",
-    body: JSON.stringify({ id })
+function deleteRule(id){
+  fetch("/.netlify/functions/rules",{
+    method:"DELETE",
+    body:JSON.stringify({id})
   }).then(loadRules);
 }
 
+if(saveRuleBtn){
+  saveRuleBtn.onclick=()=>{
+    const title=ruleTitleInput.value.trim();
+    const description=ruleDescInput.value.trim();
+    const code=ruleCodeInput.value.trim();
+    if(!title||!code) return;
 
-/* ---------- SAVE MODAL ---------- */
-if (saveRuleBtn) {
-     saveRuleBtn.onclick = () => {
-     const title = ruleTitleInput.value.trim();
-     const description = ruleDescInput.value.trim();
-     const code = ruleCodeInput.value.trim();
-   
-     if (!title || !code) return;
-   
-     if (editingRuleId) {
-       updateRule(editingRuleId, title, description, code);
-     } else {
-       addRule(title, description, code);
-     }
-   
-     closeRuleModal();
-   };
+    if(editingRuleId){
+      updateRule(editingRuleId,title,description,code);
+    }else{
+      addRule(title,description,code);
+    }
+
+    closeRuleModal();
+  };
 }
 
-/* ---------- ADD BUTTON ---------- */
-if (addRuleBtn) {
-  addRuleBtn.onclick = () => openRuleModal();
+if(addRuleBtn){
+  addRuleBtn.onclick=()=>openRuleModal();
 }
 
-/* ---------- SEARCH ---------- */
-if (searchInput) {
-  searchInput.oninput = () => {
-    const q = searchInput.value.toLowerCase();
-    const filtered = rulesData.filter(r =>
-        r.title.toLowerCase().includes(q) ||
-        (r.description && r.description.toLowerCase().includes(q))
-      );
+if(searchInput){
+  searchInput.oninput=()=>{
+    const q=searchInput.value.toLowerCase();
+    const filtered=rulesData.filter(r =>
+      r.title.toLowerCase().includes(q) ||
+      (r.description && r.description.toLowerCase().includes(q))
+    );
     renderRules(filtered);
+  };
+}
+
+/* =========================
+   DELETE MODAL
+========================= */
+const deleteModal=document.getElementById("deleteModal");
+const confirmDeleteBtn=document.getElementById("confirmDelete");
+const cancelDeleteBtn=document.getElementById("cancelDelete");
+
+let deleteRuleId=null;
+
+function openDeleteModal(id){
+  deleteRuleId=id;
+  deleteModal.style.display="flex";
+}
+
+function closeDeleteModal(){
+  deleteModal.style.display="none";
+  deleteRuleId=null;
+}
+
+if(cancelDeleteBtn) cancelDeleteBtn.onclick=closeDeleteModal;
+
+if(confirmDeleteBtn){
+  confirmDeleteBtn.onclick=()=>{
+    if(deleteRuleId) deleteRule(deleteRuleId);
+    closeDeleteModal();
   };
 }
 
 /* =========================
    AMP REQUIREMENTS
 ========================= */
-const ampContainer = document.getElementById("ampAccordion");
-const ampSearch = document.getElementById("ampSearch");
+const ampContainer=document.getElementById("ampAccordion");
+const ampSearch=document.getElementById("ampSearch");
 
-const ampRules = [
-  {
-    title: "AMP Boilerplate CSS",
-    description: "Required AMP runtime CSS boilerplate",
-    code: `<style amp-boilerplate>
-body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
--moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
--ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
-animation:-amp-start 8s steps(1,end) 0s 1 normal both}
-@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
-@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
-@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
-@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
-@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
-</style>
-
-<noscript>
-<style amp-boilerplate>
-body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}
-</style>
-</noscript>`
-  },
-  {
-    title: "AMP Runtime Script",
-    description: "Core AMP JS runtime",
-    code: `<script async src="https://cdn.ampproject.org/v0.js"></script>`
-  },
-  {
-    title: "AMP HTML Tag",
-    description: "Required AMP attribute on html tag",
-    code: `<html ⚡>`
-  },
-  {
-    title: "AMP Canonical Link",
-    description: "Canonical reference to non-AMP page",
-    code: `<link rel="canonical" href="https://example.com/page/">`
-  },
-  {
-    title: "AMP Charset Meta",
-    description: "UTF-8 charset must be first in head",
-    code: `<meta charset="utf-8">`
-  },
-  {
-    title: "AMP Viewport Meta",
-    description: "Required AMP viewport",
-    code: `<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">`
-  }
+const ampRules=[
+  {title:"AMP Boilerplate CSS",description:"Required AMP runtime CSS boilerplate",code:`<style amp-boilerplate>...</style>`},
+  {title:"AMP Runtime Script",description:"Core AMP JS runtime",code:`<script async src="https://cdn.ampproject.org/v0.js"></script>`},
+  {title:"AMP HTML Tag",description:"Required AMP attribute on html tag",code:`<html ⚡>`},
+  {title:"AMP Canonical Link",description:"Canonical reference to non-AMP page",code:`<link rel="canonical" href="https://example.com/page/">`},
+  {title:"AMP Charset Meta",description:"UTF-8 charset must be first in head",code:`<meta charset="utf-8">`},
+  {title:"AMP Viewport Meta",description:"Required AMP viewport",code:`<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">`}
 ];
 
 function renderAmp(list){
   if(!ampContainer) return;
 
-  ampContainer.innerHTML = "";
-
+  ampContainer.innerHTML="";
   list.forEach(rule=>{
-    const item = document.createElement("div");
-    item.className = "acc-item";
+    const item=document.createElement("div");
+    item.className="acc-item";
 
-    item.innerHTML = `
+    item.innerHTML=`
       <div class="acc-header">
         <div>
           <h3>${rule.title}</h3>
-          ${rule.description ? `<div class="muted" style="font-size:12px;margin-top:2px">${rule.description}</div>`:""}
+          ${rule.description?`<div class="muted" style="font-size:12px;margin-top:2px">${rule.description}</div>`:""}
         </div>
         <div class="acc-actions">
           <button class="btn small copy">Copy Code</button>
@@ -591,9 +502,9 @@ function renderAmp(list){
 }
 
 if(ampSearch){
-  ampSearch.oninput = ()=>{
-    const q = ampSearch.value.toLowerCase();
-    const filtered = ampRules.filter(r =>
+  ampSearch.oninput=()=>{
+    const q=ampSearch.value.toLowerCase();
+    const filtered=ampRules.filter(r =>
       r.title.toLowerCase().includes(q) ||
       (r.description && r.description.toLowerCase().includes(q))
     );
@@ -601,13 +512,10 @@ if(ampSearch){
   };
 }
 
-renderAmp(ampRules);
 /* =========================
    INIT
 ========================= */
-loadRules();
+setTimeout(loadRules,50);   // ⭐ non-blocking Neon load
+renderAmp(ampRules);
 
 });
-
-
-
