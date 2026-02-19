@@ -226,13 +226,15 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
 
  <div class="accordion">
 
-<!-- AMP Component Scripts -->
+<!-- ================= AMP COMPONENT SCRIPTS ================= -->
+
+<!-- amp-carousel -->
 <div class="acc-item amp-item">
   <div class="acc-header">
     <div>
-      <h3>AMP Component Scripts (Common)</h3>
+      <h3>amp-carousel</h3>
       <div class="muted" style="font-size:12px;margin-top:2px">
-        Frequently used AMP custom-element scripts
+        Carousel / slider component
       </div>
     </div>
     <div class="acc-actions">
@@ -241,26 +243,178 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
     </div>
   </div>
   <div class="acc-body">
-<pre><code>&lt;script async custom-element="amp-user-notification" src="https://cdn.ampproject.org/v0/amp-user-notification-0.1.js"&gt;&lt;/script&gt;
-&lt;script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"&gt;&lt;/script&gt;
-&lt;script async custom-element="amp-list" src="https://cdn.ampproject.org/v0/amp-list-0.1.js"&gt;&lt;/script&gt;
-&lt;script async custom-element="amp-script" src="https://cdn.ampproject.org/v0/amp-script-0.1.js"&gt;&lt;/script&gt;
-&lt;script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"&gt;&lt;/script&gt;
-&lt;script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"&gt;&lt;/script&gt;
-&lt;script async custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"&gt;&lt;/script&gt;
-&lt;script async custom-element="amp-img" src="https://cdn.ampproject.org/v0/amp-img-0.1.js"&gt;&lt;/script&gt;
-&lt;script async custom-element="amp-video" src="https://cdn.ampproject.org/v0/amp-video-0.1.js"&gt;&lt;/script&gt;
-&lt;script async custom-element="amp-youtube" src="https://cdn.ampproject.org/v0/amp-youtube-0.1.js"&gt;&lt;/script&gt;
-&lt;script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"&gt;&lt;/script&gt;
-&lt;script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"&gt;&lt;/script&gt;
-&lt;script async custom-element="amp-sidebar" src="https://cdn.ampproject.org/v0/amp-sidebar-0.1.js"&gt;&lt;/script&gt;
-&lt;script async custom-element="amp-lightbox" src="https://cdn.ampproject.org/v0/amp-lightbox-0.1.js"&gt;&lt;/script&gt;
-&lt;script async custom-element="amp-lightbox-gallery" src="https://cdn.ampproject.org/v0/amp-lightbox-gallery-0.1.js"&gt;&lt;/script&gt;
-&lt;script async custom-element="amp-accordion" src="https://cdn.ampproject.org/v0/amp-accordion-0.1.js"&gt;&lt;/script&gt;
-&lt;script async custom-element="amp-selector" src="https://cdn.ampproject.org/v0/amp-selector-0.1.js"&gt;&lt;/script&gt;
-&lt;script async custom-element="amp-state" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"&gt;&lt;/script&gt;
-&lt;script async custom-element="amp-social-share" src="https://cdn.ampproject.org/v0/amp-social-share-0.1.js"&gt;&lt;/script&gt;
-&lt;script async custom-element="amp-install-serviceworker" src="https://cdn.ampproject.org/v0/amp-install-serviceworker-0.1.js"&gt;&lt;/script&gt;</code></pre>
+<pre><code>&lt;script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"&gt;&lt;/script&gt;</code></pre>
+  </div>
+</div>
+
+<!-- amp-user-notification -->
+<div class="acc-item amp-item">
+  <div class="acc-header">
+    <div>
+      <h3>amp-user-notification</h3>
+      <div class="muted" style="font-size:12px;margin-top:2px">
+        Cookie / consent / notification banner
+      </div>
+    </div>
+    <div class="acc-actions">
+      <button class="btn small copy">Copy Code</button>
+      <span class="acc-toggle">▾</span>
+    </div>
+  </div>
+  <div class="acc-body">
+<pre><code>&lt;script async custom-element="amp-user-notification" src="https://cdn.ampproject.org/v0/amp-user-notification-0.1.js"&gt;&lt;/script&gt;</code></pre>
+  </div>
+</div>
+
+<!-- amp-list -->
+<div class="acc-item amp-item">
+  <div class="acc-header">
+    <div>
+      <h3>amp-list</h3>
+      <div class="muted" style="font-size:12px;margin-top:2px">
+        Fetch and render remote JSON data
+      </div>
+    </div>
+    <div class="acc-actions">
+      <button class="btn small copy">Copy Code</button>
+      <span class="acc-toggle">▾</span>
+    </div>
+  </div>
+  <div class="acc-body">
+<pre><code>&lt;script async custom-element="amp-list" src="https://cdn.ampproject.org/v0/amp-list-0.1.js"&gt;&lt;/script&gt;</code></pre>
+  </div>
+</div>
+
+<!-- amp-script -->
+<div class="acc-item amp-item">
+  <div class="acc-header">
+    <div>
+      <h3>amp-script</h3>
+      <div class="muted" style="font-size:12px;margin-top:2px">
+        Run custom JavaScript in AMP sandbox
+      </div>
+    </div>
+    <div class="acc-actions">
+      <button class="btn small copy">Copy Code</button>
+      <span class="acc-toggle">▾</span>
+    </div>
+  </div>
+  <div class="acc-body">
+<pre><code>&lt;script async custom-element="amp-script" src="https://cdn.ampproject.org/v0/amp-script-0.1.js"&gt;&lt;/script&gt;</code></pre>
+  </div>
+</div>
+
+<!-- amp-bind -->
+<div class="acc-item amp-item">
+  <div class="acc-header">
+    <div>
+      <h3>amp-bind</h3>
+      <div class="muted" style="font-size:12px;margin-top:2px">
+        State binding and dynamic updates
+      </div>
+    </div>
+    <div class="acc-actions">
+      <button class="btn small copy">Copy Code</button>
+      <span class="acc-toggle">▾</span>
+    </div>
+  </div>
+  <div class="acc-body">
+<pre><code>&lt;script async custom-element="amp-bind" src="https://cdn.ampproject.org/v0/amp-bind-0.1.js"&gt;&lt;/script&gt;</code></pre>
+  </div>
+</div>
+
+<!-- amp-form -->
+<div class="acc-item amp-item">
+  <div class="acc-header">
+    <div>
+      <h3>amp-form</h3>
+      <div class="muted" style="font-size:12px;margin-top:2px">
+        AMP form submission support
+      </div>
+    </div>
+    <div class="acc-actions">
+      <button class="btn small copy">Copy Code</button>
+      <span class="acc-toggle">▾</span>
+    </div>
+  </div>
+  <div class="acc-body">
+<pre><code>&lt;script async custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js"&gt;&lt;/script&gt;</code></pre>
+  </div>
+</div>
+
+<!-- amp-iframe -->
+<div class="acc-item amp-item">
+  <div class="acc-header">
+    <div>
+      <h3>amp-iframe</h3>
+      <div class="muted" style="font-size:12px;margin-top:2px">
+        Embed external iframe content
+      </div>
+    </div>
+    <div class="acc-actions">
+      <button class="btn small copy">Copy Code</button>
+      <span class="acc-toggle">▾</span>
+    </div>
+  </div>
+  <div class="acc-body">
+<pre><code>&lt;script async custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"&gt;&lt;/script&gt;</code></pre>
+  </div>
+</div>
+
+<!-- amp-img -->
+<div class="acc-item amp-item">
+  <div class="acc-header">
+    <div>
+      <h3>amp-img</h3>
+      <div class="muted" style="font-size:12px;margin-top:2px">
+        Responsive AMP image element
+      </div>
+    </div>
+    <div class="acc-actions">
+      <button class="btn small copy">Copy Code</button>
+      <span class="acc-toggle">▾</span>
+    </div>
+  </div>
+  <div class="acc-body">
+<pre><code>&lt;script async custom-element="amp-img" src="https://cdn.ampproject.org/v0/amp-img-0.1.js"&gt;&lt;/script&gt;</code></pre>
+  </div>
+</div>
+
+<!-- amp-video -->
+<div class="acc-item amp-item">
+  <div class="acc-header">
+    <div>
+      <h3>amp-video</h3>
+      <div class="muted" style="font-size:12px;margin-top:2px">
+        AMP HTML5 video player
+      </div>
+    </div>
+    <div class="acc-actions">
+      <button class="btn small copy">Copy Code</button>
+      <span class="acc-toggle">▾</span>
+    </div>
+  </div>
+  <div class="acc-body">
+<pre><code>&lt;script async custom-element="amp-video" src="https://cdn.ampproject.org/v0/amp-video-0.1.js"&gt;&lt;/script&gt;</code></pre>
+  </div>
+</div>
+
+<!-- amp-youtube -->
+<div class="acc-item amp-item">
+  <div class="acc-header">
+    <div>
+      <h3>amp-youtube</h3>
+      <div class="muted" style="font-size:12px;margin-top:2px">
+        Embed YouTube videos
+      </div>
+    </div>
+    <div class="acc-actions">
+      <button class="btn small copy">Copy Code</button>
+      <span class="acc-toggle">▾</span>
+    </div>
+  </div>
+  <div class="acc-body">
+<pre><code>&lt;script async custom-element="amp-youtube" src="https://cdn.ampproject.org/v0/amp-youtube-0.1.js"&gt;&lt;/script&gt;</code></pre>
   </div>
 </div>
 
@@ -473,6 +627,7 @@ animation:none}
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
