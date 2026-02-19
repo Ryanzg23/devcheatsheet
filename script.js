@@ -539,11 +539,12 @@ body{-webkit-animation:none;animation:none}
   }
 ];
 
-
+renderAmp(ampRules);
 function renderAmp(list){
   if(!ampContainer) return;
 
   ampContainer.innerHTML="";
+
   list.forEach(rule=>{
     const item=document.createElement("div");
     item.className="acc-item";
@@ -560,11 +561,50 @@ function renderAmp(list){
         </div>
       </div>
       <div class="acc-body">
-        <pre><code>${rule.code}</code></pre>
+        <pre><code>${rule.code.replace(/</g,"&lt;").replace(/>/g,"&gt;")}</code></pre>
       </div>
     `;
 
     ampContainer.appendChild(item);
+  });
+
+  /* IMPORTANT */
+  bindAmpInteractions();
+}
+
+function bindAmpInteractions() {
+  const items = ampContainer.querySelectorAll(".acc-item");
+
+  items.forEach(item => {
+    const header = item.querySelector(".acc-header");
+    const toggle = item.querySelector(".acc-toggle");
+    const copyBtn = item.querySelector(".btn.copy");
+    const code = item.querySelector("pre code");
+
+    /* accordion toggle */
+    if (header) {
+      header.onclick = () => {
+        item.classList.toggle("open");
+      };
+    }
+
+    /* copy */
+    if (copyBtn && code) {
+      copyBtn.onclick = e => {
+        e.stopPropagation();
+
+        navigator.clipboard.writeText(code.innerText);
+
+        const old = copyBtn.innerText;
+        copyBtn.innerText = "Copied";
+        copyBtn.disabled = true;
+
+        setTimeout(() => {
+          copyBtn.innerText = old;
+          copyBtn.disabled = false;
+        }, 1200);
+      };
+    }
   });
 }
 
