@@ -200,9 +200,7 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
 <!-- ================= AMP TAB ================= -->
 <div id="amp" class="tab-content">
 
-  <div class="search-bar">
-    <input type="text" id="ampSearch" placeholder="Search AMP requirement...">
-  </div>
+
 
 <div class="card">
   <div class="card-header">
@@ -223,7 +221,11 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
   <pre id="ampIntroCode"><code>&lt;script async src="https://cdn.ampproject.org/v0.js"&gt;&lt;/script&gt;</code></pre>
 </div>
 
+  <div class="search-bar">
+    <input type="text" id="ampSearch" placeholder="Search AMP requirement...">
+  </div>
 
+	
  <div class="accordion">
 
 <!-- ================= AMP COMPONENT SCRIPTS ================= -->
@@ -627,6 +629,7 @@ animation:none}
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
