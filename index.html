@@ -212,11 +212,14 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
   <div class="modal-content">
     <h3>Add htaccess Rule</h3>
 
-    <label>Title</label>
-    <input type="text" id="ruleTitle" placeholder="Rule title" />
-
-    <label>Code</label>
-    <textarea id="ruleCode" rows="8" placeholder="RewriteEngine On..."></textarea>
+	<label>Title</label>
+	<input type="text" id="ruleTitle" placeholder="Rule title" />
+	
+	<label>Description</label>
+	<input type="text" id="ruleDesc" placeholder="Short description" />
+	
+	<label>Code</label>
+	<textarea id="ruleCode" rows="8" placeholder="RewriteEngine On..."></textarea>
 
     <div class="modal-actions">
       <button class="btn" id="saveRule">Save</button>
@@ -262,6 +265,7 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
