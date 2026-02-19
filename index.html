@@ -209,9 +209,8 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
   </div>
 
   <p>
-    This is for situations where you don’t have a copy of your pages.dev AMP site.
-    When you download the existing site using Saveweb, it will not be AMP-valid.
-    Use this to make it valid.
+    This section is intended for cases where you don’t have the original copy of your Pages.dev AMP site.
+When you download an existing AMP site using Saveweb, the downloaded version is usually not AMP-valid due to missing scripts, boilerplate, or required tags.
   </p>
 
   <p>
@@ -219,6 +218,8 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
   </p>
 
   <pre id="ampIntroCode"><code>&lt;script async src="https://cdn.ampproject.org/v0.js"&gt;&lt;/script&gt;</code></pre>
+
+	<p>Below are some of the AMP components and scripts you may need to add to make your AMP site valid.</p>
 </div>
 
 <h3 class="searchttle">Search for AMP Components</h3>
@@ -615,6 +616,7 @@ animation:none}
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
