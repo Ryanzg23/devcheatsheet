@@ -507,8 +507,107 @@ if (searchInput) {
 }
 
 /* =========================
+   AMP REQUIREMENTS
+========================= */
+const ampContainer = document.getElementById("ampAccordion");
+const ampSearch = document.getElementById("ampSearch");
+
+const ampRules = [
+  {
+    title: "AMP Boilerplate CSS",
+    description: "Required AMP runtime CSS boilerplate",
+    code: `<style amp-boilerplate>
+body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
+-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
+-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
+animation:-amp-start 8s steps(1,end) 0s 1 normal both}
+@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+</style>
+
+<noscript>
+<style amp-boilerplate>
+body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}
+</style>
+</noscript>`
+  },
+  {
+    title: "AMP Runtime Script",
+    description: "Core AMP JS runtime",
+    code: `<script async src="https://cdn.ampproject.org/v0.js"></script>`
+  },
+  {
+    title: "AMP HTML Tag",
+    description: "Required AMP attribute on html tag",
+    code: `<html ⚡>`
+  },
+  {
+    title: "AMP Canonical Link",
+    description: "Canonical reference to non-AMP page",
+    code: `<link rel="canonical" href="https://example.com/page/">`
+  },
+  {
+    title: "AMP Charset Meta",
+    description: "UTF-8 charset must be first in head",
+    code: `<meta charset="utf-8">`
+  },
+  {
+    title: "AMP Viewport Meta",
+    description: "Required AMP viewport",
+    code: `<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">`
+  }
+];
+
+function renderAmp(list){
+  if(!ampContainer) return;
+
+  ampContainer.innerHTML = "";
+
+  list.forEach(rule=>{
+    const item = document.createElement("div");
+    item.className = "acc-item";
+
+    item.innerHTML = `
+      <div class="acc-header">
+        <div>
+          <h3>${rule.title}</h3>
+          ${rule.description ? `<div class="muted" style="font-size:12px;margin-top:2px">${rule.description}</div>`:""}
+        </div>
+        <div class="acc-actions">
+          <button class="btn small copy">Copy Code</button>
+          <span class="acc-toggle">▾</span>
+        </div>
+      </div>
+      <div class="acc-body">
+        <pre><code>${rule.code}</code></pre>
+      </div>
+    `;
+
+    ampContainer.appendChild(item);
+  });
+}
+
+if(ampSearch){
+  ampSearch.oninput = ()=>{
+    const q = ampSearch.value.toLowerCase();
+    const filtered = ampRules.filter(r =>
+      r.title.toLowerCase().includes(q) ||
+      (r.description && r.description.toLowerCase().includes(q))
+    );
+    renderAmp(filtered);
+  };
+}
+
+renderAmp(ampRules);
+/* =========================
    INIT
 ========================= */
 loadRules();
 
 });
+
+
+
