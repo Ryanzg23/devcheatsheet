@@ -43,7 +43,8 @@ body{
 }
 
 h1{margin:0;font-size:28px}
-h3{margin:0 5px}
+h3{margin:0}
+#amp .card{ margin-bottom: 14px; }
 
 /* ---------- Theme toggle ---------- */
 
