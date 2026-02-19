@@ -350,17 +350,20 @@ const ruleTitleInput = document.getElementById("ruleTitle");
 const ruleCodeInput = document.getElementById("ruleCode");
 const saveRuleBtn = document.getElementById("saveRule");
 const cancelRuleBtn = document.getElementById("cancelRule");
-
+const ruleDescInput = document.getElementById("ruleDesc");
+   
 function openRuleModal(rule = null) {
   ruleModal.style.display = "flex";
 
   if (rule) {
     editingRuleId = rule.id;
     ruleTitleInput.value = rule.title;
+    ruleDescInput.value = rule.description || "";
     ruleCodeInput.value = rule.code;
   } else {
     editingRuleId = null;
     ruleTitleInput.value = "";
+    ruleDescInput.value = "";
     ruleCodeInput.value = "";
   }
 }
@@ -434,25 +437,24 @@ function loadRules() {
 }
 
 /* ---------- ADD ---------- */
-function addRule(title, code) {
+function addRule(title, description, code) {
   fetch("/.netlify/functions/rules", {
     method: "POST",
-    body: JSON.stringify({ title, code })
+    body: JSON.stringify({ title, description, code })
   })
   .then(r => r.json())
   .then(data => {
-    // add immediately to UI
-    const newRule = { id: data.id, title, code };
+    const newRule = { id: data.id, title, description, code };
     rulesData.push(newRule);
     renderRules(rulesData);
   });
 }
 
 /* ---------- UPDATE ---------- */
-function updateRule(id, title, code) {
+function updateRule(id, title, description, code) {
   fetch("/.netlify/functions/rules", {
     method: "PUT",
-    body: JSON.stringify({ id, title, code })
+    body: JSON.stringify({ id, title, description, code })
   }).then(loadRules);
 }
 
@@ -467,19 +469,21 @@ function deleteRule(id) {
 
 /* ---------- SAVE MODAL ---------- */
 if (saveRuleBtn) {
-  saveRuleBtn.onclick = () => {
-    const title = ruleTitleInput.value.trim();
-    const code = ruleCodeInput.value.trim();
-    if (!title || !code) return;
-
-    if (editingRuleId) {
-      updateRule(editingRuleId, title, code);
-    } else {
-      addRule(title, code);
-    }
-
-    closeRuleModal();
-  };
+   saveRuleBtn.onclick = () => {
+     const title = ruleTitleInput.value.trim();
+     const description = ruleDescInput.value.trim();
+     const code = ruleCodeInput.value.trim();
+   
+     if (!title || !code) return;
+   
+     if (editingRuleId) {
+       updateRule(editingRuleId, title, description, code);
+     } else {
+       addRule(title, description, code);
+     }
+   
+     closeRuleModal();
+   };
 }
 
 /* ---------- ADD BUTTON ---------- */
