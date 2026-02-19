@@ -472,7 +472,7 @@ function deleteRule(id) {
 
 /* ---------- SAVE MODAL ---------- */
 if (saveRuleBtn) {
-   saveRuleBtn.onclick = () => {
+     saveRuleBtn.onclick = () => {
      const title = ruleTitleInput.value.trim();
      const description = ruleDescInput.value.trim();
      const code = ruleCodeInput.value.trim();
