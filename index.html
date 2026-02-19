@@ -28,6 +28,7 @@
     <div class="tabs">
       <button class="tab active" data-tab="origin">Domain Origin</button>
       <button class="tab" data-tab="htaccess">htaccess Rules</button>
+	  <button class="tab" data-tab="amp">AMP Requirements</button>
       <button class="tab" data-tab="cloudflare">Cloudflare</button>
     </div>
 	  
@@ -196,6 +197,18 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
 
     </div>
 
+<!-- ================= AMP TAB ================= -->
+<div id="amp" class="tab-content">
+
+  <div class="search-bar">
+    <input type="text" id="ampSearch" placeholder="Search AMP requirement...">
+  </div>
+
+  <div id="ampAccordion" class="accordion"></div>
+
+</div>
+
+
     <!-- ================= CLOUDFLARE TAB ================= -->
     <div class="tab-content" id="cloudflare">
       <div class="card">
@@ -265,6 +278,7 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
