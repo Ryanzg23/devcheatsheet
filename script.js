@@ -144,18 +144,25 @@ function renderStatus(results) {
     const badges = document.createElement("div");
     badges.className = "badges";
 
+    // PRIMARY BADGE
     const primary = document.createElement("span");
     primary.className =
       "badge " +
       (r.status == 200 ? "ok" : r.status == 301 ? "redirect" : "err");
     primary.textContent = r.status || "ERR";
+
+    // ✅ Tooltip ONLY on 301
+    if (r.status == 301 && r.redirect) {
+      primary.title = r.redirect;
+    }
+
     badges.appendChild(primary);
 
+    // FINAL 200 badge (no tooltip)
     if (r.redirect) {
       const final = document.createElement("span");
       final.className = "badge ok";
       final.textContent = "200";
-      final.title = r.redirect;
       badges.appendChild(final);
     }
 
@@ -167,6 +174,7 @@ function renderStatus(results) {
 
   if (recheckBtn) recheckBtn.style.display = "inline-flex";
 }
+
 
 function checkStatus(urls) {
   if (!urls?.length) return;
