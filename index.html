@@ -204,6 +204,23 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
     <input type="text" id="ampSearch" placeholder="Search AMP requirement...">
   </div>
 
+<div class="amp-intro card">
+  <div class="section-title">AMP Fix Guide</div>
+
+  <p class="muted" style="margin:6px 0 10px">
+    This is for situations where you don’t have a copy of your pages.dev AMP site.
+    When you download the existing site using Saveweb, it will not be AMP-valid.
+    Use this to make it valid.
+  </p>
+
+  <p class="muted" style="margin:0 0 8px">
+    Press <strong>CTRL+F</strong>, search for <code>v0.js</code>, and replace that line with:
+  </p>
+
+  <pre><code>&lt;script async src="https://cdn.ampproject.org/v0.js"&gt;&lt;/script&gt;</code></pre>
+</div>
+
+
   <div id="ampAccordion" class="accordion"></div>
 
 </div>
@@ -278,6 +295,7 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
