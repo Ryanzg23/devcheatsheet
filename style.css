@@ -601,3 +601,5 @@ body.admin-mode .admin-only{
 .amp-intro{
   margin-bottom:18px;
 }
+
+#amp .card{ margin-bottom: 14px; }
