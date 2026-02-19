@@ -459,19 +459,86 @@ if(confirmDeleteBtn){
 }
 
 /* =========================
-   AMP REQUIREMENTS
+   AMP REQUIREMENTS DATA
 ========================= */
-const ampContainer=document.getElementById("ampAccordion");
-const ampSearch=document.getElementById("ampSearch");
+const ampRules = [
+  {
+    title: "AMP Boilerplate CSS",
+    description: "Required AMP runtime CSS boilerplate",
+    code: `<style amp-boilerplate>
+body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
+-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
+-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
+animation:-amp-start 8s steps(1,end) 0s 1 normal both}
+@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+</style>
 
-const ampRules=[
-  {title:"AMP Boilerplate CSS",description:"Required AMP runtime CSS boilerplate",code:`<style amp-boilerplate>...</style>`},
-  {title:"AMP Runtime Script",description:"Core AMP JS runtime",code:`<script async src="https://cdn.ampproject.org/v0.js"></script>`},
-  {title:"AMP HTML Tag",description:"Required AMP attribute on html tag",code:`<html ⚡>`},
-  {title:"AMP Canonical Link",description:"Canonical reference to non-AMP page",code:`<link rel="canonical" href="https://example.com/page/">`},
-  {title:"AMP Charset Meta",description:"UTF-8 charset must be first in head",code:`<meta charset="utf-8">`},
-  {title:"AMP Viewport Meta",description:"Required AMP viewport",code:`<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">`}
+<noscript>
+<style amp-boilerplate>
+body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}
+</style>
+</noscript>`
+  },
+
+  {
+    title: "AMP Runtime Script",
+    description: "Core AMP JS runtime",
+    code: `<script async src="https://cdn.ampproject.org/v0.js"></script>`
+  },
+
+  {
+    title: "AMP HTML Tag",
+    description: "Required AMP attribute on html tag",
+    code: `<html ⚡>`
+  },
+
+  {
+    title: "AMP Canonical Link",
+    description: "Canonical reference to non-AMP page",
+    code: `<link rel="canonical" href="https://example.com/page/">`
+  },
+
+  {
+    title: "AMP Charset Meta",
+    description: "UTF-8 charset must be first in head",
+    code: `<meta charset="utf-8">`
+  },
+
+  {
+    title: "AMP Viewport Meta",
+    description: "Required AMP viewport",
+    code: `<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">`
+  },
+
+  {
+    title: "AMP Mandatory Head Structure",
+    description: "Minimal valid AMP head layout",
+    code: `<head>
+<meta charset="utf-8">
+<title>Page Title</title>
+<link rel="canonical" href="https://example.com/page/">
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<script async src="https://cdn.ampproject.org/v0.js"></script>
+
+<style amp-boilerplate>
+body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
+animation:-amp-start 8s steps(1,end) 0s 1 normal both}
+@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+</style>
+
+<noscript>
+<style amp-boilerplate>
+body{-webkit-animation:none;animation:none}
+</style>
+</noscript>
+</head>`
+  }
 ];
+
 
 function renderAmp(list){
   if(!ampContainer) return;
@@ -500,6 +567,24 @@ function renderAmp(list){
     ampContainer.appendChild(item);
   });
 }
+
+   /* AMP intro copy */
+const copyAmpIntro = document.getElementById("copyAmpIntro");
+const ampIntroCode = document.getElementById("ampIntroCode");
+
+if (copyAmpIntro && ampIntroCode) {
+  copyAmpIntro.onclick = () => {
+    navigator.clipboard.writeText(ampIntroCode.innerText);
+    const old = copyAmpIntro.innerText;
+    copyAmpIntro.innerText = "Copied";
+    copyAmpIntro.disabled = true;
+    setTimeout(() => {
+      copyAmpIntro.innerText = old;
+      copyAmpIntro.disabled = false;
+    }, 1200);
+  };
+}
+
 
 if(ampSearch){
   ampSearch.oninput=()=>{
