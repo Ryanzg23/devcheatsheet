@@ -381,7 +381,10 @@ function createRuleCard(rule) {
 
   item.innerHTML = `
     <div class="acc-header">
-      <h3>${rule.title}</h3>
+      <div>
+        <h3>${rule.title}</h3>
+        ${rule.description ? `<div class="muted" style="font-size:12px;margin-top:2px">${rule.description}</div>` : ""}
+      </div>
       <div class="acc-actions">
         <button class="btn small copy">Copy Code</button>
         <button class="btn small admin-only edit">Edit</button>
@@ -496,8 +499,9 @@ if (searchInput) {
   searchInput.oninput = () => {
     const q = searchInput.value.toLowerCase();
     const filtered = rulesData.filter(r =>
-      r.title.toLowerCase().includes(q)
-    );
+        r.title.toLowerCase().includes(q) ||
+        (r.description && r.description.toLowerCase().includes(q))
+      );
     renderRules(filtered);
   };
 }
