@@ -224,7 +224,143 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
 </div>
 
 
-  <div id="ampAccordion" class="accordion"></div>
+ <div class="accordion">
+
+  <!-- AMP Boilerplate -->
+  <div class="acc-item">
+    <div class="acc-header">
+      <div>
+        <h3>AMP Boilerplate CSS</h3>
+        <div class="muted" style="font-size:12px;margin-top:2px">
+          Required AMP runtime CSS boilerplate
+        </div>
+      </div>
+      <div class="acc-actions">
+        <button class="btn small copy">Copy Code</button>
+        <span class="acc-toggle">▾</span>
+      </div>
+    </div>
+    <div class="acc-body">
+<pre><code>&lt;style amp-boilerplate&gt;
+body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
+-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
+-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;
+animation:-amp-start 8s steps(1,end) 0s 1 normal both}
+@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}
+&lt;/style&gt;
+
+&lt;noscript&gt;
+&lt;style amp-boilerplate&gt;
+body{-webkit-animation:none;
+-moz-animation:none;
+-ms-animation:none;
+animation:none}
+&lt;/style&gt;
+&lt;/noscript&gt;</code></pre>
+    </div>
+  </div>
+
+  <!-- Runtime -->
+  <div class="acc-item">
+    <div class="acc-header">
+      <div>
+        <h3>AMP Runtime Script</h3>
+        <div class="muted" style="font-size:12px;margin-top:2px">
+          Core AMP JS runtime
+        </div>
+      </div>
+      <div class="acc-actions">
+        <button class="btn small copy">Copy Code</button>
+        <span class="acc-toggle">▾</span>
+      </div>
+    </div>
+    <div class="acc-body">
+<pre><code>&lt;script async src="https://cdn.ampproject.org/v0.js"&gt;&lt;/script&gt;</code></pre>
+    </div>
+  </div>
+
+  <!-- HTML Tag -->
+  <div class="acc-item">
+    <div class="acc-header">
+      <div>
+        <h3>AMP HTML Tag</h3>
+        <div class="muted" style="font-size:12px;margin-top:2px">
+          Required AMP attribute on html tag
+        </div>
+      </div>
+      <div class="acc-actions">
+        <button class="btn small copy">Copy Code</button>
+        <span class="acc-toggle">▾</span>
+      </div>
+    </div>
+    <div class="acc-body">
+<pre><code>&lt;html ⚡&gt;</code></pre>
+    </div>
+  </div>
+
+  <!-- Canonical -->
+  <div class="acc-item">
+    <div class="acc-header">
+      <div>
+        <h3>AMP Canonical Link</h3>
+        <div class="muted" style="font-size:12px;margin-top:2px">
+          Canonical reference to non-AMP page
+        </div>
+      </div>
+      <div class="acc-actions">
+        <button class="btn small copy">Copy Code</button>
+        <span class="acc-toggle">▾</span>
+      </div>
+    </div>
+    <div class="acc-body">
+<pre><code>&lt;link rel="canonical" href="https://example.com/page/"&gt;</code></pre>
+    </div>
+  </div>
+
+  <!-- Charset -->
+  <div class="acc-item">
+    <div class="acc-header">
+      <div>
+        <h3>AMP Charset Meta</h3>
+        <div class="muted" style="font-size:12px;margin-top:2px">
+          UTF-8 charset must be first in head
+        </div>
+      </div>
+      <div class="acc-actions">
+        <button class="btn small copy">Copy Code</button>
+        <span class="acc-toggle">▾</span>
+      </div>
+    </div>
+    <div class="acc-body">
+<pre><code>&lt;meta charset="utf-8"&gt;</code></pre>
+    </div>
+  </div>
+
+  <!-- Viewport -->
+  <div class="acc-item">
+    <div class="acc-header">
+      <div>
+        <h3>AMP Viewport Meta</h3>
+        <div class="muted" style="font-size:12px;margin-top:2px">
+          Required AMP viewport
+        </div>
+      </div>
+      <div class="acc-actions">
+        <button class="btn small copy">Copy Code</button>
+        <span class="acc-toggle">▾</span>
+      </div>
+    </div>
+    <div class="acc-body">
+<pre><code>&lt;meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1"&gt;</code></pre>
+    </div>
+  </div>
+
+</div>
+
 
 </div>
 
@@ -298,3 +434,4 @@ RewriteRule ^ http://www.%1%{REQUEST_URI} [L,NE,R=301]
   <script src="script.js"></script>
 </body>
 </html>
+
