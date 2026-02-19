@@ -19,7 +19,7 @@ if (themeToggle) {
 }
 
 /* =========================
-   TABS
+   TABS (persist)
 ========================= */
 const tabs = document.querySelectorAll(".tab");
 const contents = document.querySelectorAll(".tab-content");
@@ -44,10 +44,9 @@ tabs.forEach(t=>{
 activateTab(localStorage.getItem("activeTab") || "origin");
 
 /* =========================
-   ACCORDIONS + COPY (ALL)
+   ACCORDION + COPY (STATIC)
 ========================= */
 function bindAccordions(scope=document){
-
   scope.querySelectorAll(".acc-header").forEach(header=>{
     header.onclick = ()=>{
       const item = header.closest(".acc-item");
@@ -58,14 +57,10 @@ function bindAccordions(scope=document){
   scope.querySelectorAll(".btn.copy").forEach(btn=>{
     btn.onclick = e=>{
       e.stopPropagation();
-
-      const code = btn.closest(".acc-item, .card")
-        ?.querySelector("code")?.innerText;
-
+      const code = btn.closest(".acc-item, .card")?.querySelector("code")?.innerText;
       if(!code) return;
 
       navigator.clipboard.writeText(code);
-
       const old = btn.innerText;
       btn.innerText = "Copied";
       btn.disabled = true;
@@ -124,6 +119,7 @@ const recheckBtn = document.getElementById("recheckStatus");
 function showLoading(){
   if(statusTable)
     statusTable.innerHTML = '<div class="status-loading">Checking…</div>';
+  if(recheckBtn) recheckBtn.style.display="none";
 }
 
 function renderStatus(results){
@@ -148,8 +144,7 @@ function renderStatus(results){
     badges.className = "badges";
 
     const primary = document.createElement("span");
-    primary.className = "badge " +
-      (r.status==200?"ok":r.status==301?"redirect":"err");
+    primary.className = "badge "+(r.status==200?"ok":r.status==301?"redirect":"err");
     primary.textContent = r.status || "ERR";
     badges.appendChild(primary);
 
@@ -174,7 +169,7 @@ function checkStatus(urls){
   showLoading();
 
   Promise.all(
-    urls.map(u =>
+    urls.map(u=>
       fetch("/.netlify/functions/httpstatus?url="+encodeURIComponent(u))
         .then(r=>r.json())
         .catch(()=>({url:u,status:"ERR"}))
@@ -190,7 +185,7 @@ if(recheckBtn){
 }
 
 /* =========================
-   AMP INTRO COPY
+   AMP INTRO COPY (WORKING VERSION BEFORE AMP ACCORDIONS)
 ========================= */
 const copyAmpIntro = document.getElementById("copyAmpIntro");
 const ampIntroCode = document.getElementById("ampIntroCode");
@@ -207,42 +202,3 @@ if(copyAmpIntro && ampIntroCode){
       copyAmpIntro.innerText = old;
       copyAmpIntro.disabled = false;
     },1200);
-  };
-}
-
-/* FORCE BIND ACCORDIONS (STATIC + DYNAMIC) */
-document.querySelectorAll(".acc-header").forEach(header=>{
-  header.addEventListener("click", function(){
-    const item = this.closest(".acc-item");
-    if(item){
-      item.classList.toggle("open");
-    }
-  });
-});
-
-/* COPY BUTTONS GLOBAL */
-document.querySelectorAll(".btn.copy").forEach(btn=>{
-  btn.addEventListener("click", function(e){
-    e.stopPropagation();
-
-    const code = this.closest(".acc-item, .card")
-      ?.querySelector("code")?.innerText;
-
-    if(!code) return;
-
-    navigator.clipboard.writeText(code);
-
-    const old = this.innerText;
-    this.innerText = "Copied";
-    this.disabled = true;
-
-    setTimeout(()=>{
-      this.innerText = old;
-      this.disabled = false;
-    },1200);
-  });
-});
-
-
-   
-});
