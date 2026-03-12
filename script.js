@@ -293,6 +293,7 @@ const saveRuleBtn=document.getElementById("saveRule");
 const cancelRuleBtn=document.getElementById("cancelRule");
 
 function openRuleModal(rule=null){
+
   const activeTab = document.querySelector(".tab.active")?.dataset.tab;
 
   ruleModal.style.display="flex";
@@ -314,6 +315,7 @@ function openRuleModal(rule=null){
   if(activeTab === "cpanel"){
     ruleModalTitle.textContent = rule ? "Edit Cpanel Entry" : "Add Cpanel Entry";
   }
+
 }
 
 function openCpanelModal(rule=null){
