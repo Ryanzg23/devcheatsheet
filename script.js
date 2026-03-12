@@ -308,6 +308,22 @@ function openRuleModal(rule=null){
   }
 }
 
+function openCpanelModal(rule=null){
+  ruleModal.style.display="flex";
+
+  if(rule){
+    editingCpanelId = rule.id;
+    ruleTitleInput.value = rule.title;
+    ruleDescInput.value = rule.description || "";
+    ruleCodeInput.value = rule.code;
+  }else{
+    editingCpanelId = null;
+    ruleTitleInput.value="";
+    ruleDescInput.value="";
+    ruleCodeInput.value="";
+  }
+}
+
 function closeRuleModal(){
   ruleModal.style.display="none";
 }
@@ -400,15 +416,30 @@ function deleteRule(id){
 
 if(saveRuleBtn){
   saveRuleBtn.onclick=()=>{
-    const title=ruleTitleInput.value.trim();
-    const description=ruleDescInput.value.trim();
-    const code=ruleCodeInput.value.trim();
-    if(!title||!code) return;
+    const title = ruleTitleInput.value.trim();
+    const description = ruleDescInput.value.trim();
+    const code = ruleCodeInput.value.trim();
 
-    if(editingRuleId){
-      updateRule(editingRuleId,title,description,code);
-    }else{
-      addRule(title,description,code);
+    if(!title || !code) return;
+
+    const activeTab = localStorage.getItem("activeTab");
+
+    /* HTACCESS */
+    if(activeTab === "htaccess"){
+      if(editingRuleId){
+        updateRule(editingRuleId,title,description,code);
+      }else{
+        addRule(title,description,code);
+      }
+    }
+
+    /* CPANEL */
+    if(activeTab === "cpanel"){
+      if(editingCpanelId){
+        updateCpanel(editingCpanelId,title,description,code);
+      }else{
+        addCpanel(title,description,code);
+      }
     }
 
     closeRuleModal();
@@ -495,7 +526,7 @@ function createCpanelCard(rule){
   `;
 
   item.querySelector(".edit").onclick = ()=>openCpanelModal(rule);
-  item.querySelector(".delete").onclick = ()=>openCpanelDelete(rule.id);
+item.querySelector(".delete").onclick = ()=>openDeleteModal(rule.id,"cpanel");
 
   return item;
 }
@@ -549,9 +580,11 @@ const confirmDeleteBtn=document.getElementById("confirmDelete");
 const cancelDeleteBtn=document.getElementById("cancelDelete");
 
 let deleteRuleId=null;
+let deleteType="htaccess";
 
-function openDeleteModal(id){
+function openDeleteModal(id,type="htaccess"){
   deleteRuleId=id;
+  deleteType=type;
   deleteModal.style.display="flex";
 }
 
@@ -564,7 +597,16 @@ if(cancelDeleteBtn) cancelDeleteBtn.onclick=closeDeleteModal;
 
 if(confirmDeleteBtn){
   confirmDeleteBtn.onclick=()=>{
-    if(deleteRuleId) deleteRule(deleteRuleId);
+    if(!deleteRuleId) return;
+
+    if(deleteType==="htaccess"){
+      deleteRule(deleteRuleId);
+    }
+
+    if(deleteType==="cpanel"){
+      deleteCpanel(deleteRuleId);
+    }
+
     closeDeleteModal();
   };
 }
@@ -590,8 +632,10 @@ if (ampSearch) {
 /* =========================
    INIT
 ========================= */
-setTimeout(loadRules,50);   // ⭐ non-blocking Neon load
-
+setTimeout(()=>{
+  loadRules();
+  loadCpanel();
+},50);
    
 
 });
