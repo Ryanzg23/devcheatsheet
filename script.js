@@ -628,6 +628,10 @@ const addCloudflareBtn = document.getElementById("addCloudflareBtn");
 let cloudflareData = [];
 let editingCloudflareId = null;
 
+if(addCloudflareBtn){
+  addCloudflareBtn.onclick = () => openCloudflareModal();
+}
+
 /* LOAD */
 function loadCloudflare(){
 
