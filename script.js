@@ -285,7 +285,7 @@ let rulesData=[];
 let editingRuleId=null;
 
 /* MODAL */
-const ruleModal=document.getElementById("ruleModal");
+const ruleModalTitle=document.getElementById("ruleModalTitle");
 const ruleTitleInput=document.getElementById("ruleTitle");
 const ruleDescInput=document.getElementById("ruleDesc");
 const ruleCodeInput=document.getElementById("ruleCode");
@@ -293,18 +293,26 @@ const saveRuleBtn=document.getElementById("saveRule");
 const cancelRuleBtn=document.getElementById("cancelRule");
 
 function openRuleModal(rule=null){
+  const activeTab = localStorage.getItem("activeTab");
+
   ruleModal.style.display="flex";
 
   if(rule){
-    editingRuleId=rule.id;
-    ruleTitleInput.value=rule.title;
-    ruleDescInput.value=rule.description||"";
-    ruleCodeInput.value=rule.code;
+    ruleTitleInput.value = rule.title;
+    ruleDescInput.value = rule.description || "";
+    ruleCodeInput.value = rule.code;
   }else{
-    editingRuleId=null;
     ruleTitleInput.value="";
     ruleDescInput.value="";
     ruleCodeInput.value="";
+  }
+
+  if(activeTab === "htaccess"){
+    ruleModalTitle.textContent = rule ? "Edit htaccess Rule" : "Add htaccess Rule";
+  }
+
+  if(activeTab === "cpanel"){
+    ruleModalTitle.textContent = rule ? "Edit Cpanel Entry" : "Add Cpanel Entry";
   }
 }
 
