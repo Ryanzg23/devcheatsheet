@@ -185,15 +185,35 @@ function checkStatus(urls){
   ).then(renderStatus);
 }
 
-if(genBtn && generatedUrls && domainInput){
-  genBtn.onclick=()=>{
-    const d=normalizeDomain(domainInput.value);
-    if(!d) return;
+function generateUrlsOnly(){
 
-    const urls=buildVariants(d);
-    generatedUrls.textContent=urls.join("\n");
+  const d = normalizeDomain(domainInput.value);
+  if(!d){
+    generatedUrls.textContent = "";
+    return;
+  }
+
+  const urls = buildVariants(d);
+  generatedUrls.textContent = urls.join("\n");
+
+}
+   if(domainInput){
+  domainInput.addEventListener("input", generateUrlsOnly);
+}
+   if(genBtn){
+
+  genBtn.onclick = ()=>{
+
+    const urls = generatedUrls.innerText
+      .split("\n")
+      .filter(Boolean);
+
+    if(!urls.length) return;
+
     checkStatus(urls);
+
   };
+
 }
 
 if(copyUrlsBtn && generatedUrls){
