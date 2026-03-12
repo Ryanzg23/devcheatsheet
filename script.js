@@ -778,17 +778,23 @@ if(cancelDeleteBtn) cancelDeleteBtn.onclick=closeDeleteModal;
 
 if(confirmDeleteBtn){
   confirmDeleteBtn.onclick=()=>{
-    if(!deleteRuleId) return;
 
-    if(deleteType==="htaccess"){
-      deleteRule(deleteRuleId);
+    const activeTab = document.querySelector(".tab.active")?.dataset.tab;
+
+    if(activeTab === "htaccess"){
+      if(deleteRuleId) deleteRule(deleteRuleId);
     }
 
-    if(deleteType==="cpanel"){
-      deleteCpanel(deleteRuleId);
+    if(activeTab === "cpanel"){
+      if(deleteRuleId) deleteCpanel(deleteRuleId);
+    }
+
+    if(activeTab === "cloudflare"){
+      if(deleteRuleId) deleteCloudflare(deleteRuleId);
     }
 
     closeDeleteModal();
+
   };
 }
 
