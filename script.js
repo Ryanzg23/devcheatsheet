@@ -338,6 +338,26 @@ function openCpanelModal(rule=null){
 
 }
 
+function openCloudflareModal(rule=null){
+
+  ruleModal.style.display="flex";
+
+  if(rule){
+    editingCloudflareId = rule.id;
+    ruleTitleInput.value = rule.title;
+    ruleDescInput.value = rule.description || "";
+    ruleCodeInput.value = rule.code;
+    ruleModalTitle.textContent = "Edit Cloudflare Rule";
+  }else{
+    editingCloudflareId = null;
+    ruleTitleInput.value="";
+    ruleDescInput.value="";
+    ruleCodeInput.value="";
+    ruleModalTitle.textContent = "Add Cloudflare Rule";
+  }
+
+}
+
 function closeRuleModal(){
   ruleModal.style.display="none";
 }
