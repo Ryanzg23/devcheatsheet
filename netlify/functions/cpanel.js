@@ -1,4 +1,4 @@
-const { neon } = require('@neondatabase/serverless');
+const { neon } = require("@neondatabase/serverless");
 
 const sql = neon(process.env.DATABASE_URL);
 
@@ -6,9 +6,8 @@ exports.handler = async (event) => {
 
   const method = event.httpMethod;
 
-  /* ================= GET ================= */
   if(method === "GET"){
-    const rows = await sql`SELECT * FROM cpanel ORDER BY id DESC`;
+    const rows = await sql`SELECT * FROM cpanel_rules ORDER BY id DESC`;
     return {
       statusCode:200,
       body:JSON.stringify(rows)
@@ -17,10 +16,9 @@ exports.handler = async (event) => {
 
   const data = JSON.parse(event.body || "{}");
 
-  /* ================= POST ================= */
   if(method === "POST"){
     const result = await sql`
-      INSERT INTO cpanel (title, description, code)
+      INSERT INTO cpanel_rules (title, description, code)
       VALUES (${data.title}, ${data.description}, ${data.code})
       RETURNING id
     `;
@@ -31,10 +29,9 @@ exports.handler = async (event) => {
     };
   }
 
-  /* ================= PUT ================= */
   if(method === "PUT"){
     await sql`
-      UPDATE cpanel
+      UPDATE cpanel_rules
       SET title=${data.title},
           description=${data.description},
           code=${data.code}
@@ -44,9 +41,8 @@ exports.handler = async (event) => {
     return {statusCode:200};
   }
 
-  /* ================= DELETE ================= */
   if(method === "DELETE"){
-    await sql`DELETE FROM cpanel WHERE id=${data.id}`;
+    await sql`DELETE FROM cpanel_rules WHERE id=${data.id}`;
     return {statusCode:200};
   }
 
