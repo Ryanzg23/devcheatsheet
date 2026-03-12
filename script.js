@@ -319,6 +319,7 @@ function openRuleModal(rule=null){
 }
 
 function openCpanelModal(rule=null){
+
   ruleModal.style.display="flex";
 
   if(rule){
@@ -326,12 +327,15 @@ function openCpanelModal(rule=null){
     ruleTitleInput.value = rule.title;
     ruleDescInput.value = rule.description || "";
     ruleCodeInput.value = rule.code;
+    ruleModalTitle.textContent = "Edit Cpanel Entry";
   }else{
     editingCpanelId = null;
     ruleTitleInput.value="";
     ruleDescInput.value="";
     ruleCodeInput.value="";
+    ruleModalTitle.textContent = "Add Cpanel Entry";
   }
+
 }
 
 function closeRuleModal(){
@@ -432,7 +436,7 @@ if(saveRuleBtn){
 
     if(!title || !code) return;
 
-    const activeTab = localStorage.getItem("activeTab");
+    const activeTab = document.querySelector(".tab.active")?.dataset.tab;
 
     /* HTACCESS */
     if(activeTab === "htaccess"){
