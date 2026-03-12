@@ -625,4 +625,6 @@ body.admin-mode .admin-only{
   top:15px;
 }
 
+#genBtn{ background: var(--accent2) }
+
 .section-title{ margin-bottom: 10px; }
