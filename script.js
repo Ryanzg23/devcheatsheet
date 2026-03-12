@@ -468,7 +468,11 @@ if(searchInput){
 const cpanelContainer = document.getElementById("cpanelAccordion");
 const cpanelSearch = document.getElementById("cpanelSearch");
 const addCpanelBtn = document.getElementById("addCpanelBtn");
-
+   
+if(addCpanelBtn){
+  addCpanelBtn.onclick = () => openCpanelModal();
+}
+   
 let cpanelData = [];
 let editingCpanelId = null;
 
