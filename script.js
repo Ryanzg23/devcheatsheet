@@ -293,7 +293,7 @@ const saveRuleBtn=document.getElementById("saveRule");
 const cancelRuleBtn=document.getElementById("cancelRule");
 
 function openRuleModal(rule=null){
-  const activeTab = localStorage.getItem("activeTab");
+  const activeTab = document.querySelector(".tab.active")?.dataset.tab;
 
   ruleModal.style.display="flex";
 
