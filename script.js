@@ -89,6 +89,8 @@ document.addEventListener("click", e=>{
 const domainInput = document.getElementById("domainInput");
 const genBtn = document.getElementById("genBtn");
 const generatedUrls = document.getElementById("generatedUrls");
+const copyUrlsBtn = document.getElementById("copyUrls");
+const checkHttpStatusBtn = document.getElementById("checkHttpStatus");
 
 /* =========================
    HTTP STATUS
@@ -192,6 +194,50 @@ if(genBtn && generatedUrls && domainInput){
     generatedUrls.textContent=urls.join("\n");
     checkStatus(urls);
   };
+}
+
+if(copyUrlsBtn && generatedUrls){
+
+  copyUrlsBtn.onclick = () => {
+
+    const text = generatedUrls.innerText.trim();
+    if(!text) return;
+
+    navigator.clipboard.writeText(text);
+
+    const original = copyUrlsBtn.innerText;
+    copyUrlsBtn.innerText = "Copied";
+    copyUrlsBtn.disabled = true;
+
+    setTimeout(()=>{
+      copyUrlsBtn.innerText = original;
+      copyUrlsBtn.disabled = false;
+    },1200);
+
+  };
+
+}
+
+if(checkHttpStatusBtn && generatedUrls){
+
+  checkHttpStatusBtn.onclick = () => {
+
+    const urls = generatedUrls.innerText
+      .split("\n")
+      .map(u => u.trim())
+      .filter(Boolean);
+
+    if(!urls.length) return;
+
+    const query = encodeURIComponent(urls.join("\n"));
+
+    window.open(
+      "https://httpstatus.io/?urls=" + query,
+      "_blank"
+    );
+
+  };
+
 }
 
 if(recheckBtn){
