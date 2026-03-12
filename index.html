@@ -593,12 +593,23 @@ animation:none}
 
 
     <!-- ================= CLOUDFLARE TAB ================= -->
-    <div class="tab-content" id="cloudflare">
-      <div class="card">
-        <h3>Cloudflare</h3>
-        <p class="muted">Coming soon…</p>
-      </div>
-    </div>
+<div class="tab-content" id="cloudflare">
+
+<div class="htaccess-toolbar">
+  <button id="addCloudflareBtn" class="btn small admin-only">+ Add Rule</button>
+</div>
+
+<div class="search-bar">
+  <input
+    type="text"
+    id="cloudflareSearch"
+    placeholder="Search Cloudflare rules..."
+  />
+</div>
+
+<div id="cloudflareAccordion" class="accordion"></div>
+
+</div>
 
     
 
@@ -661,6 +672,7 @@ animation:none}
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
