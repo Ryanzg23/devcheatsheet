@@ -456,6 +456,15 @@ if(saveRuleBtn){
       }
     }
 
+     /* CLOUDFLARE */
+     if(activeTab === "cloudflare"){
+  if(editingCloudflareId){
+    updateCloudflare(editingCloudflareId,title,description,code);
+  }else{
+    addCloudflare(title,description,code);
+  }
+}
+
     closeRuleModal();
   };
 }
@@ -588,7 +597,137 @@ if(cpanelSearch){
   };
 }
 
-   
+/* =========================
+   CLOUDFLARE RULES
+========================= */
+
+const cloudflareContainer = document.getElementById("cloudflareAccordion");
+const cloudflareSearch = document.getElementById("cloudflareSearch");
+const addCloudflareBtn = document.getElementById("addCloudflareBtn");
+
+let cloudflareData = [];
+let editingCloudflareId = null;
+
+/* LOAD */
+function loadCloudflare(){
+
+  if(!cloudflareContainer) return;
+
+  cloudflareContainer.innerHTML =
+    '<div class="status-loading">Loading…</div>';
+
+  fetch("/.netlify/functions/cloudflare")
+    .then(r=>r.json())
+    .then(data=>{
+      cloudflareData = data || [];
+      renderCloudflare(cloudflareData);
+    })
+    .catch(()=>{
+      cloudflareData = [];
+      renderCloudflare([]);
+    });
+
+}
+
+/* RENDER */
+function renderCloudflare(list){
+
+  cloudflareContainer.innerHTML="";
+
+  list.forEach(rule=>{
+    cloudflareContainer.appendChild(createCloudflareCard(rule));
+  });
+
+  updateAdminUI();
+
+}
+
+/* CARD */
+function createCloudflareCard(rule){
+
+  const item=document.createElement("div");
+  item.className="acc-item";
+
+  item.innerHTML=`
+    <div class="acc-header">
+      <div>
+        <h3>${rule.title}</h3>
+        ${rule.description ? `<div class="muted" style="font-size:12px;margin-top:2px">${rule.description}</div>` : ""}
+      </div>
+      <div class="acc-actions">
+        <button class="btn small copy">Copy Code</button>
+        <button class="btn small admin-only edit">Edit</button>
+        <button class="btn small admin-only delete">Delete</button>
+        <span class="acc-toggle">▾</span>
+      </div>
+    </div>
+    <div class="acc-body">
+      <pre><code>${rule.code}</code></pre>
+    </div>
+  `;
+
+  item.querySelector(".edit").onclick = ()=>openCloudflareModal(rule);
+  item.querySelector(".delete").onclick = ()=>openDeleteModal(rule.id);
+
+  return item;
+
+}
+
+/* ADD */
+function addCloudflare(title, description, code){
+
+  fetch("/.netlify/functions/cloudflare",{
+    method:"POST",
+    body:JSON.stringify({title,description,code})
+  })
+  .then(r=>r.json())
+  .then(data=>{
+    cloudflareData.push({id:data.id,title,description,code});
+    renderCloudflare(cloudflareData);
+  });
+
+}
+
+/* UPDATE */
+function updateCloudflare(id,title,description,code){
+
+  fetch("/.netlify/functions/cloudflare",{
+    method:"PUT",
+    body:JSON.stringify({id,title,description,code})
+  }).then(loadCloudflare);
+
+}
+
+/* DELETE */
+function deleteCloudflare(id){
+
+  fetch("/.netlify/functions/cloudflare",{
+    method:"DELETE",
+    body:JSON.stringify({id})
+  }).then(loadCloudflare);
+
+}
+
+/* SEARCH */
+if(cloudflareSearch){
+
+  cloudflareSearch.oninput = ()=>{
+    const q = cloudflareSearch.value.toLowerCase();
+
+    const filtered = cloudflareData.filter(r =>
+      r.title.toLowerCase().includes(q) ||
+      (r.description && r.description.toLowerCase().includes(q))
+    );
+
+    renderCloudflare(filtered);
+  };
+
+}
+
+/* ADD BUTTON */
+if(addCloudflareBtn){
+  addCloudflareBtn.onclick = ()=>openCloudflareModal();
+}
 
 /* =========================
    DELETE MODAL
@@ -653,6 +792,7 @@ if (ampSearch) {
 setTimeout(()=>{
   loadRules();
   loadCpanel();
+  loadCloudflare();
 },50);
    
 
