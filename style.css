@@ -614,3 +614,13 @@ body.admin-mode .admin-only{
 .amp-search-block{
   margin-top:18px;
 }
+
+.generated-box{
+  position:relative;
+}
+
+.generated-box .copy{
+  position:absolute;
+  right:12px;
+  bottom:12px;
+}
