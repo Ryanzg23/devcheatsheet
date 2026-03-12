@@ -430,6 +430,117 @@ if(searchInput){
   };
 }
 
+
+/* =========================
+   CPANEL RULES
+========================= */
+const cpanelContainer = document.getElementById("cpanelAccordion");
+const cpanelSearch = document.getElementById("cpanelSearch");
+const addCpanelBtn = document.getElementById("addCpanelBtn");
+
+let cpanelData = [];
+let editingCpanelId = null;
+
+/* ---------- LOAD ---------- */
+function loadCpanel(){
+  if(!cpanelContainer) return;
+
+  cpanelContainer.innerHTML = '<div class="status-loading">Loading…</div>';
+
+  fetch("/.netlify/functions/cpanel")
+    .then(r=>r.json())
+    .then(data=>{
+      cpanelData = data || [];
+      renderCpanel(cpanelData);
+    })
+    .catch(()=>{
+      cpanelData = [];
+      renderCpanel([]);
+    });
+}
+
+/* ---------- RENDER ---------- */
+function renderCpanel(list){
+  if(!cpanelContainer) return;
+
+  cpanelContainer.innerHTML="";
+  list.forEach(rule=>{
+    cpanelContainer.appendChild(createCpanelCard(rule));
+  });
+
+  updateAdminUI();
+}
+
+/* ---------- CARD ---------- */
+function createCpanelCard(rule){
+  const item=document.createElement("div");
+  item.className="acc-item";
+
+  item.innerHTML=`
+    <div class="acc-header">
+      <div>
+        <h3>${rule.title}</h3>
+        ${rule.description?`<div class="muted" style="font-size:12px;margin-top:2px">${rule.description}</div>`:""}
+      </div>
+      <div class="acc-actions">
+        <button class="btn small copy">Copy</button>
+        <button class="btn small admin-only edit">Edit</button>
+        <button class="btn small admin-only delete">Delete</button>
+        <span class="acc-toggle">▾</span>
+      </div>
+    </div>
+    <div class="acc-body">
+      <pre><code>${rule.code}</code></pre>
+    </div>
+  `;
+
+  item.querySelector(".edit").onclick = ()=>openCpanelModal(rule);
+  item.querySelector(".delete").onclick = ()=>openCpanelDelete(rule.id);
+
+  return item;
+}
+
+/* ---------- ADD / EDIT ---------- */
+function addCpanel(title, description, code){
+  fetch("/.netlify/functions/cpanel",{
+    method:"POST",
+    body:JSON.stringify({title,description,code})
+  })
+  .then(r=>r.json())
+  .then(data=>{
+    cpanelData.push({id:data.id,title,description,code});
+    renderCpanel(cpanelData);
+  });
+}
+
+function updateCpanel(id,title,description,code){
+  fetch("/.netlify/functions/cpanel",{
+    method:"PUT",
+    body:JSON.stringify({id,title,description,code})
+  }).then(loadCpanel);
+}
+
+function deleteCpanel(id){
+  fetch("/.netlify/functions/cpanel",{
+    method:"DELETE",
+    body:JSON.stringify({id})
+  }).then(loadCpanel);
+}
+
+/* ---------- SEARCH ---------- */
+if(cpanelSearch){
+  cpanelSearch.oninput = ()=>{
+    const q = cpanelSearch.value.toLowerCase();
+    const filtered = cpanelData.filter(r =>
+      r.title.toLowerCase().includes(q) ||
+      (r.description && r.description.toLowerCase().includes(q))
+    );
+    renderCpanel(filtered);
+  };
+}
+
+   
+
 /* =========================
    DELETE MODAL
 ========================= */
