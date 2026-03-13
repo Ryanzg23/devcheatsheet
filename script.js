@@ -655,7 +655,10 @@ function openRegistrarModal(rule=null){
   }
 
 }
-
+   
+if(addRegistrarBtn){
+  addRegistrarBtn.onclick = ()=>openRegistrarModal();
+}
 
 /* ---------- CARD ---------- */
 function createRegistrarCard(rule){
@@ -726,7 +729,18 @@ function deleteRegistrar(id){
   }).then(loadRegistrars);
 
 }
+   
+function openRegistrarDelete(id){
+  deleteRuleId = id;
+  deleteModal.style.display = "flex";
+}
 
+function deleteRegistrar(id){
+  fetch("/.netlify/functions/registrars",{
+    method:"DELETE",
+    body:JSON.stringify({id})
+  }).then(loadRegistrars);
+}
 
 /* ---------- SEARCH ---------- */
 if(registrarSearch){
