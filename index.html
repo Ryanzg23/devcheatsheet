@@ -30,6 +30,7 @@
       <button class="tab" data-tab="htaccess">htaccess Rules</button>
       <button class="tab" data-tab="cpanel">WHM/Cpanel</button>
       <button class="tab" data-tab="cloudflare">Cloudflare</button>
+	  <button class="tab" data-tab="registrars">Domain Registrars</button>
 	  <button class="tab" data-tab="amp">AMP Requirements</button>
     </div>
 	  
@@ -620,6 +621,25 @@ animation:none}
 
 </div>
 
+
+<!-- ================= DOMAIN REGISTRARS TAB ================= -->
+<div class="tab-content" id="registrars">
+
+<div class="htaccess-toolbar">
+  <button id="addRegistrarBtn" class="btn small admin-only">+ Add Registrar</button>
+</div>
+
+<div class="search-bar">
+  <input
+    type="text"
+    id="registrarSearch"
+    placeholder="Search domain registrars..."
+  />
+</div>
+
+<div id="registrarAccordion" class="accordion"></div>
+
+</div>
     
 
   </div>
@@ -681,6 +701,7 @@ animation:none}
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
