@@ -553,12 +553,22 @@ if(saveRuleBtn){
 
      /* CLOUDFLARE */
      if(activeTab === "cloudflare"){
-  if(editingCloudflareId){
-    updateCloudflare(editingCloudflareId,title,description,code);
-  }else{
-    addCloudflare(title,description,code);
-  }
-}
+        if(editingCloudflareId){
+          updateCloudflare(editingCloudflareId,title,description,code);
+        }else{
+          addCloudflare(title,description,code);
+        }
+      }
+
+     /* REGISTRARS */
+      
+      if(activeTab === "registrars"){
+        if(editingRegistrarId){
+          updateRegistrar(editingRegistrarId,title,description,code);
+        }else{
+          addRegistrar(title,description,code);
+        }
+      }
 
     closeRuleModal();
   };
@@ -577,6 +587,139 @@ if(searchInput){
     );
     renderRules(filtered);
   };
+}
+
+/* =========================
+   DOMAIN REGISTRARS
+========================= */
+
+const registrarContainer = document.getElementById("registrarAccordion");
+const registrarSearch = document.getElementById("registrarSearch");
+const addRegistrarBtn = document.getElementById("addRegistrarBtn");
+
+let registrarData = [];
+let editingRegistrarId = null;
+
+
+/* ---------- LOAD ---------- */
+function loadRegistrars(){
+  if(!registrarContainer) return;
+
+  registrarContainer.innerHTML = '<div class="status-loading">Loading…</div>';
+
+  fetch("/.netlify/functions/registrars")
+    .then(r=>r.json())
+    .then(data=>{
+      registrarData = data || [];
+      renderRegistrars(registrarData);
+    })
+    .catch(()=>{
+      registrarData = [];
+      renderRegistrars([]);
+    });
+}
+
+
+/* ---------- RENDER ---------- */
+function renderRegistrars(list){
+  if(!registrarContainer) return;
+
+  registrarContainer.innerHTML="";
+  list.forEach(rule=>{
+    registrarContainer.appendChild(createRegistrarCard(rule));
+  });
+
+  updateAdminUI();
+}
+
+
+/* ---------- CARD ---------- */
+function createRegistrarCard(rule){
+
+  const item=document.createElement("div");
+  item.className="acc-item";
+
+  item.innerHTML=`
+    <div class="acc-header">
+      <div>
+        <h3>${rule.title}</h3>
+        ${rule.description?`<div class="muted" style="font-size:12px;margin-top:2px">${rule.description}</div>`:""}
+      </div>
+
+      <div class="acc-actions">
+        <button class="btn small copy">Copy</button>
+        <button class="btn small admin-only edit">Edit</button>
+        <button class="btn small admin-only delete">Delete</button>
+        <span class="acc-toggle">▾</span>
+      </div>
+    </div>
+
+    <div class="acc-body">
+      <pre><code>${escapeHTML(rule.code)}</code></pre>
+    </div>
+  `;
+
+  item.querySelector(".edit").onclick = ()=>openRegistrarModal(rule);
+  item.querySelector(".delete").onclick = ()=>openRegistrarDelete(rule.id);
+
+  return item;
+}
+
+
+/* ---------- ADD ---------- */
+function addRegistrar(title,description,code){
+
+  fetch("/.netlify/functions/registrars",{
+    method:"POST",
+    body:JSON.stringify({title,description,code})
+  })
+  .then(r=>r.json())
+  .then(data=>{
+    registrarData.push({id:data.id,title,description,code});
+    renderRegistrars(registrarData);
+  });
+
+}
+
+
+/* ---------- UPDATE ---------- */
+function updateRegistrar(id,title,description,code){
+
+  fetch("/.netlify/functions/registrars",{
+    method:"PUT",
+    body:JSON.stringify({id,title,description,code})
+  }).then(loadRegistrars);
+
+}
+
+
+/* ---------- DELETE ---------- */
+function deleteRegistrar(id){
+
+  fetch("/.netlify/functions/registrars",{
+    method:"DELETE",
+    body:JSON.stringify({id})
+  }).then(loadRegistrars);
+
+}
+
+
+/* ---------- SEARCH ---------- */
+if(registrarSearch){
+
+  registrarSearch.oninput = ()=>{
+
+    const q = registrarSearch.value.toLowerCase();
+
+    const filtered = registrarData.filter(r =>
+      r.title.toLowerCase().includes(q) ||
+      (r.description && r.description.toLowerCase().includes(q))
+    );
+
+    renderRegistrars(filtered);
+
+  };
+
 }
 
 
@@ -868,6 +1011,8 @@ if(confirmDeleteBtn){
       if(deleteRuleId) deleteCloudflare(deleteRuleId);
     }
 
+     
+
     closeDeleteModal();
 
   };
@@ -898,6 +1043,7 @@ setTimeout(()=>{
   loadRules();
   loadCpanel();
   loadCloudflare();
+  loadRegistrars();
 },50);
    
 
