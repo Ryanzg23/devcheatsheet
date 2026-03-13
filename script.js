@@ -632,6 +632,30 @@ function renderRegistrars(list){
   updateAdminUI();
 }
 
+/* ---------- OPEN MODAL ---------- */
+
+function openRegistrarModal(rule=null){
+
+  const modalTitle = document.getElementById("ruleModalTitle");
+
+  ruleModal.style.display="flex";
+
+  if(modalTitle) modalTitle.innerText = rule ? "Edit Registrar" : "Add Registrar";
+
+  if(rule){
+    editingRegistrarId = rule.id;
+    ruleTitleInput.value = rule.title;
+    ruleDescInput.value = rule.description || "";
+    ruleCodeInput.value = rule.code;
+  }else{
+    editingRegistrarId = null;
+    ruleTitleInput.value = "";
+    ruleDescInput.value = "";
+    ruleCodeInput.value = "";
+  }
+
+}
+
 
 /* ---------- CARD ---------- */
 function createRegistrarCard(rule){
