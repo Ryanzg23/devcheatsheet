@@ -92,6 +92,15 @@ const generatedUrls = document.getElementById("generatedUrls");
 const copyUrlsBtn = document.getElementById("copyUrls");
 const checkHttpStatusBtn = document.getElementById("checkHttpStatus");
 
+
+function escapeHTML(str){
+  return str
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;");
+}
+
+   
 /* =========================
    HTTP STATUS
 ========================= */
@@ -448,7 +457,7 @@ function createRuleCard(rule){
       </div>
     </div>
     <div class="acc-body">
-      <pre><code>${rule.code}</code></pre>
+      <pre><code>${escapeHTML(rule.code)}</code></pre>
     </div>
   `;
 
@@ -634,7 +643,7 @@ function createCpanelCard(rule){
       </div>
     </div>
     <div class="acc-body">
-      <pre><code>${rule.code}</code></pre>
+      <pre><code>${escapeHTML(rule.code)}</code></pre>
     </div>
   `;
 
@@ -752,7 +761,7 @@ function createCloudflareCard(rule){
       </div>
     </div>
     <div class="acc-body">
-      <pre><code>${rule.code}</code></pre>
+      <pre><code>${escapeHTML(rule.code)}</code></pre>
     </div>
   `;
 
