@@ -1,6 +1,6 @@
 const { neon } = require("@neondatabase/serverless");
 
-const sql = neon(process.env.DATABASE_URL);
+const sql = neon(process.env.NETLIFY_DATABASE_URL);
 
 exports.handler = async (event) => {
 
@@ -10,7 +10,7 @@ exports.handler = async (event) => {
 
   if(method === "GET"){
     const rows = await sql`
-      SELECT * FROM registrars
+      SELECT * FROM domain_registrars
       ORDER BY id DESC
     `;
 
@@ -27,7 +27,7 @@ exports.handler = async (event) => {
   if(method === "POST"){
 
     const result = await sql`
-      INSERT INTO registrars (title, description, code)
+      INSERT INTO domain_registrars (title, description, code)
       VALUES (${data.title}, ${data.description}, ${data.code})
       RETURNING id
     `;
@@ -44,7 +44,7 @@ exports.handler = async (event) => {
   if(method === "PUT"){
 
     await sql`
-      UPDATE registrars
+      UPDATE domain_registrars
       SET title=${data.title},
           description=${data.description},
           code=${data.code}
@@ -60,7 +60,7 @@ exports.handler = async (event) => {
   if(method === "DELETE"){
 
     await sql`
-      DELETE FROM registrars
+      DELETE FROM domain_registrars
       WHERE id=${data.id}
     `;
 
