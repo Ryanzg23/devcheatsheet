@@ -360,6 +360,7 @@ let rulesData=[];
 let editingRuleId=null;
 
 /* MODAL */
+const ruleModal=document.getElementById("ruleModal");
 const ruleModalTitle=document.getElementById("ruleModalTitle");
 const ruleTitleInput=document.getElementById("ruleTitle");
 const ruleDescInput=document.getElementById("ruleDesc");
@@ -1043,10 +1044,11 @@ if(confirmDeleteBtn){
       if(deleteRuleId) deleteCloudflare(deleteRuleId);
     }
 
-     
+    if(activeTab === "registrars"){
+      if(deleteRuleId) deleteRegistrar(deleteRuleId);
+    }
 
     closeDeleteModal();
-
   };
 }
 
