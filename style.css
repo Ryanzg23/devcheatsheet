@@ -159,6 +159,7 @@ pre{
   padding:14px;
   overflow:auto;
   flex:1;
+  max-height: 400px;
 }
 
 code{
