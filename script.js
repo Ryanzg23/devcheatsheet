@@ -734,12 +734,7 @@ function openRegistrarDelete(id){
   deleteModal.style.display = "flex";
 }
 
-function deleteRegistrar(id){
-  fetch("/.netlify/functions/registrars",{
-    method:"DELETE",
-    body:JSON.stringify({id})
-  }).then(loadRegistrars);
-}
+
 
 /* ---------- SEARCH ---------- */
 if(registrarSearch){
