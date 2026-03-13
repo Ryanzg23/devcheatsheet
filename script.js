@@ -1080,6 +1080,7 @@ setTimeout(()=>{
   loadRules();
   loadCpanel();
   loadCloudflare();
+  loadRules();
   loadRegistrars();
 },50);
    
