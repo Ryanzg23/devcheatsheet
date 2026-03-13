@@ -559,9 +559,8 @@ if(saveRuleBtn){
           addCloudflare(title,description,code);
         }
       }
-
-     /* REGISTRARS */
       
+      /* REGISTRARS */
       if(activeTab === "registrars"){
         if(editingRegistrarId){
           updateRegistrar(editingRegistrarId,title,description,code);
