@@ -652,11 +652,6 @@ body.admin-mode .admin-only{
   border-bottom:1px solid var(--border);
 }
 
-.ssh-actions{
-  display:flex;
-  gap:6px;
-}
-
 .ssh-command{
   display:inline-flex;
   align-items:center;
@@ -667,6 +662,16 @@ body.admin-mode .admin-only{
   padding:6px 10px;
   border-radius:6px;
   font-size:13px;
+}
+.ssh-command-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.ssh-actions{
+  display:flex;
+  gap:6px;
 }
 
 .ssh-command code{
