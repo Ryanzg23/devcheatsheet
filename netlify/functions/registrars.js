@@ -11,7 +11,7 @@ exports.handler = async (event) => {
   if(method === "GET"){
     const rows = await sql`
       SELECT * FROM domain_registrars
-      ORDER BY id DESC
+      ORDER BY id ASC
     `;
 
     return {
