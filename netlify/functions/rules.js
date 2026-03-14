@@ -7,10 +7,12 @@ export default async (req) => {
     CREATE TABLE IF NOT EXISTS htaccess_rules (
       id SERIAL PRIMARY KEY,
       title TEXT NOT NULL,
+      description TEXT,
       code TEXT NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `;
+
 
   /* GET */
 if (req.method === "GET") {
