@@ -616,37 +616,6 @@ if(saveRuleBtn){
         }
       }
 
-      /* SSH */
-      if(activeTab === "ssh"){
-      
-        const command = title;
-        const usage = description;
-      
-        if(editingSshId){
-      
-          fetch("/.netlify/functions/ssh",{
-            method:"PUT",
-            body:JSON.stringify({
-              id:editingSshId,
-              command,
-              usage
-            })
-          }).then(loadSsh);
-      
-        }else{
-      
-          fetch("/.netlify/functions/ssh",{
-            method:"POST",
-            body:JSON.stringify({
-              command,
-              usage
-            })
-          }).then(loadSsh);
-      
-        }
-      
-      }
-
 
     closeRuleModal();
   };
@@ -836,7 +805,13 @@ if(registrarSearch){
 /* =========================
    SSH COMMANDS
 ========================= */
+const sshModal = document.getElementById("sshModal");
+const sshCommandInput = document.getElementById("sshCommand");
+const sshUsageInput = document.getElementById("sshUsage");
 
+const saveSshBtn = document.getElementById("saveSsh");
+const cancelSshBtn = document.getElementById("cancelSsh");
+   
 const sshTableBody = document.getElementById("sshTableBody");
 const sshSearch = document.getElementById("sshSearch");
 const addSshBtn = document.getElementById("addSshBtn");
@@ -864,8 +839,17 @@ function loadSsh(){
 
 if(addSshBtn){
   addSshBtn.onclick = ()=>{
-     openRuleModal();
-   };
+
+    editingSshId = null;
+
+    sshCommandInput.value = "";
+    sshUsageInput.value = "";
+
+    document.getElementById("sshModalTitle").textContent = "Add SSH Command";
+
+    sshModal.style.display = "flex";
+
+  };
 }
 
 
@@ -915,19 +899,14 @@ tr.querySelector(".edit").onclick = ()=>{
 
   editingSshId = row.id;
 
-  ruleModalTitle.textContent = "Edit SSH Command";
+  sshCommandInput.value = row.command;
+  sshUsageInput.value = row.usage;
 
-  ruleTitleInput.previousElementSibling.textContent = "Command";
-  ruleDescInput.previousElementSibling.textContent = "Usage";
+  document.getElementById("sshModalTitle").textContent = "Edit SSH Command";
 
-  ruleCodeInput.style.display = "none";
-  ruleCodeInput.previousElementSibling.style.display = "none";
-
-  ruleTitleInput.value = row.command;
-  ruleDescInput.value = row.usage;
-
-  ruleModal.style.display = "flex";
+  sshModal.style.display = "flex";
 };
+
 
 tr.querySelector(".delete").onclick = ()=>{
   openDeleteModal(row.id,"ssh");
@@ -960,6 +939,47 @@ if(sshSearch){
 
   };
 
+}
+
+if(saveSshBtn){
+  saveSshBtn.onclick = ()=>{
+
+    const command = sshCommandInput.value.trim();
+    const usage = sshUsageInput.value.trim();
+
+    if(!command || !usage) return;
+
+    if(editingSshId){
+
+      fetch("/.netlify/functions/ssh",{
+        method:"PUT",
+        body:JSON.stringify({
+          id:editingSshId,
+          command,
+          usage
+        })
+      }).then(loadSsh);
+
+    }else{
+
+      fetch("/.netlify/functions/ssh",{
+        method:"POST",
+        body:JSON.stringify({
+          command,
+          usage
+        })
+      }).then(loadSsh);
+
+    }
+
+    sshModal.style.display="none";
+  };
+}
+
+if(cancelSshBtn){
+  cancelSshBtn.onclick=()=>{
+    sshModal.style.display="none";
+  };
 }
 
 
