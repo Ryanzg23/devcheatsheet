@@ -652,15 +652,36 @@ body.admin-mode .admin-only{
   border-bottom:1px solid var(--border);
 }
 
-.ssh-command{
-  font-family:monospace;
-  background:#0f172a;
-  padding:4px 8px;
-  border-radius:6px;
-}
-
 .ssh-actions{
   display:flex;
   gap:6px;
 }
+
+.ssh-command{
+  position:relative;
+  font-family:monospace;
+  background:#0f172a;
+  color:#e2e8f0;
+  padding:6px 10px;
+  border-radius:6px;
+  display:inline-block;
+}
+
+.ssh-command code{
+  font-size:13px;
+}
+
+.ssh-copy-icon{
+  position:absolute;
+  right:6px;
+  top:4px;
+  opacity:0;
+  cursor:pointer;
+  font-size:12px;
+}
+
+.ssh-command:hover .ssh-copy-icon{
+  opacity:1;
+}
+
 
