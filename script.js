@@ -570,15 +570,20 @@ if(saveRuleBtn){
         }
       }
 
-     if(activeTab === "ssh"){
+      /* SSH */
+      if(activeTab === "ssh"){
+      
+        const command = title;
+        const usage = description;
       
         if(editingSshId){
+      
           fetch("/.netlify/functions/ssh",{
             method:"PUT",
             body:JSON.stringify({
               id:editingSshId,
-              command:title,
-              usage:description
+              command,
+              usage
             })
           }).then(loadSsh);
       
@@ -587,8 +592,8 @@ if(saveRuleBtn){
           fetch("/.netlify/functions/ssh",{
             method:"POST",
             body:JSON.stringify({
-              command:title,
-              usage:description
+              command,
+              usage
             })
           }).then(loadSsh);
       
@@ -811,6 +816,20 @@ function loadSsh(){
 
 }
 
+if(addSshBtn){
+  addSshBtn.onclick = ()=>{
+    editingSshId = null;
+
+    ruleModalTitle.textContent = "Add SSH Command";
+
+    ruleTitleInput.value = "";
+    ruleDescInput.value = "";
+    ruleCodeInput.value = "";
+
+    ruleModal.style.display = "flex";
+  };
+}
+
 /* RENDER */
 
 function renderSsh(list){
@@ -822,7 +841,12 @@ function renderSsh(list){
     const tr = document.createElement("tr");
 
     tr.innerHTML=`
-      <td><span class="ssh-command">${escapeHTML(row.command)}</span></td>
+      <td>
+         <div class="ssh-command">
+            <span class="ssh-copy-icon">⧉</span>
+            <code>${escapeHTML(row.command)}</code>
+         </div>
+      </td>
       <td>${escapeHTML(row.usage)}</td>
       <td>
         <div class="ssh-actions">
@@ -857,6 +881,14 @@ function renderSsh(list){
     sshTableBody.appendChild(tr);
 
   });
+
+   const copyIcon = tr.querySelector(".ssh-copy-icon");
+   
+   if(copyIcon){
+     copyIcon.onclick = ()=>{
+       navigator.clipboard.writeText(row.command);
+     };
+   }
 
   updateAdminUI();
 
@@ -1173,6 +1205,15 @@ if(confirmDeleteBtn){
     if(activeTab === "registrars"){
       if(deleteRuleId) deleteRegistrar(deleteRuleId);
     }
+
+   if(activeTab === "ssh"){
+     if(deleteRuleId){
+       fetch("/.netlify/functions/ssh",{
+         method:"DELETE",
+         body:JSON.stringify({id:deleteRuleId})
+       }).then(loadSsh);
+     }
+   }
 
     closeDeleteModal();
   };
