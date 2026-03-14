@@ -39,12 +39,18 @@ exports.handler = async (event) => {
       WHERE id=${data.id}
     `;
 
-    return {statusCode:200};
+    return {
+    statusCode:200,
+      body:JSON.stringify({ok:true})
+    };
   }
 
   if(method === "DELETE"){
     await sql`DELETE FROM cloudflare_rules WHERE id=${data.id}`;
-    return {statusCode:200};
+    return {
+    statusCode:200,
+      body:JSON.stringify({ok:true})
+    };
   }
 
 };
