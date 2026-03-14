@@ -838,44 +838,52 @@ function renderSsh(list){
 
   list.forEach(row=>{
 
-    const tr = document.createElement("tr");
+const tr = document.createElement("tr");
 
-   tr.innerHTML = `
-   <td>
-     <div class="ssh-command">
-       <code>${escapeHTML(row.command)}</code>
-       <span class="ssh-copy-icon">⧉</span>
-     </div>
-   </td>
-   
-   <td>${escapeHTML(row.usage)}</td>
-   
-   <td class="admin-only">
-     <div class="ssh-actions">
-       <button class="btn small edit">Edit</button>
-       <button class="btn small delete">Delete</button>
-     </div>
-   </td>
-   `;
+tr.innerHTML = `
+<td>
+  <div class="ssh-command">
+    <code>${escapeHTML(row.command)}</code>
+    <span class="ssh-copy-icon">⧉</span>
+  </div>
+</td>
 
-    tr.querySelector(".copy").onclick = ()=>{
-      navigator.clipboard.writeText(row.command);
-    };
+<td>${escapeHTML(row.usage)}</td>
 
-    tr.querySelector(".edit").onclick = ()=>{
-      editingSshId = row.id;
-      ruleTitleInput.value = row.command;
-      ruleDescInput.value = row.usage;
-      ruleCodeInput.value = row.command;
-      ruleModalTitle.textContent="Edit SSH Command";
-      ruleModal.style.display="flex";
-    };
+<td class="admin-only">
+  <div class="ssh-actions">
+    <button class="btn small edit">Edit</button>
+    <button class="btn small delete">Delete</button>
+  </div>
+</td>
+`;
 
-    tr.querySelector(".delete").onclick = ()=>{
-      openDeleteModal(row.id,"ssh");
-    };
+const copyIcon = tr.querySelector(".ssh-copy-icon");
 
-    sshTableBody.appendChild(tr);
+copyIcon.onclick = ()=>{
+  navigator.clipboard.writeText(row.command);
+
+  copyIcon.textContent = "✓";
+
+  setTimeout(()=>{
+    copyIcon.textContent = "⧉";
+  },1000);
+};
+
+tr.querySelector(".edit").onclick = ()=>{
+  editingSshId = row.id;
+  ruleTitleInput.value = row.command;
+  ruleDescInput.value = row.usage;
+  ruleModalTitle.textContent = "Edit SSH Command";
+  ruleModal.style.display = "flex";
+};
+
+tr.querySelector(".delete").onclick = ()=>{
+  openDeleteModal(row.id,"ssh");
+};
+
+sshTableBody.appendChild(tr);
+
 
   });
 
