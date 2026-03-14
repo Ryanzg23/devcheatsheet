@@ -840,26 +840,23 @@ function renderSsh(list){
 
     const tr = document.createElement("tr");
 
-    tr.innerHTML=`
-      <td>
-         <div class="ssh-command">
-            <span class="ssh-copy-icon">⧉</span>
-            <code>${escapeHTML(row.command)}</code>
-         </div>
-      </td>
-      <td>${escapeHTML(row.usage)}</td>
-      <td>
-        <div class="ssh-actions">
-
-          <button class="btn small copy">Copy</button>
-
-          <button class="btn small admin-only edit">Edit</button>
-
-          <button class="btn small admin-only delete">Delete</button>
-
-        </div>
-      </td>
-    `;
+   tr.innerHTML = `
+   <td>
+     <div class="ssh-command">
+       <code>${escapeHTML(row.command)}</code>
+       <span class="ssh-copy-icon">⧉</span>
+     </div>
+   </td>
+   
+   <td>${escapeHTML(row.usage)}</td>
+   
+   <td class="admin-only">
+     <div class="ssh-actions">
+       <button class="btn small edit">Edit</button>
+       <button class="btn small delete">Delete</button>
+     </div>
+   </td>
+   `;
 
     tr.querySelector(".copy").onclick = ()=>{
       navigator.clipboard.writeText(row.command);
@@ -887,6 +884,12 @@ function renderSsh(list){
    if(copyIcon){
      copyIcon.onclick = ()=>{
        navigator.clipboard.writeText(row.command);
+   
+       copyIcon.textContent = "✓";
+   
+       setTimeout(()=>{
+         copyIcon.textContent = "⧉";
+       },1000);
      };
    }
 
