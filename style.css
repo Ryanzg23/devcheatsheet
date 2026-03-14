@@ -741,16 +741,16 @@ body:not(.admin-mode) .admin-only{
 
 /* row hover */
 
-#sshTable tbody tr:hover{
+#sshTableBody tr:hover{
   background:rgba(255,255,255,0.05);
   transition:background .15s ease;
 }
 
-#sshTable tbody tr{
+#sshTableBody tr{
   border-top:1px solid rgba(255,255,255,0.05);
 }
 
-#sshTable tbody tr:hover{
+#sshTableBody tr:hover{
   background:rgba(255,255,255,0.03);
 }
 
