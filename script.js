@@ -570,6 +570,33 @@ if(saveRuleBtn){
         }
       }
 
+     if(activeTab === "ssh"){
+      
+        if(editingSshId){
+          fetch("/.netlify/functions/ssh",{
+            method:"PUT",
+            body:JSON.stringify({
+              id:editingSshId,
+              command:title,
+              usage:description
+            })
+          }).then(loadSsh);
+      
+        }else{
+      
+          fetch("/.netlify/functions/ssh",{
+            method:"POST",
+            body:JSON.stringify({
+              command:title,
+              usage:description
+            })
+          }).then(loadSsh);
+      
+        }
+      
+      }
+
+
     closeRuleModal();
   };
 }
@@ -750,6 +777,105 @@ if(registrarSearch){
     );
 
     renderRegistrars(filtered);
+
+  };
+
+}
+
+/* =========================
+   SSH COMMANDS
+========================= */
+
+const sshTableBody = document.getElementById("sshTableBody");
+const sshSearch = document.getElementById("sshSearch");
+const addSshBtn = document.getElementById("addSshBtn");
+
+let sshData = [];
+let editingSshId = null;
+
+/* LOAD */
+function loadSsh(){
+
+  if(!sshTableBody) return;
+
+  sshTableBody.innerHTML = `
+  <tr><td colspan="3" class="status-loading">Loading...</td></tr>
+  `;
+
+  fetch("/.netlify/functions/ssh")
+  .then(r=>r.json())
+  .then(data=>{
+    sshData = data || [];
+    renderSsh(sshData);
+  });
+
+}
+
+/* RENDER */
+
+function renderSsh(list){
+
+  sshTableBody.innerHTML="";
+
+  list.forEach(row=>{
+
+    const tr = document.createElement("tr");
+
+    tr.innerHTML=`
+      <td><span class="ssh-command">${escapeHTML(row.command)}</span></td>
+      <td>${escapeHTML(row.usage)}</td>
+      <td>
+        <div class="ssh-actions">
+
+          <button class="btn small copy">Copy</button>
+
+          <button class="btn small admin-only edit">Edit</button>
+
+          <button class="btn small admin-only delete">Delete</button>
+
+        </div>
+      </td>
+    `;
+
+    tr.querySelector(".copy").onclick = ()=>{
+      navigator.clipboard.writeText(row.command);
+    };
+
+    tr.querySelector(".edit").onclick = ()=>{
+      editingSshId = row.id;
+      ruleTitleInput.value = row.command;
+      ruleDescInput.value = row.usage;
+      ruleCodeInput.value = row.command;
+      ruleModalTitle.textContent="Edit SSH Command";
+      ruleModal.style.display="flex";
+    };
+
+    tr.querySelector(".delete").onclick = ()=>{
+      openDeleteModal(row.id,"ssh");
+    };
+
+    sshTableBody.appendChild(tr);
+
+  });
+
+  updateAdminUI();
+
+}
+
+/* SEARCH */
+
+if(sshSearch){
+
+  sshSearch.oninput = ()=>{
+
+    const q = sshSearch.value.toLowerCase();
+
+    const filtered = sshData.filter(r =>
+      r.command.toLowerCase().includes(q) ||
+      r.usage.toLowerCase().includes(q)
+    );
+
+    renderSsh(filtered);
 
   };
 
@@ -1078,6 +1204,7 @@ setTimeout(()=>{
   loadCpanel();
   loadCloudflare();
   loadRegistrars();
+  loadSsh();
 },50);
    
 
