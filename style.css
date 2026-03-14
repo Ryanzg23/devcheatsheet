@@ -682,5 +682,7 @@ body.admin-mode .admin-only{
 .ssh-copy-icon:hover{
   opacity:1;
 }
-
+body:not(.admin-mode) .admin-only{
+  display:none !important;
+}
 
