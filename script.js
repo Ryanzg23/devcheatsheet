@@ -387,19 +387,26 @@ function openRuleModal(rule=null){
   const activeTab = document.querySelector(".tab.active")?.dataset.tab;
 
   ruleModal.style.display="flex";
-ruleCodeInput.style.display = "";
-ruleCodeInput.previousElementSibling.style.display = "";
 
+  /* RESET MODAL DEFAULT (for htaccess/cpanel/cloudflare/registrars) */
+  ruleTitleInput.previousElementSibling.textContent = "Title";
+  ruleDescInput.previousElementSibling.textContent = "Description";
+
+  ruleCodeInput.style.display = "";
+  ruleCodeInput.previousElementSibling.style.display = "";
+
+  /* Populate fields */
   if(rule){
     ruleTitleInput.value = rule.title;
     ruleDescInput.value = rule.description || "";
-    ruleCodeInput.value = rule.code;
+    ruleCodeInput.value = rule.code || "";
   }else{
     ruleTitleInput.value="";
     ruleDescInput.value="";
     ruleCodeInput.value="";
   }
 
+  /* Tab specific titles */
   if(activeTab === "htaccess"){
     ruleModalTitle.textContent = rule ? "Edit htaccess Rule" : "Add htaccess Rule";
   }
@@ -408,7 +415,29 @@ ruleCodeInput.previousElementSibling.style.display = "";
     ruleModalTitle.textContent = rule ? "Edit Cpanel Entry" : "Add Cpanel Entry";
   }
 
+  if(activeTab === "cloudflare"){
+    ruleModalTitle.textContent = rule ? "Edit Cloudflare Rule" : "Add Cloudflare Rule";
+  }
+
+  if(activeTab === "registrars"){
+    ruleModalTitle.textContent = rule ? "Edit Registrar" : "Add Registrar";
+  }
+
+  /* SSH CUSTOM MODAL */
+  if(activeTab === "ssh"){
+
+    ruleModalTitle.textContent = rule ? "Edit SSH Command" : "Add SSH Command";
+
+    ruleTitleInput.previousElementSibling.textContent = "Command";
+    ruleDescInput.previousElementSibling.textContent = "Usage";
+
+    ruleCodeInput.style.display = "none";
+    ruleCodeInput.previousElementSibling.style.display = "none";
+
+  }
+
 }
+
 
 function openCpanelModal(rule=null){
 
@@ -835,27 +864,8 @@ function loadSsh(){
 
 if(addSshBtn){
   addSshBtn.onclick = ()=>{
-
-    editingSshId = null;
-
-    ruleModalTitle.textContent = "Add SSH Command";
-
-    document.querySelector('label[for="ruleTitle"]')?.remove();
-
-    ruleTitleInput.previousElementSibling.textContent = "Command";
-    ruleDescInput.previousElementSibling.textContent = "Usage";
-
-    const codeLabel = ruleCodeInput.previousElementSibling;
-    if(codeLabel) codeLabel.style.display = "none";
-
-    ruleCodeInput.style.display = "none";
-
-    ruleTitleInput.value = "";
-    ruleDescInput.value = "";
-
-    ruleModal.style.display = "flex";
-
-  };
+     openRuleModal();
+   };
 }
 
 
