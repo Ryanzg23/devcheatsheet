@@ -546,10 +546,10 @@ if(saveRuleBtn){
     const description = ruleDescInput.value.trim();
     const code = ruleCodeInput.value.trim();
 
+    const activeTab = document.querySelector(".tab.active")?.dataset.tab;
+     
     if(activeTab !== "ssh" && (!title || !code)) return;
     if(activeTab === "ssh" && (!title || !description)) return;
-
-    const activeTab = document.querySelector(".tab.active")?.dataset.tab;
 
     /* HTACCESS */
     if(activeTab === "htaccess"){
@@ -821,7 +821,7 @@ function loadSsh(){
   if(!sshTableBody) return;
 
   sshTableBody.innerHTML = `
-  <tr><td colspan="3" class="status-loading">Loading...</td></tr>
+  <tr><td colspan="2" class="status-loading">Loading...</td></tr>
   `;
 
   fetch("/.netlify/functions/ssh")
@@ -928,19 +928,6 @@ sshTableBody.appendChild(tr);
 
   });
 
-   const copyIcon = tr.querySelector(".ssh-copy-icon");
-   
-   if(copyIcon){
-     copyIcon.onclick = ()=>{
-       navigator.clipboard.writeText(row.command);
-   
-       copyIcon.textContent = "✓";
-   
-       setTimeout(()=>{
-         copyIcon.textContent = "⧉";
-       },1000);
-     };
-   }
 
   updateAdminUI();
 
@@ -964,10 +951,6 @@ if(sshSearch){
   };
 
 }
-
-tr.querySelector(".ssh-command").onclick = ()=>{
-  navigator.clipboard.writeText(row.command);
-};
 
 
 /* =========================
