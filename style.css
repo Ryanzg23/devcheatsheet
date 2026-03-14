@@ -691,3 +691,50 @@ body:not(.admin-mode) .admin-only{
   display:none !important;
 }
 
+
+/* SSH COMMAND BLOCK */
+
+.ssh-command-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.ssh-command{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+
+  background:#0f172a;
+  border:1px solid #1f2937;
+  padding:6px 10px;
+  border-radius:8px;
+
+  font-family:monospace;
+  font-size:13px;
+  color:#e5e7eb;
+}
+
+.ssh-command code{
+  background:none;
+  padding:0;
+  color:#f8fafc;
+}
+
+.ssh-copy-icon{
+  font-size:12px;
+  opacity:.6;
+  cursor:pointer;
+  transition:opacity .2s;
+}
+
+.ssh-copy-icon:hover{
+  opacity:1;
+}
+
+/* row hover */
+
+#sshTable tbody tr:hover{
+  background:rgba(255,255,255,0.03);
+}
+
