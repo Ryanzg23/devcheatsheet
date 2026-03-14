@@ -396,15 +396,21 @@ function openRuleModal(rule=null){
   ruleCodeInput.previousElementSibling.style.display = "";
 
   /* Populate fields */
-  if(rule){
-    ruleTitleInput.value = rule.title;
-    ruleDescInput.value = rule.description || "";
-    ruleCodeInput.value = rule.code || "";
-  }else{
-    ruleTitleInput.value="";
-    ruleDescInput.value="";
-    ruleCodeInput.value="";
-  }
+   if(rule){
+     editingRuleId = rule.id;   // ADD THIS
+   
+     ruleTitleInput.value = rule.title;
+     ruleDescInput.value = rule.description || "";
+     ruleCodeInput.value = rule.code;
+   
+   }else{
+   
+     editingRuleId = null;      // ADD THIS
+   
+     ruleTitleInput.value="";
+     ruleDescInput.value="";
+     ruleCodeInput.value="";
+   }
 
   /* Tab specific titles */
   if(activeTab === "htaccess"){
