@@ -671,7 +671,8 @@ body.admin-mode .admin-only{
 
 .ssh-actions{
   display:flex;
-  gap:6px;
+  gap:8px;
+  margin-left:10px;
 }
 
 .ssh-command code{
@@ -741,7 +742,8 @@ body:not(.admin-mode) .admin-only{
 /* row hover */
 
 #sshTable tbody tr:hover{
-  background:rgba(255,255,255,0.03);
+  background:rgba(255,255,255,0.05);
+  transition:background .15s ease;
 }
 
 #sshTable tbody tr{
@@ -752,3 +754,34 @@ body:not(.admin-mode) .admin-only{
   background:rgba(255,255,255,0.03);
 }
 
+/* SSH EDIT BUTTON */
+
+.ssh-actions .edit{
+  background:#16a34a;
+  border:none;
+}
+
+.ssh-actions .edit:hover{
+  background:#15803d;
+}
+
+/* SSH DELETE BUTTON */
+
+.ssh-actions .delete{
+  background:#dc2626;
+  border:none;
+}
+
+.ssh-actions .delete:hover{
+  background:#b91c1c;
+}
+
+/* SSH TABLE STRIPES */
+
+#sshTable tbody tr:nth-child(even){
+  background:rgba(255,255,255,0.02);
+}
+
+#sshTable tbody tr:nth-child(odd){
+  background:transparent;
+}
