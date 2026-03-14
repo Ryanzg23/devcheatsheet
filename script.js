@@ -544,7 +544,8 @@ if(saveRuleBtn){
     const description = ruleDescInput.value.trim();
     const code = ruleCodeInput.value.trim();
 
-    if(!title || !code) return;
+    if(activeTab !== "ssh" && (!title || !code)) return;
+    if(activeTab === "ssh" && (!title || !description)) return;
 
     const activeTab = document.querySelector(".tab.active")?.dataset.tab;
 
@@ -832,17 +833,29 @@ function loadSsh(){
 
 if(addSshBtn){
   addSshBtn.onclick = ()=>{
+
     editingSshId = null;
 
     ruleModalTitle.textContent = "Add SSH Command";
 
+    document.querySelector('label[for="ruleTitle"]')?.remove();
+
+    ruleTitleInput.previousElementSibling.textContent = "Command";
+    ruleDescInput.previousElementSibling.textContent = "Usage";
+
+    const codeLabel = ruleCodeInput.previousElementSibling;
+    if(codeLabel) codeLabel.style.display = "none";
+
+    ruleCodeInput.style.display = "none";
+
     ruleTitleInput.value = "";
     ruleDescInput.value = "";
-    ruleCodeInput.value = "";
 
     ruleModal.style.display = "flex";
+
   };
 }
+
 
 /* RENDER */
 
@@ -887,10 +900,20 @@ copyIcon.onclick = ()=>{
 };
 
 tr.querySelector(".edit").onclick = ()=>{
+
   editingSshId = row.id;
+
+  ruleModalTitle.textContent = "Edit SSH Command";
+
+  ruleTitleInput.previousElementSibling.textContent = "Command";
+  ruleDescInput.previousElementSibling.textContent = "Usage";
+
+  ruleCodeInput.style.display = "none";
+  ruleCodeInput.previousElementSibling.style.display = "none";
+
   ruleTitleInput.value = row.command;
   ruleDescInput.value = row.usage;
-  ruleModalTitle.textContent = "Edit SSH Command";
+
   ruleModal.style.display = "flex";
 };
 
@@ -939,6 +962,10 @@ if(sshSearch){
   };
 
 }
+
+tr.querySelector(".ssh-command").onclick = ()=>{
+  navigator.clipboard.writeText(row.command);
+};
 
 
 /* =========================
