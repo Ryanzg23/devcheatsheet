@@ -327,15 +327,29 @@ if(adminPassword){
 
 if(adminLogin){
   adminLogin.onclick=()=>{
-    if(adminPassword.value==="admin"){
-      isAdmin=true;
+
+    if(adminPassword.value === "admin"){
+
+      isAdmin = true;
+
       localStorage.setItem("adminMode","1");
+
       updateAdminUI();
+
       loadRules();
+      loadCpanel();
+      loadCloudflare();
+      loadRegistrars();
+      loadSsh();
+
       closeAdminModal();
+
     }else{
+
       alert("Wrong password");
+
     }
+
   };
 }
 
@@ -842,20 +856,22 @@ const tr = document.createElement("tr");
 
 tr.innerHTML = `
 <td>
-  <div class="ssh-command">
-    <code>${escapeHTML(row.command)}</code>
-    <span class="ssh-copy-icon">⧉</span>
+  <div class="ssh-command-row">
+
+    <div class="ssh-command">
+      <code>${escapeHTML(row.command)}</code>
+      <span class="ssh-copy-icon">⧉</span>
+    </div>
+
+    <div class="ssh-actions admin-only">
+      <button class="btn small edit">Edit</button>
+      <button class="btn small delete">Delete</button>
+    </div>
+
   </div>
 </td>
 
 <td>${escapeHTML(row.usage)}</td>
-
-<td class="admin-only">
-  <div class="ssh-actions">
-    <button class="btn small edit">Edit</button>
-    <button class="btn small delete">Delete</button>
-  </div>
-</td>
 `;
 
 const copyIcon = tr.querySelector(".ssh-copy-icon");
