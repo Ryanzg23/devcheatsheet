@@ -387,6 +387,8 @@ function openRuleModal(rule=null){
   const activeTab = document.querySelector(".tab.active")?.dataset.tab;
 
   ruleModal.style.display="flex";
+ruleCodeInput.style.display = "";
+ruleCodeInput.previousElementSibling.style.display = "";
 
   if(rule){
     ruleTitleInput.value = rule.title;
