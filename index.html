@@ -31,6 +31,7 @@
       <button class="tab" data-tab="cpanel">WHM/Cpanel</button>
       <button class="tab" data-tab="cloudflare">Cloudflare</button>
 	  <button class="tab" data-tab="registrars">Domain Registrars</button>
+	  <button class="tab" data-tab="ssh">SSH / Terminal</button>
 	  <button class="tab" data-tab="amp">AMP Requirements</button>
     </div>
 	  
@@ -640,6 +641,33 @@ animation:none}
 <div id="registrarAccordion" class="accordion"></div>
 
 </div>
+
+<!-- ================= SSH TAB ================= -->
+<div class="tab-content" id="ssh">
+
+<div class="htaccess-toolbar">
+  <button id="addSshBtn" class="btn small admin-only">+ Add Command</button>
+</div>
+
+<div class="search-bar">
+  <input type="text" id="sshSearch" placeholder="Search SSH commands...">
+</div>
+
+<table class="ssh-table">
+<thead>
+<tr>
+<th style="width:40%">Command</th>
+<th>Usage</th>
+<th style="width:160px">Action</th>
+</tr>
+</thead>
+
+<tbody id="sshTableBody"></tbody>
+
+</table>
+
+</div>
+
     
 
   </div>
