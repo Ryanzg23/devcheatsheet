@@ -7,7 +7,8 @@ exports.handler = async (event) => {
   const method = event.httpMethod;
 
   if(method === "GET"){
-    const rows = await sql`SELECT * FROM cloudflare_rules ORDER BY id DESC`;
+    const rows = await sql`SELECT id, title, description, code FROM cloudflare_rules ORDER BY id ASC`;
+
     return {
       statusCode:200,
       body:JSON.stringify(rows)
