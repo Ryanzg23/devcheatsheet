@@ -10,7 +10,12 @@ export async function handler(event) {
   try {
     const res = await fetch(url, {
       method: "GET",
-      redirect: "manual"
+      redirect: "manual",
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Bulk SEO Meta Viewer)",
+        "Accept": "text/html,application/xhtml+xml",
+        "Accept-Language": "en-US,en;q=0.9"
+      }
     });
 
     const status = res.status;
