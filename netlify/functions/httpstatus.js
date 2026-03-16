@@ -18,7 +18,7 @@ export async function handler(event) {
 
     return {
       statusCode: 200,
-      headers: { "Access-Control-Allow-Origin": "*" },
+      "User-Agent": "Mozilla/5.0 (Bulk SEO Meta Viewer)",
       body: JSON.stringify({
         url,
         status,
