@@ -1299,7 +1299,7 @@ setTimeout(()=>{
   loadRules();
   loadCpanel();
   loadCloudflare();
-  loadRegistrars();
+  loadNotes();
   loadSsh();
 },50);
    
