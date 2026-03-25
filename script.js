@@ -646,10 +646,14 @@ const cancelNoteBtn = document.getElementById("cancelNote");
 
 let notesData = [];
 let noteSteps = [];
+let openSteps = [];
 let editingNoteId = null;
 
 function addStep(data = { instruction: "", code: "" }) {
   noteSteps.push(data);
+
+  openSteps = noteSteps.map((_, i) => i === noteSteps.length - 1);
+
   renderSteps();
 }
 
@@ -666,7 +670,7 @@ function renderSteps(){
     div.className = "step-item";
 
     div.innerHTML = `
-      <div class="step-card ${i === 0 ? "open" : ""}">
+      <div class="step-card ${openSteps[i] ? "open" : ""}">
 
         <div class="step-header">
           <span>Step ${i + 1}</span>
@@ -697,8 +701,9 @@ function renderSteps(){
     /* TOGGLE */
     const header = stepEl.querySelector(".step-header");
     header.onclick = () => {
-      stepEl.classList.toggle("open");
-    };
+        const isOpen = stepEl.classList.toggle("open");
+        openSteps[i] = isOpen;
+      };
 
     /* REMOVE */
     div.querySelector(".remove-step").onclick = ()=>{
@@ -838,6 +843,7 @@ function openNoteModal(note=null){
     noteTitle.value = "";
 
     noteSteps = [{ instruction:"", code:"" }];
+     
 
   }
 
