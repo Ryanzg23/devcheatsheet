@@ -665,24 +665,42 @@ function renderSteps(){
     const div = document.createElement("div");
     div.className = "step-item";
 
-      div.innerHTML = `
-        <div class="step-card">
-      
+    div.innerHTML = `
+      <div class="step-card ${i === 0 ? "open" : ""}">
+
+        <div class="step-header">
+          <span>Step ${i + 1}</span>
+          <span class="step-toggle">▾</span>
+        </div>
+
+        <div class="step-body">
           <div class="step-fields">
+
             <label>Instruction</label>
             <textarea class="step-instruction" data-i="${i}">${step.instruction || ""}</textarea>
-      
+
             <label>Code</label>
             <textarea class="step-code" data-i="${i}">${step.code || ""}</textarea>
-          </div>
-      
-          <div class="step-actions">
-            <button class="btn danger small remove-step">Remove</button>
-          </div>
-      
-        </div>
-      `;
 
+          </div>
+
+          <div class="step-actions">
+            <button class="btn small danger remove-step">Remove</button>
+          </div>
+        </div>
+
+      </div>
+    `;
+
+    const stepEl = div.querySelector(".step-card");
+
+    /* TOGGLE */
+    const header = stepEl.querySelector(".step-header");
+    header.onclick = () => {
+      stepEl.classList.toggle("open");
+    };
+
+    /* REMOVE */
     div.querySelector(".remove-step").onclick = ()=>{
       noteSteps.splice(i,1);
       renderSteps();
@@ -811,8 +829,8 @@ function openNoteModal(note=null){
     noteTitle.value = note.title;
 
     noteSteps = note.steps && note.steps.length
-      ? note.steps
-      : [{ instruction:"", code:"" }];
+     ? JSON.parse(JSON.stringify(note.steps))
+     : [{ instruction:"", code:"" }];
 
   }else{
 
