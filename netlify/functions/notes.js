@@ -9,9 +9,7 @@ exports.handler = async (event) => {
   /* GET */
   if(method === "GET"){
     const rows = await sql`
-      SELECT id, title, text_instructions, code, instructions
-      FROM important_notes
-      ORDER BY id ASC
+      SELECT * FROM important_notes ORDER BY id ASC
     `;
 
     return {
@@ -25,8 +23,8 @@ exports.handler = async (event) => {
   /* POST */
   if(method === "POST"){
     const result = await sql`
-      INSERT INTO important_notes (title, text_instructions, code, instructions)
-      VALUES (${data.title}, ${data.text_instructions}, ${data.code}, ${data.instructions})
+      INSERT INTO important_notes (title, steps)
+      VALUES (${data.title}, ${JSON.stringify(data.steps)})
       RETURNING id
     `;
 
@@ -41,9 +39,7 @@ exports.handler = async (event) => {
     await sql`
       UPDATE important_notes
       SET title=${data.title},
-          text_instructions=${data.text_instructions},
-          code=${data.code},
-          instructions=${data.instructions}
+          steps=${JSON.stringify(data.steps)}
       WHERE id=${data.id}
     `;
 
@@ -53,10 +49,8 @@ exports.handler = async (event) => {
   /* DELETE */
   if(method === "DELETE"){
     await sql`
-      DELETE FROM important_notes
-      WHERE id=${data.id}
+      DELETE FROM important_notes WHERE id=${data.id}
     `;
-
     return {statusCode:200};
   }
 
