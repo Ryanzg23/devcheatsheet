@@ -441,18 +441,6 @@ input{
 }
 
 
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.45);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:1000;
-}
-
-.modal.open{display:flex}
-
 .modal-box{
   background:var(--card);
   border:1px solid var(--border);
@@ -807,7 +795,9 @@ body:not(.admin-mode) .admin-only{
   max-width: 520px;
   width: 100%;
   box-sizing: border-box;
-  overflow: hidden;
+  max-height: 90vh;   /* ✅ limit height */
+  overflow-y: auto;   /* ✅ enable vertical scroll */
+  overflow-x: hidden; /* prevent sideways scroll */
 }
 
 /* TEXTAREA FIX */
