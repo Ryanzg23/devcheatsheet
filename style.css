@@ -820,3 +820,46 @@ body:not(.admin-mode) .admin-only{
 .modal-content textarea {
   width: 100%;
 }
+
+
+.note-code {
+  position: relative;
+  background: #1e1e1e;
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 10px;
+  overflow: auto;
+}
+
+/* code text */
+.note-code code {
+  display: block;
+  font-family: monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #e5e7eb;
+}
+
+/* COPY BUTTON (ChatGPT style) */
+.note-code .copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+
+  font-size: 12px;
+  padding: 4px 10px;
+
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px;
+
+  color: #ccc;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.note-code .copy-btn:hover {
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+}
