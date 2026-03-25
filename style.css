@@ -863,3 +863,58 @@ body:not(.admin-mode) .admin-only{
   background: rgba(255,255,255,0.15);
   color: #fff;
 }
+
+
+/* STEP CARD */
+.step-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+/* spacing */
+.step-fields textarea {
+  margin-bottom: 10px;
+}
+
+/* ACTION ROW */
+.step-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+/* REMOVE BUTTON (RED but subtle) */
+.btn.danger {
+  background: rgba(220,38,38,0.15);
+  color: #f87171;
+  border: 1px solid rgba(220,38,38,0.25);
+}
+
+.btn.danger:hover {
+  background: rgba(220,38,38,0.25);
+}
+
+/* ADD STEP BUTTON */
+#addStepBtn {
+  width: 100%;
+  margin-top: 10px;
+
+  background: rgba(59,130,246,0.15);
+  border: 1px dashed rgba(59,130,246,0.4);
+  color: #93c5fd;
+}
+
+#addStepBtn:hover {
+  background: rgba(59,130,246,0.25);
+}
+
+/* MODAL FOOTER (better alignment) */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
