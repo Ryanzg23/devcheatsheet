@@ -30,7 +30,7 @@
       <button class="tab" data-tab="htaccess">htaccess Rules</button>
       <button class="tab" data-tab="cpanel">WHM/Cpanel</button>
       <button class="tab" data-tab="cloudflare">Cloudflare</button>
-	  <button class="tab" data-tab="registrars">Domain Registrars</button>
+	  <button class="tab" data-tab="registrars">Important Notes</button>
 	  <button class="tab" data-tab="ssh">SSH / Terminal</button>
 	  <button class="tab" data-tab="amp">AMP Requirements</button>
     </div>
@@ -623,22 +623,18 @@ animation:none}
 </div>
 
 
-<!-- ================= DOMAIN REGISTRARS TAB ================= -->
-<div class="tab-content" id="registrars">
+<!-- ================= IMPORTANT NOTES TAB ================= -->
+<div id="notes" class="tab-content">
 
-<div class="htaccess-toolbar">
-  <button id="addRegistrarBtn" class="btn small admin-only">+ Add Registrar</button>
-</div>
+  <div class="htaccess-toolbar">
+    <button id="addNoteBtn" class="btn small admin-only">+ Add Note</button>
+  </div>
 
-<div class="search-bar">
-  <input
-    type="text"
-    id="registrarSearch"
-    placeholder="Search domain registrars..."
-  />
-</div>
+  <div class="search-bar">
+    <input type="text" id="notesSearch" placeholder="Search notes...">
+  </div>
 
-<div id="registrarAccordion" class="accordion"></div>
+  <div id="notesAccordion" class="accordion"></div>
 
 </div>
 
@@ -739,6 +735,31 @@ animation:none}
     <div class="modal-actions">
       <button class="btn" id="saveSsh">Save</button>
       <button class="btn secondary" id="cancelSsh">Cancel</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal" id="noteModal">
+  <div class="modal-content">
+
+    <h3 id="noteModalTitle">Add Note</h3>
+
+    <label>Title</label>
+    <input type="text" id="noteTitle">
+
+    <label>Text Instructions</label>
+    <textarea id="noteText"></textarea>
+
+    <label>Code</label>
+    <textarea id="noteCode"></textarea>
+
+    <label>Instructions</label>
+    <textarea id="noteInstructions"></textarea>
+
+    <div class="modal-actions">
+      <button class="btn" id="saveNote">Save</button>
+      <button class="btn secondary" id="cancelNote">Cancel</button>
     </div>
 
   </div>
