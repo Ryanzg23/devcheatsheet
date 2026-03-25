@@ -339,9 +339,8 @@ if(adminLogin){
       loadRules();
       loadCpanel();
       loadCloudflare();
-      loadRegistrars();
       loadSsh();
-
+      loadNotes();
       closeAdminModal();
 
     }else{
@@ -388,7 +387,7 @@ function openRuleModal(rule=null){
 
   ruleModal.style.display="flex";
 
-  /* RESET MODAL DEFAULT (for htaccess/cpanel/cloudflare/registrars) */
+  /* RESET MODAL DEFAULT (for htaccess/cpanel/cloudflare) */
   ruleTitleInput.previousElementSibling.textContent = "Title";
   ruleDescInput.previousElementSibling.textContent = "Description";
 
@@ -425,9 +424,6 @@ function openRuleModal(rule=null){
     ruleModalTitle.textContent = rule ? "Edit Cloudflare Rule" : "Add Cloudflare Rule";
   }
 
-  if(activeTab === "registrars"){
-    ruleModalTitle.textContent = rule ? "Edit Registrar" : "Add Registrar";
-  }
 
   /* SSH CUSTOM MODAL */
   if(activeTab === "ssh"){
@@ -613,14 +609,6 @@ if(saveRuleBtn){
         }
       }
       
-      /* REGISTRARS */
-      if(activeTab === "registrars"){
-        if(editingRegistrarId){
-          updateRegistrar(editingRegistrarId,title,description,code);
-        }else{
-          addRegistrar(title,description,code);
-        }
-      }
 
 
     closeRuleModal();
@@ -643,171 +631,158 @@ if(searchInput){
 }
 
 /* =========================
-   DOMAIN REGISTRARS
+   IMPORTANT NOTES
 ========================= */
 
-const registrarContainer = document.getElementById("registrarAccordion");
-const registrarSearch = document.getElementById("registrarSearch");
-const addRegistrarBtn = document.getElementById("addRegistrarBtn");
+const notesContainer = document.getElementById("notesAccordion");
+const notesSearch = document.getElementById("notesSearch");
+const addNoteBtn = document.getElementById("addNoteBtn");
 
-let registrarData = [];
-let editingRegistrarId = null;
+const noteModal = document.getElementById("noteModal");
+const noteTitle = document.getElementById("noteTitle");
+const noteText = document.getElementById("noteText");
+const noteCode = document.getElementById("noteCode");
+const noteInstructions = document.getElementById("noteInstructions");
 
+const saveNoteBtn = document.getElementById("saveNote");
+const cancelNoteBtn = document.getElementById("cancelNote");
 
-/* ---------- LOAD ---------- */
-function loadRegistrars(){
-  if(!registrarContainer) return;
+let notesData = [];
+let editingNoteId = null;
 
-  registrarContainer.innerHTML = '<div class="status-loading">Loading…</div>';
+/* LOAD */
+function loadNotes(){
+  if(!notesContainer) return;
 
-  fetch("/.netlify/functions/registrars")
+  fetch("/.netlify/functions/notes")
     .then(r=>r.json())
     .then(data=>{
-      registrarData = data || [];
-      renderRegistrars(registrarData);
-    })
-    .catch(()=>{
-      registrarData = [];
-      renderRegistrars([]);
+      notesData = data || [];
+      renderNotes(notesData);
     });
 }
 
+/* RENDER */
+function renderNotes(list){
 
-/* ---------- RENDER ---------- */
-function renderRegistrars(list){
-  if(!registrarContainer) return;
+  notesContainer.innerHTML="";
 
-  registrarContainer.innerHTML="";
-  list.forEach(rule=>{
-    registrarContainer.appendChild(createRegistrarCard(rule));
+  list.forEach(n=>{
+
+    const item=document.createElement("div");
+    item.className="acc-item";
+
+    item.innerHTML=`
+      <div class="acc-header">
+        <div>
+          <h3>${n.title}</h3>
+          ${n.text_instructions ? `<div class="muted">${n.text_instructions}</div>` : ""}
+        </div>
+
+        <div class="acc-actions">
+          <button class="btn small copy">Copy</button>
+          <button class="btn small admin-only edit">Edit</button>
+          <button class="btn small admin-only delete">Delete</button>
+          <span class="acc-toggle">▾</span>
+        </div>
+      </div>
+
+      <div class="acc-body">
+        ${n.code ? `<pre><code>${escapeHTML(n.code)}</code></pre>` : ""}
+        ${n.instructions ? `<div class="muted">${n.instructions}</div>` : ""}
+      </div>
+    `;
+
+    item.querySelector(".edit").onclick = ()=>openNoteModal(n);
+    item.querySelector(".delete").onclick = ()=>openDeleteModal(n.id,"notes");
+
+    notesContainer.appendChild(item);
+
   });
 
   updateAdminUI();
 }
 
-/* ---------- OPEN MODAL ---------- */
+/* MODAL */
+function openNoteModal(note=null){
 
-function openRegistrarModal(rule=null){
+  noteModal.style.display="flex";
 
-  const modalTitle = document.getElementById("ruleModalTitle");
-
-  ruleModal.style.display="flex";
-
-  if(modalTitle) modalTitle.innerText = rule ? "Edit Registrar" : "Add Registrar";
-
-  if(rule){
-    editingRegistrarId = rule.id;
-    ruleTitleInput.value = rule.title;
-    ruleDescInput.value = rule.description || "";
-    ruleCodeInput.value = rule.code;
+  if(note){
+    editingNoteId = note.id;
+    noteTitle.value = note.title;
+    noteText.value = note.text_instructions || "";
+    noteCode.value = note.code || "";
+    noteInstructions.value = note.instructions || "";
   }else{
-    editingRegistrarId = null;
-    ruleTitleInput.value = "";
-    ruleDescInput.value = "";
-    ruleCodeInput.value = "";
+    editingNoteId = null;
+    noteTitle.value = "";
+    noteText.value = "";
+    noteCode.value = "";
+    noteInstructions.value = "";
   }
-
-}
-   
-if(addRegistrarBtn){
-  addRegistrarBtn.onclick = ()=>openRegistrarModal();
 }
 
-/* ---------- CARD ---------- */
-function createRegistrarCard(rule){
-
-  const item=document.createElement("div");
-  item.className="acc-item";
-
-  item.innerHTML=`
-    <div class="acc-header">
-      <div>
-        <h3>${rule.title}</h3>
-        ${rule.description?`<div class="muted" style="font-size:12px;margin-top:2px">${rule.description}</div>`:""}
-      </div>
-
-      <div class="acc-actions">
-        <button class="btn small copy">Copy</button>
-        <button class="btn small admin-only edit">Edit</button>
-        <button class="btn small admin-only delete">Delete</button>
-        <span class="acc-toggle">▾</span>
-      </div>
-    </div>
-
-    <div class="acc-body">
-      <pre><code>${escapeHTML(rule.code)}</code></pre>
-    </div>
-  `;
-
-  item.querySelector(".edit").onclick = ()=>openRegistrarModal(rule);
-  item.querySelector(".delete").onclick = ()=>openRegistrarDelete(rule.id);
-
-  return item;
+if(addNoteBtn){
+  addNoteBtn.onclick = ()=>openNoteModal();
 }
 
+/* SAVE */
+if(saveNoteBtn){
+  saveNoteBtn.onclick = ()=>{
 
-/* ---------- ADD ---------- */
-function addRegistrar(title,description,code){
+    const payload = {
+      title: noteTitle.value,
+      text_instructions: noteText.value,
+      code: noteCode.value,
+      instructions: noteInstructions.value
+    };
 
-  fetch("/.netlify/functions/registrars",{
-    method:"POST",
-    body:JSON.stringify({title,description,code})
-  })
-  .then(r=>r.json())
-  .then(data=>{
-    registrarData.push({id:data.id,title,description,code});
-    renderRegistrars(registrarData);
-  });
+    if(editingNoteId){
+      payload.id = editingNoteId;
 
+      fetch("/.netlify/functions/notes",{
+        method:"PUT",
+        body:JSON.stringify(payload)
+      }).then(loadNotes);
+
+    }else{
+
+      fetch("/.netlify/functions/notes",{
+        method:"POST",
+        body:JSON.stringify(payload)
+      }).then(loadNotes);
+
+    }
+
+    noteModal.style.display="none";
+  };
 }
 
-
-/* ---------- UPDATE ---------- */
-function updateRegistrar(id,title,description,code){
-
-  fetch("/.netlify/functions/registrars",{
-    method:"PUT",
-    body:JSON.stringify({id,title,description,code})
-  }).then(loadRegistrars);
-
+if(cancelNoteBtn){
+  cancelNoteBtn.onclick=()=>{
+    noteModal.style.display="none";
+  };
 }
 
+/* SEARCH */
+if(notesSearch){
+  notesSearch.oninput=()=>{
+    const q = notesSearch.value.toLowerCase();
 
-/* ---------- DELETE ---------- */
-function deleteRegistrar(id){
-
-  fetch("/.netlify/functions/registrars",{
-    method:"DELETE",
-    body:JSON.stringify({id})
-  }).then(loadRegistrars);
-
-}
-   
-function openRegistrarDelete(id){
-  deleteRuleId = id;
-  deleteModal.style.display = "flex";
-}
-
-
-
-/* ---------- SEARCH ---------- */
-if(registrarSearch){
-
-  registrarSearch.oninput = ()=>{
-
-    const q = registrarSearch.value.toLowerCase();
-
-    const filtered = registrarData.filter(r =>
-      r.title.toLowerCase().includes(q) ||
-      (r.description && r.description.toLowerCase().includes(q))
+    const filtered = notesData.filter(n =>
+      n.title.toLowerCase().includes(q) ||
+      (n.text_instructions && n.text_instructions.toLowerCase().includes(q))
     );
 
-    renderRegistrars(filtered);
-
+    renderNotes(filtered);
   };
-
 }
 
+
+
+
+   
 /* =========================
    SSH COMMANDS
 ========================= */
@@ -1277,9 +1252,14 @@ if(confirmDeleteBtn){
       if(deleteRuleId) deleteCloudflare(deleteRuleId);
     }
 
-    if(activeTab === "registrars"){
-      if(deleteRuleId) deleteRegistrar(deleteRuleId);
-    }
+     if(activeTab === "notes"){
+        if(deleteRuleId) {
+          fetch("/.netlify/functions/notes",{
+            method:"DELETE",
+            body:JSON.stringify({id:deleteRuleId})
+          }).then(loadNotes);
+        }
+      }
 
    if(activeTab === "ssh"){
      if(deleteRuleId){
