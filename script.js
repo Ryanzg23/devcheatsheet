@@ -846,7 +846,8 @@ function openNoteModal(note=null){
      
 
   }
-
+   
+  openSteps = noteSteps.map((_, i) => i === 0);
   renderSteps();
 
 }
