@@ -785,3 +785,13 @@ body:not(.admin-mode) .admin-only{
 #sshTableBody tr:nth-child(odd){
   background:transparent;
 }
+
+/* IMPORTANT NOTES spacing */
+.notes-body pre {
+  margin-bottom: 12px;
+}
+
+.notes-instructions {
+  margin-top: 10px;
+  line-height: 1.6;
+}
