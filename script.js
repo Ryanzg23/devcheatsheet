@@ -732,9 +732,9 @@ function renderNotes(list){
 
         ${step.code ? `
           <pre class="note-code">
-            <code>${escapeHTML(step.code)}</code>
-            <span class="copy-btn">Copy</span>
-          </pre>
+              <button class="copy-btn">Copy</button>
+              <code>${escapeHTML(step.code)}</code>
+            </pre>
         ` : ""}
 
       </div>
