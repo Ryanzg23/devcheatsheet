@@ -687,9 +687,16 @@ function renderNotes(list){
         </div>
       </div>
 
-      <div class="acc-body">
-        ${n.code ? `<pre><code>${escapeHTML(n.code)}</code></pre>` : ""}
-        ${n.instructions ? `<div class="muted">${n.instructions}</div>` : ""}
+      <div class="acc-body notes-body">
+        ${n.code ? `
+          <pre><code>${escapeHTML(n.code)}</code></pre>
+        ` : ""}
+      
+        ${n.instructions ? `
+          <div class="notes-instructions muted">
+            ${n.instructions}
+          </div>
+        ` : ""}
       </div>
     `;
 
