@@ -953,3 +953,5 @@ body:not(.admin-mode) .admin-only{
 .step-card.open .step-body {
   max-height: 500px; /* enough for textarea */
 }
+
+.note-step{ margin-bottom: 15px; }
