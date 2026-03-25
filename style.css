@@ -342,6 +342,7 @@ input{
   overflow:hidden;
   padding:0 16px;
   transition:max-height .28s ease, padding .18s ease;
+  overflow: auto;
 }
 
 /* IMPORTANT: force block context */
