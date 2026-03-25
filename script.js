@@ -774,9 +774,13 @@ document.addEventListener("click", e=>{
 
   if(e.target.classList.contains("copy-btn")){
 
-    const code = e.target.previousElementSibling.innerText;
+    const codeEl = e.target.nextElementSibling;
 
-    navigator.clipboard.writeText(code);
+    if(!codeEl) return;
+
+    const text = codeEl.innerText;
+
+    navigator.clipboard.writeText(text);
 
     e.target.textContent = "Copied";
 
