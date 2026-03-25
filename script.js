@@ -640,15 +640,69 @@ const addNoteBtn = document.getElementById("addNoteBtn");
 
 const noteModal = document.getElementById("noteModal");
 const noteTitle = document.getElementById("noteTitle");
-const noteText = document.getElementById("noteText");
-const noteCode = document.getElementById("noteCode");
-const noteInstructions = document.getElementById("noteInstructions");
 
 const saveNoteBtn = document.getElementById("saveNote");
 const cancelNoteBtn = document.getElementById("cancelNote");
 
 let notesData = [];
+let noteSteps = [];
 let editingNoteId = null;
+
+function addStep(data = { instruction: "", code: "" }) {
+  noteSteps.push(data);
+  renderSteps();
+}
+
+function renderSteps(){
+
+  const container = document.getElementById("stepsContainer");
+  if(!container) return;
+
+  container.innerHTML = "";
+
+  noteSteps.forEach((step, i)=>{
+
+    const div = document.createElement("div");
+    div.className = "step-item";
+
+    div.innerHTML = `
+      <label>Instruction</label>
+      <textarea class="step-instruction" data-i="${i}">${step.instruction || ""}</textarea>
+
+      <label>Code</label>
+      <textarea class="step-code" data-i="${i}">${step.code || ""}</textarea>
+
+      <button class="btn small remove-step">Remove</button>
+    `;
+
+    div.querySelector(".remove-step").onclick = ()=>{
+      noteSteps.splice(i,1);
+      renderSteps();
+    };
+
+    container.appendChild(div);
+
+  });
+
+}
+
+document.addEventListener("input", e=>{
+
+  if(e.target.classList.contains("step-instruction")){
+    noteSteps[e.target.dataset.i].instruction = e.target.value;
+  }
+
+  if(e.target.classList.contains("step-code")){
+    noteSteps[e.target.dataset.i].code = e.target.value;
+  }
+
+});
+
+const addStepBtn = document.getElementById("addStepBtn");
+
+if(addStepBtn){
+  addStepBtn.onclick = ()=>addStep();
+}
 
 /* LOAD */
 function loadNotes(){
@@ -665,38 +719,43 @@ function loadNotes(){
 /* RENDER */
 function renderNotes(list){
 
-  notesContainer.innerHTML="";
+  notesContainer.innerHTML = "";
 
-  list.forEach(n=>{
+  list.forEach(n => {
 
-    const item=document.createElement("div");
-    item.className="acc-item";
+    const stepsHTML = (n.steps || []).map(step => `
+      <div class="note-step">
 
-    item.innerHTML=`
+        ${step.instruction ? `
+          <div class="note-instruction">${step.instruction}</div>
+        ` : ""}
+
+        ${step.code ? `
+          <pre class="note-code">
+            <code>${escapeHTML(step.code)}</code>
+            <span class="copy-btn">Copy</span>
+          </pre>
+        ` : ""}
+
+      </div>
+    `).join("");
+
+    const item = document.createElement("div");
+    item.className = "acc-item";
+
+    item.innerHTML = `
       <div class="acc-header">
-        <div>
-          <h3>${n.title}</h3>
-          ${n.text_instructions ? `<div class="muted">${n.text_instructions}</div>` : ""}
-        </div>
+        <h3>${n.title}</h3>
 
         <div class="acc-actions">
-          <button class="btn small copy">Copy</button>
           <button class="btn small admin-only edit">Edit</button>
           <button class="btn small admin-only delete">Delete</button>
           <span class="acc-toggle">▾</span>
         </div>
       </div>
 
-      <div class="acc-body notes-body">
-        ${n.code ? `
-          <pre><code>${escapeHTML(n.code)}</code></pre>
-        ` : ""}
-      
-        ${n.instructions ? `
-          <div class="notes-instructions muted">
-            ${n.instructions}
-          </div>
-        ` : ""}
+      <div class="acc-body">
+        ${stepsHTML}
       </div>
     `;
 
@@ -710,24 +769,49 @@ function renderNotes(list){
   updateAdminUI();
 }
 
+   
+document.addEventListener("click", e=>{
+
+  if(e.target.classList.contains("copy-btn")){
+
+    const code = e.target.previousElementSibling.innerText;
+
+    navigator.clipboard.writeText(code);
+
+    e.target.textContent = "Copied";
+
+    setTimeout(()=>{
+      e.target.textContent = "Copy";
+    },1000);
+
+  }
+
+});
+
 /* MODAL */
 function openNoteModal(note=null){
 
   noteModal.style.display="flex";
 
+  noteSteps = [];
+
   if(note){
+
     editingNoteId = note.id;
     noteTitle.value = note.title;
-    noteText.value = note.text_instructions || "";
-    noteCode.value = note.code || "";
-    noteInstructions.value = note.instructions || "";
+
+    noteSteps = note.steps || [];
+
   }else{
+
     editingNoteId = null;
     noteTitle.value = "";
-    noteText.value = "";
-    noteCode.value = "";
-    noteInstructions.value = "";
+    noteSteps = [];
+
   }
+
+  renderSteps();
+
 }
 
 if(addNoteBtn){
@@ -738,31 +822,35 @@ if(addNoteBtn){
 if(saveNoteBtn){
   saveNoteBtn.onclick = ()=>{
 
-    const payload = {
-      title: noteTitle.value,
-      text_instructions: noteText.value,
-      code: noteCode.value,
-      instructions: noteInstructions.value
-    };
+   const title = noteTitle.value.trim();
 
-    if(editingNoteId){
-      payload.id = editingNoteId;
+   if(!title || noteSteps.length === 0) return;
+   
+   if(editingNoteId){
+   
+     fetch("/.netlify/functions/notes",{
+       method:"PUT",
+       body:JSON.stringify({
+         id: editingNoteId,
+         title,
+         steps: noteSteps
+       })
+     }).then(loadNotes);
+   
+   }else{
+   
+     fetch("/.netlify/functions/notes",{
+       method:"POST",
+       body:JSON.stringify({
+         title,
+         steps: noteSteps
+       })
+     }).then(loadNotes);
+   
+   }
+   
+   noteModal.style.display="none";
 
-      fetch("/.netlify/functions/notes",{
-        method:"PUT",
-        body:JSON.stringify(payload)
-      }).then(loadNotes);
-
-    }else{
-
-      fetch("/.netlify/functions/notes",{
-        method:"POST",
-        body:JSON.stringify(payload)
-      }).then(loadNotes);
-
-    }
-
-    noteModal.style.display="none";
   };
 }
 
@@ -775,11 +863,15 @@ if(cancelNoteBtn){
 /* SEARCH */
 if(notesSearch){
   notesSearch.oninput=()=>{
+
     const q = notesSearch.value.toLowerCase();
 
     const filtered = notesData.filter(n =>
       n.title.toLowerCase().includes(q) ||
-      (n.text_instructions && n.text_instructions.toLowerCase().includes(q))
+      (n.steps && n.steps.some(s =>
+        (s.instruction && s.instruction.toLowerCase().includes(q)) ||
+        (s.code && s.code.toLowerCase().includes(q))
+      ))
     );
 
     renderNotes(filtered);
