@@ -805,20 +805,21 @@ function openNoteModal(note=null){
 
   noteModal.style.display="flex";
 
-  noteSteps = [];
-
   if(note){
 
     editingNoteId = note.id;
     noteTitle.value = note.title;
 
-    noteSteps = note.steps || [];
+    noteSteps = note.steps && note.steps.length
+      ? note.steps
+      : [{ instruction:"", code:"" }];
 
   }else{
 
     editingNoteId = null;
     noteTitle.value = "";
-    noteSteps = [];
+
+    noteSteps = [{ instruction:"", code:"" }];
 
   }
 
