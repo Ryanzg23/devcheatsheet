@@ -1,8 +1,12 @@
-import { neon } from "@neondatabase/serverless";
+const { neon } = require("@neondatabase/serverless");
 
-export default async (req) => {
+exports.handler = async (event) => {
+
   const sql = neon(process.env.NETLIFY_DATABASE_URL);
 
+  const method = event.httpMethod;
+
+  // Ensure table exists
   await sql`
     CREATE TABLE IF NOT EXISTS htaccess_rules (
       id SERIAL PRIMARY KEY,
@@ -13,61 +17,58 @@ export default async (req) => {
     )
   `;
 
-
   /* GET */
-if (req.method === "GET") {
-  const rows = await sql`
-    SELECT id, title, description, code
-    FROM htaccess_rules
-    ORDER BY id ASC
-  `;
-
-  return new Response(JSON.stringify(rows), {
-    headers: { "Content-Type": "application/json" }
-  });
-}
-
-  /* POST (add) */
-if (req.method === "POST") {
-  const { title, description, code } = await req.json();
-
-  const [row] = await sql`
-    INSERT INTO htaccess_rules (title, description, code)
-    VALUES (${title}, ${description}, ${code})
-    RETURNING id
-  `;
-
-  return new Response(JSON.stringify({ id: row.id }), {
-    headers: { "Content-Type": "application/json" }
-  });
-}
-
-  /* PUT (edit) */
-if (req.method === "PUT") {
-  const { id, title, description, code } = await req.json();
-
-  await sql`
-    UPDATE htaccess_rules
-    SET title=${title},
-        description=${description},
-        code=${code}
-    WHERE id=${id}
-  `;
-
-  return new Response("OK");
-}
-
-  /* DELETE */
-  if (req.method === "DELETE") {
-    const { id } = await req.json();
-
-    await sql`
-      DELETE FROM htaccess_rules
-      WHERE id=${id}
+  if (method === "GET") {
+    const rows = await sql`
+      SELECT id, title, description, code
+      FROM htaccess_rules
+      ORDER BY id ASC
     `;
 
-    return new Response(JSON.stringify({ ok: true }));
+    return {
+      statusCode: 200,
+      body: JSON.stringify(rows)
+    };
   }
 
-  return new Response("Method not allowed", { status: 405 });
+  const data = JSON.parse(event.body || "{}");
+
+  /* POST */
+  if (method === "POST") {
+    const result = await sql`
+      INSERT INTO htaccess_rules (title, description, code)
+      VALUES (${data.title}, ${data.description}, ${data.code})
+      RETURNING id
+    `;
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ id: result[0].id })
+    };
+  }
+
+  /* PUT */
+  if (method === "PUT") {
+    await sql`
+      UPDATE htaccess_rules
+      SET title=${data.title},
+          description=${data.description},
+          code=${data.code}
+      WHERE id=${data.id}
+    `;
+
+    return { statusCode: 200 };
+  }
+
+  /* DELETE */
+  if (method === "DELETE") {
+    await sql`
+      DELETE FROM htaccess_rules
+      WHERE id=${data.id}
+    `;
+
+    return { statusCode: 200 };
+  }
+
+  return { statusCode: 405 };
 };
