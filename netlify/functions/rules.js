@@ -1,8 +1,7 @@
 const { neon } = require("@neondatabase/serverless");
 
   const sql = neon(process.env.NETLIFY_DATABASE_URL);
-  
-  const sql = neon();
+
 
   const method = event.httpMethod;
 
